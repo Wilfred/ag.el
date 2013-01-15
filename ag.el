@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2012
-;; Version: 0.5
+;; Version: 0.6
 
 ;;; Commentary
 
@@ -50,6 +50,8 @@
   (list "--nocolor" "--literal" "--smart-case" "--nogroup" "--column")
   "Default arguments passed to ag."
   :type '(repeat (string)))
+
+(require 'compile)
 
 (define-compilation-mode ag-mode "Ag"
   "Ag results compilation mode")
