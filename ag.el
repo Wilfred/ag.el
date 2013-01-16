@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2012
-;; Version: 0.6
+;; Version: 0.7
 
 ;;; Commentary
 
@@ -70,7 +70,7 @@
 
 (defun ag/search (string directory)
   "Run ag searching for the literal STRING given in DIRECTORY."
-  (let ((default-directory directory))
+  (let ((default-directory (file-name-as-directory directory)))
     (compilation-start
      (ag/s-join " "
                 (append '("ag") ag-arguments (list (ag/shell-quote string))))
