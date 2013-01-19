@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2012
-;; Version: 0.7
+;; Version: 0.8
 
 ;;; Commentary
 
@@ -71,6 +71,8 @@
 (defun ag/search (string directory)
   "Run ag searching for the literal STRING given in DIRECTORY."
   (let ((default-directory (file-name-as-directory directory)))
+    (unless (file-exists-p default-directory)
+      (error "No such directory %s" default-directory))
     (compilation-start
      (ag/s-join " "
                 (append '("ag") ag-arguments (list (ag/shell-quote string))))
