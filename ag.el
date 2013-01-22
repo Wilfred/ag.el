@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2012
-;; Version: 0.9
+;; Version: 0.10
 
 ;;; Commentary
 
@@ -20,10 +20,6 @@
 ;; I like to bind ag-project-at-point to F5:
 
 ;; (global-set-key (kbd "<f5>") 'ag-project-at-point)
-
-;;; Todo:
-
-;; 1. Add ag-regexp
 
 ;;; License:
 
@@ -100,6 +96,11 @@ is non-nil, treat STRING as a regular expression."
   "Search using ag in a given directory for a given string."
   (interactive "sSearch string: \nDDirectory: ")
   (ag/search string directory))
+
+(defun ag-regexp (string directory)
+  "Search using ag in a given directory for a given string."
+  (interactive "sSearch regexp: \nDDirectory: ")
+  (ag/search string directory t))
 
 (defun ag-project (string)
   "Guess the root of the current project and search it with ag
