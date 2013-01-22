@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2012
-;; Version: 0.8
+;; Version: 0.9
 
 ;;; Commentary
 
@@ -24,7 +24,6 @@
 ;;; Todo:
 
 ;; 1. Add ag-regexp
-;; 2. Add highlighting to *Ag* buffer
 
 ;;; License:
 
