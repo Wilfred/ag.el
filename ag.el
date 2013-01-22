@@ -114,7 +114,7 @@ to the symbol under point."
                                                (symbol-name (symbol-at-point))))))
    (ag/search string (ag/project-root default-directory)))
 
-;; Taken from grep-filter, juste changed the color regex.
+;; Taken from grep-filter, just changed the color regex.
 (defun ag-filter ()
   "Handle match highlighting escape sequences inserted by the grep process.
 This function is called from `compilation-filter-hook'."
