@@ -46,7 +46,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 (defcustom ag-arguments
-  (list "--color" "--color-match" "'30;43'" "--literal" "--smart-case" "--nogroup" "--column")
+  (list "--color" "--color-match" "'30;43'" "--smart-case" "--nogroup" "--column")
   "Default arguments passed to ag."
   :type '(repeat (string)))
 
@@ -73,14 +73,18 @@
   "Wrap in single quotes, and quote existing single quotes to make shell safe."
   (concat "'" (ag/s-replace "'" "'\\''" string) "'"))
 
-(defun ag/search (string directory)
-  "Run ag searching for the literal STRING given in DIRECTORY."
-  (let ((default-directory (file-name-as-directory directory)))
+(defun ag/search (string directory &optional regexp)
+  "Run ag searching for the STRING given in DIRECTORY. If REGEXP
+is non-nil, treat STRING as a regular expression."
+  (let ((default-directory (file-name-as-directory directory))
+        (arguments (if regexp
+                       ag-arguments
+                     (cons "--literal" ag-arguments))))
     (unless (file-exists-p default-directory)
       (error "No such directory %s" default-directory))
     (compilation-start
      (ag/s-join " "
-                (append '("ag") ag-arguments (list (ag/shell-quote string))))
+                (append '("ag") arguments (list (ag/shell-quote string))))
      'ag-mode)))
 
 (autoload 'vc-git-root "vc-git")
