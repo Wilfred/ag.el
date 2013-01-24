@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2012
-;; Version: 0.10
+;; Version: 0.11
 
 ;;; Commentary
 
@@ -83,6 +83,14 @@ is non-nil, treat STRING as a regular expression."
                 (append '("ag") arguments (list (ag/shell-quote string))))
      'ag-mode)))
 
+(defun ag/dwim-at-point ()
+  "If there's an active selection, return that. Otherwise, get
+the symbol at point."
+  (if (use-region-p)
+      (buffer-substring-no-properties (region-beginning) (region-end))
+    (if (symbol-at-point)
+        (symbol-name (symbol-at-point)))))
+
 (autoload 'vc-git-root "vc-git")
 (autoload 'vc-svn-root "vc-svn")
 
@@ -113,9 +121,7 @@ for the given string."
 (defun ag-project-at-point (string)
   "Same as ``ag-project'', but with the search string defaulting
 to the symbol under point."
-   (interactive (list (read-from-minibuffer "Search string: "
-                                           (if (symbol-at-point)
-                                               (symbol-name (symbol-at-point))))))
+   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
    (ag/search string (ag/project-root default-directory)))
 
 ;; Taken from grep-filter, just changed the color regex.
