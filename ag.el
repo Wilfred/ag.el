@@ -1,6 +1,6 @@
 ;;; ag.el --- A front-end for ag, the C ack replacement.
 
-;; Copyright (C) 2013 Wilfred Hughes <me@wilfred.meuk>
+;; Copyright (C) 2013 Wilfred Hughes <me@wilfred.me.uk>
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
