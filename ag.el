@@ -49,7 +49,7 @@
 (require 'compile)
 
 (defvar ag-match-face 'match
-  "Face name to use for grep matches.")
+  "Face name to use for ag matches.")
 
 
 (define-compilation-mode ag-mode "Ag"
@@ -120,7 +120,7 @@ to the symbol under point."
 
 ;; Taken from grep-filter, just changed the color regex.
 (defun ag-filter ()
-  "Handle match highlighting escape sequences inserted by the grep process.
+  "Handle match highlighting escape sequences inserted by the ag process.
 This function is called from `compilation-filter-hook'."
   (save-excursion
     (forward-line 0)
