@@ -17,9 +17,10 @@
 ;; (add-to-list 'load-path "/path/to/ag.el") ;; optional
 ;; (require 'ag)
 
-;; I like to bind ag-project-at-point to F5:
+;; I like to bind the *-at-point commands to F5 and F6:
 
 ;; (global-set-key (kbd "<f5>") 'ag-project-at-point)
+;; (global-set-key (kbd "<f6>") 'ag-regexp-project-at-point)
 
 ;;; License:
 
@@ -106,7 +107,7 @@ the symbol at point."
   (ag/search string directory))
 
 (defun ag-regexp (string directory)
-  "Search using ag in a given directory for a given string."
+  "Search using ag in a given directory for a given regexp."
   (interactive "sSearch regexp: \nDDirectory: ")
   (ag/search string directory t))
 
@@ -116,6 +117,12 @@ for the given string."
   (interactive "sSearch string: ")
   (ag/search string (ag/project-root (buffer-file-name))))
 
+(defun ag-project-regexp (regexp)
+  "Guess the root of the current project and search it with ag
+for the given regexp."
+  (interactive "sSearch regexp: ")
+  (ag/search regexp (ag/project-root (buffer-file-name)) t))
+
 (autoload 'symbol-at-point "thingatpt")
 
 (defun ag-project-at-point (string)
@@ -123,6 +130,12 @@ for the given string."
 to the symbol under point."
    (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
    (ag/search string (ag/project-root default-directory)))
+
+(defun ag-regexp-project-at-point (regexp)
+  "Same as ``ag-regexp-project'', but with the search regexp defaulting
+to the symbol under point."
+   (interactive (list (read-from-minibuffer "Search regexp: " (ag/dwim-at-point))))
+   (ag/search regexp (ag/project-root default-directory) t))
 
 ;; Taken from grep-filter, just changed the color regex.
 (defun ag-filter ()
