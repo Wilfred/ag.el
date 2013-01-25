@@ -138,7 +138,7 @@ This function is called from `compilation-filter-hook'."
       ;; escape sequence in one chunk and the rest in another.
       (when (< (point) end)
         (setq end (copy-marker end))
-        ;; Highlight grep matches and delete marking sequences.
+        ;; Highlight ag matches and delete marking sequences.
         (while (re-search-forward "\033\\[30;43m\\(.*?\\)\033\\[[0-9]*m" end 1)
           (replace-match (propertize (match-string 1)
                                      'face nil 'font-lock-face ag-match-face)
