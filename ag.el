@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.11
+;; Version: 0.12
 
 ;;; Commentary
 
@@ -43,7 +43,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 (defcustom ag-arguments
-  (list "--color" "--color-match" "'30;43'" "--smart-case" "--nogroup" "--column")
+  (list "--color" "--color-match" "'30;43'" "--smart-case" "--nogroup" "--column" "--")
   "Default arguments passed to ag."
   :type '(repeat (string)))
 
