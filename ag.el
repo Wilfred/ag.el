@@ -162,3 +162,4 @@ This function is called from `compilation-filter-hook'."
           (replace-match "" t t))))))
 
 (provide 'ag)
+;;; ag.el ends here
