@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.12
+;; Version: 0.13
 
 ;;; Commentary
 
@@ -16,6 +16,11 @@
 
 ;; (add-to-list 'load-path "/path/to/ag.el") ;; optional
 ;; (require 'ag)
+
+;; If you're using ag 0.14+, which supports --color-match, then you
+;; can add highlighting with:
+
+;; (setq ag-highlight-search t)
 
 ;; I like to bind the *-at-point commands to F5 and F6:
 
@@ -43,9 +48,17 @@
 ;; Boston, MA 02110-1301, USA.
 
 (defcustom ag-arguments
-  (list "--color" "--color-match" "'30;43'" "--smart-case" "--nogroup" "--column" "--")
+  (list "--smart-case" "--nogroup" "--column" "--")
   "Default arguments passed to ag."
-  :type '(repeat (string)))
+  :type '(repeat (string))
+  :group 'ag)
+
+(defcustom ag-highlight-search nil
+  "Non-nil means we highlight the current search term in results.
+
+This requires the ag command to support --color-match, which is only in v0.14+"
+  :type 'boolean
+  :group 'ag)
 
 (require 'compile)
 
@@ -77,6 +90,9 @@ is non-nil, treat STRING as a regular expression."
         (arguments (if regexp
                        ag-arguments
                      (cons "--literal" ag-arguments))))
+    (if ag-highlight-search
+        (setq arguments (append '("--color" "--color-match" "'30;43'") arguments))
+      (setq arguments (append '("--nocolor") arguments)))
     (unless (file-exists-p default-directory)
       (error "No such directory %s" default-directory))
     (compilation-start
@@ -141,25 +157,26 @@ to the symbol under point."
 (defun ag-filter ()
   "Handle match highlighting escape sequences inserted by the ag process.
 This function is called from `compilation-filter-hook'."
-  (save-excursion
-    (forward-line 0)
-    (let ((end (point)) beg)
-      (goto-char compilation-filter-start)
+  (when ag-highlight-search
+    (save-excursion
       (forward-line 0)
-      (setq beg (point))
-      ;; Only operate on whole lines so we don't get caught with part of an
-      ;; escape sequence in one chunk and the rest in another.
-      (when (< (point) end)
-        (setq end (copy-marker end))
-        ;; Highlight ag matches and delete marking sequences.
-        (while (re-search-forward "\033\\[30;43m\\(.*?\\)\033\\[[0-9]*m" end 1)
-          (replace-match (propertize (match-string 1)
-                                     'face nil 'font-lock-face ag-match-face)
-                         t t))
-        ;; Delete all remaining escape sequences
-        (goto-char beg)
-        (while (re-search-forward "\033\\[[0-9;]*[mK]" end 1)
-          (replace-match "" t t))))))
+      (let ((end (point)) beg)
+        (goto-char compilation-filter-start)
+        (forward-line 0)
+        (setq beg (point))
+        ;; Only operate on whole lines so we don't get caught with part of an
+        ;; escape sequence in one chunk and the rest in another.
+        (when (< (point) end)
+          (setq end (copy-marker end))
+          ;; Highlight ag matches and delete marking sequences.
+          (while (re-search-forward "\033\\[30;43m\\(.*?\\)\033\\[[0-9]*m" end 1)
+            (replace-match (propertize (match-string 1)
+                                       'face nil 'font-lock-face ag-match-face)
+                           t t))
+          ;; Delete all remaining escape sequences
+          (goto-char beg)
+          (while (re-search-forward "\033\\[[0-9;]*[mK]" end 1)
+            (replace-match "" t t)))))))
 
 (provide 'ag)
 ;;; ag.el ends here
