@@ -21,6 +21,12 @@ Try putting the following code in your Emacs configuration:
 
 ## Changelog
 
+### 0.14
+
+The compilation mode regexp is now more accurate, so you should no
+longer get 'compilation-next-error: No error here' when trying to open
+a file in the results list.
+
 ### 0.13
 
 Current stable ag (0.13.1) doesn't support `--color-match`, ag.el now

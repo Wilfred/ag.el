@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.13
+;; Version: 0.14
 
 ;;; Commentary
 
@@ -69,6 +69,10 @@ This requires the ag command to support --color-match, which is only in v0.14+"
 (define-compilation-mode ag-mode "Ag"
   "Ag results compilation mode"
   (setq ag-last-buffer (current-buffer))
+  (let ((smbl  'compilation-ag-nogroup)
+        (pttrn '("^\\([^:\n]+?\\):\\([0-9]+\\):\\([0-9]+\\):" 1 2 3)))
+    (set (make-local-variable 'compilation-error-regexp-alist) (list smbl))
+    (set (make-local-variable 'compilation-error-regexp-alist-alist) (list (cons smbl pttrn))))
   (add-hook 'compilation-filter-hook 'ag-filter nil t))
 
 (defun ag/s-join (separator strings)
