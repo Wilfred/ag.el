@@ -6,8 +6,8 @@ A simple ag.el frontend, loosely based on ack-and-half.el.
 
 ### ag.el can't find the ag executable
 
-Install the [https://github.com/purcell/exec-path-from-shell](exec-path-from-shell) package
-from Marmalade or [MELPA](http://melpa.milkbox.net/), or try
+Install the [exec-path-from-shell](https://github.com/purcell/exec-path-from-shell) package
+from [Marmalade](http://marmalade-repo.org/) or [MELPA](http://melpa.milkbox.net/), or try
 putting the following code in your Emacs configuration:
 
     (defun set-exec-path-from-shell-PATH ()
