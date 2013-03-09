@@ -4,7 +4,7 @@ A simple ag frontend, loosely based on ack-and-half.el.
 
 ## Screenshot
 
-![Screenshot from 2013-03-09 16:38:36](https://f.cloud.github.com/assets/70800/239871/d8421a54-88d7-11e2-9cc0-df569b228888.png)
+[![screen_thumb](https://f.cloud.github.com/assets/70800/239876/738b5bd8-88d8-11e2-96a1-606e8d17d5ba.png)](https://f.cloud.github.com/assets/70800/239871/d8421a54-88d7-11e2-9cc0-df569b228888.png)
 
 ## Configuration
 
