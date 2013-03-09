@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.14
+;; Version: 0.15
 
 ;;; Commentary
 
@@ -135,13 +135,13 @@ the symbol at point."
   "Guess the root of the current project and search it with ag
 for the given string."
   (interactive "sSearch string: ")
-  (ag/search string (ag/project-root (buffer-file-name))))
+  (ag/search string (ag/project-root default-directory)))
 
 (defun ag-project-regexp (regexp)
   "Guess the root of the current project and search it with ag
 for the given regexp."
   (interactive "sSearch regexp: ")
-  (ag/search regexp (ag/project-root (buffer-file-name)) t))
+  (ag/search regexp (ag/project-root default-directory) t))
 
 (autoload 'symbol-at-point "thingatpt")
 

@@ -23,6 +23,11 @@ putting the following code in your Emacs configuration:
 
 ## Changelog
 
+### 0.15
+
+Fixed `ag-project` and `ag-project-regexp` not working in buffers that
+aren't associated with a specific file, such as dired and magit buffers.
+
 ### 0.14
 
 The compilation mode regexp is now more accurate, so you should no
