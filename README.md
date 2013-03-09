@@ -1,14 +1,34 @@
 # ag.el
 
-A simple ag.el frontend, loosely based on ack-and-half.el.
+A simple ag frontend, loosely based on ack-and-half.el.
 
-## FAQ
+## Configuration
 
-### ag.el can't find the ag executable
+### Highlighting results
 
-Install the [exec-path-from-shell](https://github.com/purcell/exec-path-from-shell) package
-from [Marmalade](http://marmalade-repo.org/) or [MELPA](http://melpa.milkbox.net/), or try
-putting the following code in your Emacs configuration:
+ag.el supports highlighting results for ag 0.14 or later. Previous
+versions of ag don't support the `--color-match` argument.
+
+If your version of ag is recent enough, you can add highlighting by
+adding the following to your Emacs configuration:
+
+    (setq ag-highlight-search t)
+
+### Path to the ag executable
+
+ag.el assumes that the ag executable is in one of the directories on
+`exec-path`. Generally, this is sufficient.
+
+However, you may find that you can run ag in a terminal but ag.el
+isn't finding the ag executable. This is common on Mac OS X. You'll
+need to update `exec-path` to match your terminal. The best way to do
+this is to install
+[exec-path-from-shell](https://github.com/purcell/exec-path-from-shell)
+(available on both [Marmalade](http://marmalade-repo.org/) and
+[MELPA](http://melpa.milkbox.net/)).
+
+Alternatively, you can do this yourself by putting the following code
+in your Emacs configuration:
 
     (defun set-exec-path-from-shell-PATH ()
       "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell.
