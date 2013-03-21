@@ -68,7 +68,6 @@ This requires the ag command to support --color-match, which is only in v0.14+"
 
 (define-compilation-mode ag-mode "Ag"
   "Ag results compilation mode"
-  (setq ag-last-buffer (current-buffer))
   (let ((smbl  'compilation-ag-nogroup)
         (pttrn '("^\\([^:\n]+?\\):\\([0-9]+\\):\\([0-9]+\\):" 1 2 3)))
     (set (make-local-variable 'compilation-error-regexp-alist) (list smbl))
