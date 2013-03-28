@@ -47,6 +47,10 @@ in your Emacs configuration:
 
 ## Changelog
 
+### 0.16
+
+Removed the unused variable `ag-last-buffer`
+
 ### 0.15
 
 Fixed `ag-project` and `ag-project-regexp` not working in buffers that
