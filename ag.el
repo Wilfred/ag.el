@@ -17,6 +17,8 @@
 ;; (add-to-list 'load-path "/path/to/ag.el") ;; optional
 ;; (require 'ag)
 
+;; Alternatively, just install the package from MELPA.
+
 ;; If you're using ag 0.14+, which supports --color-match, then you
 ;; can add highlighting with:
 
