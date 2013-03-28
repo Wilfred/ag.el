@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.16
+;; Version: 0.17
 
 ;;; Commentary
 
@@ -120,22 +120,26 @@ the symbol at point."
       (vc-svn-root file-path)
       file-path))
 
+;;;###autoload
 (defun ag (string directory)
   "Search using ag in a given directory for a given string."
   (interactive "sSearch string: \nDDirectory: ")
   (ag/search string directory))
 
+;;;###autoload
 (defun ag-regexp (string directory)
   "Search using ag in a given directory for a given regexp."
   (interactive "sSearch regexp: \nDDirectory: ")
   (ag/search string directory t))
 
+;;;###autoload
 (defun ag-project (string)
   "Guess the root of the current project and search it with ag
 for the given string."
   (interactive "sSearch string: ")
   (ag/search string (ag/project-root default-directory)))
 
+;;;###autoload
 (defun ag-project-regexp (regexp)
   "Guess the root of the current project and search it with ag
 for the given regexp."
@@ -144,12 +148,14 @@ for the given regexp."
 
 (autoload 'symbol-at-point "thingatpt")
 
+;;;###autoload
 (defun ag-project-at-point (string)
   "Same as ``ag-project'', but with the search string defaulting
 to the symbol under point."
    (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
    (ag/search string (ag/project-root default-directory)))
 
+;;;###autoload
 (defun ag-regexp-project-at-point (regexp)
   "Same as ``ag-regexp-project'', but with the search regexp defaulting
 to the symbol under point."

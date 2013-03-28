@@ -47,6 +47,10 @@ in your Emacs configuration:
 
 ## Changelog
 
+### 0.17
+
+The interactive functions provided by ag.el are now autoloaded.
+
 ### 0.16
 
 Removed the unused variable `ag-last-buffer`
