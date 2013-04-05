@@ -75,3 +75,7 @@ If you're upgrading ag.el and your ag version is 0.14 or higher, you
 need to explicitly enable highlighting:
 
     (setq ag-highlight-search t)
+
+## Alternatives
+
+* There's an ag plugin for helm: https://github.com/syohex/emacs-helm-ag
