@@ -6,11 +6,11 @@
 ;; Created: 11 January 2013
 ;; Version: 0.17
 
-;;; Commentary
+;;; Commentary:
 
 ;; This file is heavily based on the excellent ack-and-a-half.el.
 
-;;; Usage
+;; Usage:
 
 ;; Add you to your .emacs.d:
 
@@ -49,6 +49,8 @@
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
+;;; Code:
+
 (defcustom ag-arguments
   (list "--smart-case" "--nogroup" "--column" "--")
   "Default arguments passed to ag."
@@ -85,12 +87,12 @@ This requires the ag command to support --color-match, which is only in v0.14+"
   (replace-regexp-in-string (regexp-quote old) new s t t))
 
 (defun ag/shell-quote (string)
-  "Wrap in single quotes, and quote existing single quotes to make shell safe."
+  "Wrap STRING in single quotes, and quote existing single quotes to make shell safe."
   (concat "'" (ag/s-replace "'" "'\\''" string) "'"))
 
 (defun ag/search (string directory &optional regexp)
-  "Run ag searching for the STRING given in DIRECTORY. If REGEXP
-is non-nil, treat STRING as a regular expression."
+  "Run ag searching for the STRING given in DIRECTORY.
+If REGEXP is non-nil, treat STRING as a regular expression."
   (let ((default-directory (file-name-as-directory directory))
         (arguments (if regexp
                        ag-arguments
@@ -106,8 +108,8 @@ is non-nil, treat STRING as a regular expression."
      'ag-mode)))
 
 (defun ag/dwim-at-point ()
-  "If there's an active selection, return that. Otherwise, get
-the symbol at point."
+  "If there's an active selection, return that.
+Otherwise, get the symbol at point."
   (if (use-region-p)
       (buffer-substring-no-properties (region-beginning) (region-end))
     (if (symbol-at-point)
@@ -117,14 +119,14 @@ the symbol at point."
 (autoload 'vc-svn-root "vc-svn")
 
 (defun ag/project-root (file-path)
-  "Guess the project root of the given file path."
+  "Guess the project root of the given FILE-PATH."
   (or (vc-git-root file-path)
       (vc-svn-root file-path)
       file-path))
 
 ;;;###autoload
 (defun ag (string directory)
-  "Search using ag in a given directory for a given string."
+  "Search using ag in a given DIRECTORY for a given search STRING."
   (interactive "sSearch string: \nDDirectory: ")
   (ag/search string directory))
 
