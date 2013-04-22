@@ -47,6 +47,11 @@ in your Emacs configuration:
 
 ## Changelog
 
+### 0.18
+
+Search results are now highlighted as information, rather than
+errors. The ag output is now more consistent with grep.el.
+
 ### 0.17
 
 The interactive functions provided by ag.el are now autoloaded.
