@@ -47,6 +47,10 @@ in your Emacs configuration:
 
 ## Changelog
 
+### 0.19
+
+`ag` now has a default search term of the symbol at point.
+
 ### 0.18
 
 Search results are now highlighted as information, rather than

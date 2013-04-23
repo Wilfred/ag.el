@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.18
+;; Version: 0.19
 
 ;;; Commentary:
 
@@ -126,9 +126,11 @@ Otherwise, get the symbol at point."
 
 ;;;###autoload
 (defun ag (string directory)
-  "Search using ag in a given DIRECTORY for a given search STRING."
-  (interactive "sSearch string: \nDDirectory: ")
-  (ag/search string directory))
+  "Search using ag in a given DIRECTORY for a given search STRING,
+with STRING defaulting to the symbol under point."
+   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+                      (read-directory-name "Directory: ")))
+   (ag/search string directory))
 
 ;;;###autoload
 (defun ag-regexp (string directory)
@@ -164,6 +166,7 @@ to the symbol under point."
   "Same as ``ag-regexp-project'', but with the search regexp defaulting
 to the symbol under point."
    (interactive (list (read-from-minibuffer "Search regexp: " (ag/dwim-at-point))))
+   
    (ag/search regexp (ag/project-root default-directory) t))
 
 ;; Taken from grep-filter, just changed the color regex.
