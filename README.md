@@ -88,3 +88,12 @@ need to explicitly enable highlighting:
 ## Alternatives
 
 * There's an ag plugin for helm: https://github.com/syohex/emacs-helm-ag
+
+## Todo
+
+* Remove `*-at-point` commands in favour of always defaulting to the
+  symbol at point.
+* Add aliases for the old command names to ensure backward
+  compatibility.
+* Modify `ag-regexp-project-at-point` to quote the default search
+  string, otherwise `"foo.bar"` will match other things.
