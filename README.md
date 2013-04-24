@@ -44,6 +44,13 @@ in your Emacs configuration:
         (setq exec-path (split-string path-from-shell path-separator))))
 
     (set-exec-path-from-shell-PATH)
+    
+### Using ag in elisp functions
+
+You can use `ag`, `ag-project` and so on from an elisp
+function. `ag/FOO` functions are private and are more likely to
+change. Please file a bug if you find a use for internal functions
+that you can't do otherwise.
 
 ## Changelog
 
