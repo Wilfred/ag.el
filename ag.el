@@ -26,7 +26,7 @@
 
 ;; I like to bind the *-at-point commands to F5 and F6:
 
-;; (global-set-key (kbd "<f5>") 'ag-project-at-point)
+;; (global-set-key (kbd "<f5>") 'ag-project)
 ;; (global-set-key (kbd "<f6>") 'ag-regexp-project-at-point)
 
 ;;; License:
@@ -142,7 +142,7 @@ with STRING defaulting to the symbol under point."
 (defun ag-project (string)
   "Guess the root of the current project and search it with ag
 for the given string."
-  (interactive "sSearch string: ")
+  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
   (ag/search string (ag/project-root default-directory)))
 
 ;;;###autoload
@@ -155,11 +155,7 @@ for the given regexp."
 (autoload 'symbol-at-point "thingatpt")
 
 ;;;###autoload
-(defun ag-project-at-point (string)
-  "Same as ``ag-project'', but with the search string defaulting
-to the symbol under point."
-   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
-   (ag/search string (ag/project-root default-directory)))
+(defalias 'ag-project-at-point 'ag-project)
 
 ;;;###autoload
 (defun ag-regexp-project-at-point (regexp)
