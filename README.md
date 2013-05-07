@@ -54,6 +54,11 @@ that you can't do otherwise.
 
 ## Changelog
 
+### 0.20
+
+Fixed `next-error` and `previous-error` not working with ag.el (broken
+in v0.18).
+
 ### 0.19
 
 `ag` now has a default search term of the symbol at point.

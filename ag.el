@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.19
+;; Version: 0.20
 
 ;;; Commentary:
 
@@ -66,16 +66,21 @@ This requires the ag command to support --color-match, which is only in v0.14+"
 
 (require 'compile)
 
-(defvar ag-match-face 'match
+;; Although ag results aren't exactly errors, we treat them as errors
+;; so `next-error' and `previous-error' work. However, we ensure our
+;; face inherits from `compilation-info-face' so the results are
+;; styled appropriately.
+(defvar ag-match-face compilation-info-face
   "Face name to use for ag matches.")
-
 
 (define-compilation-mode ag-mode "Ag"
   "Ag results compilation mode"
   (let ((smbl  'compilation-ag-nogroup)
-        (pttrn '("^\\([^:\n]+?\\):\\([0-9]+\\):\\([0-9]+\\):" 1 2 3 0)))
+        (pttrn '("^\\([^:\n]+?\\):\\([0-9]+\\):\\([0-9]+\\):" 1 2 3)))
     (set (make-local-variable 'compilation-error-regexp-alist) (list smbl))
-    (set (make-local-variable 'compilation-error-regexp-alist-alist) (list (cons smbl pttrn))))
+    (set (make-local-variable 'compilation-error-regexp-alist-alist) (list (cons smbl pttrn)))
+    (set (make-local-variable 'compilation-error-face)
+         ag-match-face))
   (add-hook 'compilation-filter-hook 'ag-filter nil t))
 
 (defun ag/s-join (separator strings)
