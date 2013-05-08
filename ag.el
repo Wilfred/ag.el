@@ -76,7 +76,11 @@ This requires the ag command to support --color-match, which is only in v0.14+"
 (define-compilation-mode ag-mode "Ag"
   "Ag results compilation mode"
   (let ((smbl  'compilation-ag-nogroup)
-        (pttrn '("^\\([^:\n]+?\\):\\([0-9]+\\):\\([0-9]+\\):" 1 2 3)))
+        ;; Note that we want to use as tight a regexp as we can to try and
+        ;; handle weird file names (with colons in them) as well as possible.
+        ;; E.g. we use [1-9][0-9]* rather than [0-9]+ so as to accept ":034:"
+        ;; in file names.
+        (pttrn '("^\\([^:\n]+?\\):\\([1-9][0-9]*\\):\\([1-9][0-9]*\\):" 1 2 3)))
     (set (make-local-variable 'compilation-error-regexp-alist) (list smbl))
     (set (make-local-variable 'compilation-error-regexp-alist-alist) (list (cons smbl pttrn)))
     (set (make-local-variable 'compilation-error-face)
