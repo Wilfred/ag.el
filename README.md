@@ -54,6 +54,10 @@ that you can't do otherwise.
 
 ## Changelog
 
+### 0.21
+
+Added a new face `ag-hit-face` to distinguish from `ag-match-face`.
+
 ### 0.20
 
 Fixed `next-error` and `previous-error` not working with ag.el (broken

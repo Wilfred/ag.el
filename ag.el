@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.20
+;; Version: 0.21
 
 ;;; Commentary:
 
@@ -70,7 +70,10 @@ This requires the ag command to support --color-match, which is only in v0.14+"
 ;; so `next-error' and `previous-error' work. However, we ensure our
 ;; face inherits from `compilation-info-face' so the results are
 ;; styled appropriately.
-(defvar ag-match-face compilation-info-face
+(defvar ag-hit-face compilation-info-face
+  "Face name to use for ag matches.")
+
+(defvar ag-match-face 'match
   "Face name to use for ag matches.")
 
 (define-compilation-mode ag-mode "Ag"
@@ -84,7 +87,7 @@ This requires the ag command to support --color-match, which is only in v0.14+"
     (set (make-local-variable 'compilation-error-regexp-alist) (list smbl))
     (set (make-local-variable 'compilation-error-regexp-alist-alist) (list (cons smbl pttrn)))
     (set (make-local-variable 'compilation-error-face)
-         ag-match-face))
+         ag-hit-face))
   (add-hook 'compilation-filter-hook 'ag-filter nil t))
 
 (defun ag/s-join (separator strings)
