@@ -54,6 +54,11 @@ that you can't do otherwise.
 
 ## Changelog
 
+### 0.22
+
+The keys `n` and `p` now move between matches, similar to the
+behaviour of dired.
+
 ### 0.21
 
 Added a new face `ag-hit-face` to distinguish from `ag-match-face`.

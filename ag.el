@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.21
+;; Version: 0.22
 
 ;;; Commentary:
 
@@ -89,6 +89,9 @@ This requires the ag command to support --color-match, which is only in v0.14+"
     (set (make-local-variable 'compilation-error-face)
          ag-hit-face))
   (add-hook 'compilation-filter-hook 'ag-filter nil t))
+
+(define-key ag-mode-map (kbd "p") 'compilation-previous-error)
+(define-key ag-mode-map (kbd "n") 'compilation-next-error)
 
 (defun ag/s-join (separator strings)
   "Join all the strings in STRINGS with SEPARATOR in between."
