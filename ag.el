@@ -132,11 +132,13 @@ Otherwise, get the symbol at point."
 
 (autoload 'vc-git-root "vc-git")
 (autoload 'vc-svn-root "vc-svn")
+(autoload 'vc-hg-root "vc-hg")
 
 (defun ag/project-root (file-path)
   "Guess the project root of the given FILE-PATH."
   (or (vc-git-root file-path)
       (vc-svn-root file-path)
+      (vc-hg-root file-path)
       file-path))
 
 ;;;###autoload
@@ -177,7 +179,7 @@ for the given regexp."
   "Same as ``ag-regexp-project'', but with the search regexp defaulting
 to the symbol under point."
    (interactive (list (read-from-minibuffer "Search regexp: " (ag/dwim-at-point))))
-   
+
    (ag/search regexp (ag/project-root default-directory) t))
 
 ;; Taken from grep-filter, just changed the color regex.
