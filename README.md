@@ -54,6 +54,11 @@ that you can't do otherwise.
 
 ## Changelog
 
+### 0.23
+
+ag.el now detects the project root for Mercurial repositories in the
+`ag-project*` commands.
+
 ### 0.22
 
 The keys `n` and `p` now move between matches, similar to the
