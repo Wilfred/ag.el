@@ -44,6 +44,10 @@ in your Emacs configuration:
         (setq exec-path (split-string path-from-shell path-separator))))
 
     (set-exec-path-from-shell-PATH)
+
+### Hooks
+
+ag.el provides `ag-mode-hook` which is run when you start a search.
     
 ### Using ag in elisp functions
 
