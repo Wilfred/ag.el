@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.24
+;; Version: 0.23
 
 ;;; Commentary:
 
@@ -64,11 +64,6 @@ This requires the ag command to support --color-match, which is only in v0.14+"
   :type 'boolean
   :group 'ag)
 
-(defcustom ag-started-hook nil
-  "List of hook functions run when an ag search is started."
-  :type 'hook
-  :group 'ag)
-
 (require 'compile)
 
 ;; Although ag results aren't exactly errors, we treat them as errors
@@ -112,9 +107,7 @@ This requires the ag command to support --color-match, which is only in v0.14+"
 
 (defun ag/search (string directory &optional regexp)
   "Run ag searching for the STRING given in DIRECTORY.
-If REGEXP is non-nil, treat STRING as a regular expression.
-
-Runs `ag-started-hook' once the search has started."
+If REGEXP is non-nil, treat STRING as a regular expression."
   (let ((default-directory (file-name-as-directory directory))
         (arguments (if regexp
                        ag-arguments
@@ -127,8 +120,7 @@ Runs `ag-started-hook' once the search has started."
     (compilation-start
      (ag/s-join " "
                 (append '("ag") arguments (list (ag/shell-quote string))))
-     'ag-mode)
-    (run-hooks 'ag-started-hook)))
+     'ag-mode)))
 
 (defun ag/dwim-at-point ()
   "If there's an active selection, return that.
