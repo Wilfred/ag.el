@@ -54,6 +54,11 @@ that you can't do otherwise.
 
 ## Changelog
 
+### 0.24
+
+Added a hook `ag-started-hook` that is run when ag searches are
+initiated.
+
 ### 0.23
 
 ag.el now detects the project root for Mercurial repositories in the
