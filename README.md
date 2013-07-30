@@ -56,6 +56,15 @@ function. `ag/FOO` functions are private and are more likely to
 change. Please file a bug if you find a use for internal functions
 that you can't do otherwise.
 
+### Editing the results inline
+
+[wgrep](https://github.com/mhayashi1120/Emacs-wgrep) has support for
+ag.el. If you install wgrep-ag
+([soon to be available](https://github.com/milkypostman/melpa/pull/911)
+on MELPA), you can simply run `wgrep-change-to-wgrep-mode` and edit
+the `*ag*` buffer. Press `C-x C-s` when you're done to make the
+changes to buffers.
+
 ## Changelog
 
 ### 0.23
