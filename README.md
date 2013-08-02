@@ -60,10 +60,10 @@ that you can't do otherwise.
 
 [wgrep](https://github.com/mhayashi1120/Emacs-wgrep) has support for
 ag.el. If you install wgrep-ag
-([soon to be available](https://github.com/milkypostman/melpa/pull/911)
-on MELPA), you can simply run `wgrep-change-to-wgrep-mode` and edit
-the `*ag*` buffer. Press `C-x C-s` when you're done to make the
-changes to buffers.
+([available on MELPA](http://melpa.milkbox.net/?#wgrep-ag)), you can
+simply run `wgrep-change-to-wgrep-mode` and edit the `*ag*`
+buffer. Press `C-x C-s` when you're done to make the changes to
+buffers.
 
 ## Changelog
 
