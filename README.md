@@ -67,6 +67,11 @@ buffers.
 
 ## Changelog
 
+### 0.24
+
+Search results buffers now take the form `*ag text:something
+dir:~/some/path*`, so new searches will create new buffers.
+
 ### 0.23
 
 ag.el now detects the project root for Mercurial repositories in the
