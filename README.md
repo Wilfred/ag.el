@@ -6,6 +6,34 @@ A simple ag frontend, loosely based on ack-and-half.el.
 
 [![screen_thumb](https://f.cloud.github.com/assets/70800/239876/738b5bd8-88d8-11e2-96a1-606e8d17d5ba.png)](https://f.cloud.github.com/assets/70800/239871/d8421a54-88d7-11e2-9cc0-df569b228888.png)
 
+## Usage
+
+### Installation
+
+You can install ag.el from [MELPA](http://melpa.milkbox.net/) or
+[Marmalade](http://marmalade-repo.org/packages/ag/0.24). Just
+run `M-x package-install RET ag RET`. Functions are autoloaded, so
+`(require 'ag)` is unnecessary.
+
+If you want to install it manually, add the following to your
+.emacs.d:
+
+    (add-to-list 'load-path "/path/to/ag.el")
+    (require 'ag)
+
+### Running a search
+
+You will now have the following interactive commands available for performing
+searches:
+
+* `ag`
+* `ag-regexp`
+* `ag-project`
+* `ag-project-regexp`
+
+`*-project` commands automatically choose the directory to search,
+automatically detecting git, Subversion and Mercurial project roots.
+
 ## Configuration
 
 ### Highlighting results
