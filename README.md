@@ -138,6 +138,13 @@ buffers.
 
 ## Changelog
 
+### 0.25
+
+Added commands `ag-kill-buffers` and `ag-kill-other-buffers` to
+close old search result buffers. Also added a customisable variable
+`ag-reuse-buffers` so users can optionally stop ag.el creating
+multiple buffers.
+
 ### 0.24
 
 Search results buffers now take the form `*ag text:something
