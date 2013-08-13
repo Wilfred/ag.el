@@ -188,6 +188,25 @@ to the symbol under point."
 
    (ag/search regexp (ag/project-root default-directory) t))
 
+;;;###autoload
+(defun ag-kill-buffers ()
+  "Kill all ag-mode buffers."
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (when (eq (buffer-local-value 'major-mode buffer) 'ag-mode)
+      (kill-buffer buffer))))
+
+;;;###autoload
+(defun ag-kill-other-buffers ()
+  "Kill all ag-mode buffers other than the current buffer."
+  (interactive)
+  (let ((current-buffer (current-buffer)))
+    (dolist (buffer (buffer-list))
+      (when (and
+             (eq (buffer-local-value 'major-mode buffer) 'ag-mode)
+             (not (eq buffer current-buffer)))
+        (kill-buffer buffer)))))
+
 ;; Taken from grep-filter, just changed the color regex.
 (defun ag-filter ()
   "Handle match highlighting escape sequences inserted by the ag process.

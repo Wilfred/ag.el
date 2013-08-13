@@ -76,6 +76,14 @@ in your Emacs configuration:
 ### Hooks
 
 ag.el provides `ag-mode-hook` which is run when you start a search.
+
+### Multiple search buffers
+
+Ag.el provides the interactive commands for closing old search
+buffers:
+
+* `ag-kill-buffers`
+* `ag-kill-other-buffers`
     
 ### Using ag in elisp functions
 
