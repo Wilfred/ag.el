@@ -84,6 +84,11 @@ buffers:
 
 * `ag-kill-buffers`
 * `ag-kill-other-buffers`
+
+Alternatively, you can make ag.el reuse the same `*ag*` buffer for all
+your searches:
+
+    (setq ag-reuse-buffers 't)
     
 ### Using ag in elisp functions
 

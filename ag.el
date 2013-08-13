@@ -64,6 +64,12 @@ This requires the ag command to support --color-match, which is only in v0.14+"
   :type 'boolean
   :group 'ag)
 
+(defcustom ag-reuse-buffers nil
+  "Non-nil means we reuse the existing search results buffer, rather than
+creating one buffer per unique search."
+  :type 'boolean
+  :group 'ag)
+
 (require 'compile)
 
 ;; Although ag results aren't exactly errors, we treat them as errors
@@ -94,9 +100,10 @@ This requires the ag command to support --color-match, which is only in v0.14+"
 (define-key ag-mode-map (kbd "n") 'compilation-next-error)
 
 (defun ag/buffer-name (search-string directory regexp)
-  (if regexp
-      (format "*ag regexp:%s dir:%s*" search-string directory)
-    (format "*ag text:%s dir:%s*" search-string directory)))
+  (cond
+   (ag-reuse-buffers "*ag*")
+   (regexp (format "*ag regexp:%s dir:%s*" search-string directory))
+   (:else (format "*ag text:%s dir:%s*" search-string directory))))
 
 (defun ag/s-join (separator strings)
   "Join all the strings in STRINGS with SEPARATOR in between."
