@@ -1,3 +1,33 @@
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [ag.el](#agel)
+	- [Screenshot](#screenshot)
+	- [Usage](#usage)
+		- [Installation](#installation)
+		- [Running a search](#running-a-search)
+	- [Configuration](#configuration)
+		- [Highlighting results](#highlighting-results)
+		- [Path to the ag executable](#path-to-the-ag-executable)
+		- [Hooks](#hooks)
+		- [Multiple search buffers](#multiple-search-buffers)
+		- [Using ag in elisp functions](#using-ag-in-elisp-functions)
+		- [Editing the results inline](#editing-the-results-inline)
+	- [Changelog](#changelog)
+		- [0.24](#024)
+		- [0.23](#023)
+		- [0.22](#022)
+		- [0.21](#021)
+		- [0.20](#020)
+		- [0.19](#019)
+		- [0.18](#018)
+		- [0.17](#017)
+		- [0.16](#016)
+		- [0.15](#015)
+		- [0.14](#014)
+		- [0.13](#013)
+	- [Alternatives](#alternatives)
+	- [Todo](#todo)
+
 # ag.el
 
 A simple ag frontend, loosely based on ack-and-half.el.
