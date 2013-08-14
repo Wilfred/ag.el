@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.25
+;; Version: 0.26
 
 ;;; Commentary:
 
@@ -133,7 +133,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
      (ag/s-join " "
                 (append '("ag") arguments (list (ag/shell-quote string))))
      'ag-mode
-     (lambda (mode-name) (ag/buffer-name string directory regexp)))))
+     `(lambda (mode-name) ,(ag/buffer-name string directory regexp)))))
 
 (defun ag/dwim-at-point ()
   "If there's an active selection, return that.

@@ -13,6 +13,8 @@
 		- [Using ag in elisp functions](#using-ag-in-elisp-functions)
 		- [Editing the results inline](#editing-the-results-inline)
 	- [Changelog](#changelog)
+		- [0.26](#026)
+		- [0.25](#025)
 		- [0.24](#024)
 		- [0.23](#023)
 		- [0.22](#022)
@@ -137,6 +139,10 @@ buffer. Press `C-x C-s` when you're done to make the changes to
 buffers.
 
 ## Changelog
+
+### 0.26
+
+Fixed a crash when refreshing a search buffer by pressing `g`.
 
 ### 0.25
 
