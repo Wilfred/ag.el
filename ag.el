@@ -138,11 +138,11 @@ If REGEXP is non-nil, treat STRING as a regular expression."
 (defun ag/dwim-at-point ()
   "If there's an active selection, return that.
 Otherwise, get the symbol at point."
-  (if (use-region-p)
-      (buffer-substring-no-properties (region-beginning) (region-end))
-    (if (symbol-at-point)
-        (substring-no-properties
-         (symbol-name (symbol-at-point))))))
+  (cond ((use-region-p)
+         (buffer-substring-no-properties (region-beginning) (region-end)))
+        ((symbol-at-point)
+         (substring-no-properties
+          (symbol-name (symbol-at-point))))))
 
 (autoload 'vc-git-root "vc-git")
 (autoload 'vc-svn-root "vc-svn")
