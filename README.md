@@ -140,6 +140,13 @@ buffers.
 
 ## Changelog
 
+### 0.27
+
+Ag.el autopopulates the minibuffer with the text at point, or the
+active selection. If this text was read-only, the minibuffer text
+would also be read-only. It's now always possible to edit the text in
+the minibuffer.
+
 ### 0.26
 
 Fixed a crash when refreshing a search buffer by pressing `g`.
