@@ -141,7 +141,8 @@ Otherwise, get the symbol at point."
   (if (use-region-p)
       (buffer-substring-no-properties (region-beginning) (region-end))
     (if (symbol-at-point)
-        (symbol-name (symbol-at-point)))))
+        (substring-no-properties
+         (symbol-name (symbol-at-point))))))
 
 (autoload 'vc-git-root "vc-git")
 (autoload 'vc-svn-root "vc-svn")
