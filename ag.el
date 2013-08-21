@@ -12,7 +12,7 @@
 
 ;; Usage:
 
-;; Add you to your .emacs.d:
+;; Add to your .emacs.d:
 
 ;; (add-to-list 'load-path "/path/to/ag.el") ;; optional
 ;; (require 'ag)
