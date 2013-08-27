@@ -66,6 +66,24 @@ searches:
 `*-project` commands automatically choose the directory to search,
 automatically detecting git, Subversion and Mercurial project roots.
 
+### The results buffer
+
+In the search results buffer, you can move between results by pressing
+`n` and `p`, and you can visit the file by pressing `<return>` or
+clicking.
+
+You can run the search again by pressing `g`, or close the buffer with `q`.
+
+You can activate `next-error-follow-minor-mode` with `C-c C-f`. With
+this minor mode enabled, moving in the results buffer will make Emacs
+automatically display the search result at point.
+
+If you've [configured wgrep](#editing-the-results-inline) you can use
+`C-c C-p` to make the buffer writable and edit the results inline.
+
+Of course, `C-h m` inside a results buffer witll show all the
+keybindings available to you.
+
 ## Configuration
 
 ### Highlighting results
