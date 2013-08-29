@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.27
+;; Version: 0.28
 
 ;;; Commentary:
 
@@ -50,6 +50,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Code:
+(eval-when-compile (require 'cl)) ;; dolist
 
 (defcustom ag-arguments
   (list "--smart-case" "--nogroup" "--column" "--")
@@ -144,15 +145,28 @@ Otherwise, get the symbol at point."
          (substring-no-properties
           (symbol-name (symbol-at-point))))))
 
+(defun ag/longest-string (&rest strings)
+  "Given a list of strings and nils, return the longest string."
+  (let ((longest-string nil))
+    (dolist (string strings)
+      (cond ((null longest-string)
+             (setq longest-string string))
+            ((stringp string)
+             (when (< (length longest-string)
+                      (length string))
+               (setq longest-string string)))))
+    longest-string))
+
 (autoload 'vc-git-root "vc-git")
 (autoload 'vc-svn-root "vc-svn")
 (autoload 'vc-hg-root "vc-hg")
 
 (defun ag/project-root (file-path)
   "Guess the project root of the given FILE-PATH."
-  (or (vc-git-root file-path)
-      (vc-svn-root file-path)
-      (vc-hg-root file-path)
+  (or (ag/longest-string
+       (vc-git-root file-path)
+       (vc-svn-root file-path)
+       (vc-hg-root file-path))
       file-path))
 
 ;;;###autoload

@@ -160,6 +160,13 @@ buffers.
 
 ## Changelog
 
+### 0.28
+
+`-project` functions now handle the case of multiple nested VCS
+repositories. Ag.el now takes the most deepest subdirectory, so if
+`/foo/bar` is a subversion repo that contains a git repo
+`/foo/bar/baz`, ag.el will search `/foo/bar/baz`.
+
 ### 0.27
 
 Ag.el autopopulates the minibuffer with the text at point, or the
