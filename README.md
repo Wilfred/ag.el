@@ -125,6 +125,14 @@ in your Emacs configuration:
 
     (set-exec-path-from-shell-PATH)
 
+### Visiting the results
+
+By default, ag.el will open results in a different window in the
+frame, so the results buffer is still visible. You can override this
+so the results buffer is hidden and the selected result is shown in its place:
+
+    (setq ag-reuse-window 't)
+
 ### Hooks
 
 ag.el provides `ag-mode-hook` which is run when you start a search.
@@ -159,6 +167,12 @@ buffer. Press `C-x C-s` when you're done to make the changes to
 buffers.
 
 ## Changelog
+
+### 0.29
+
+Added customisable variable `ag-reuse-window`. If set to `t` (defaults
+to `nil`) then selecting a search result hides the results buffer and
+shows the match, rather than using a different window in the frame.
 
 ### 0.28
 

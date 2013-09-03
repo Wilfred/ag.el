@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.28
+;; Version: 0.29
 
 ;;; Commentary:
 
@@ -50,7 +50,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Code:
-(eval-when-compile (require 'cl)) ;; dolist
+(eval-when-compile (require 'cl)) ;; dolist, flet
 
 (defcustom ag-arguments
   (list "--smart-case" "--nogroup" "--column" "--")
@@ -71,6 +71,12 @@ creating one buffer per unique search."
   :type 'boolean
   :group 'ag)
 
+(defcustom ag-reuse-window nil
+  "Non-nil means we open search results in the same window,
+hiding the results buffer."
+  :type 'boolean
+  :group 'ag)
+
 (require 'compile)
 
 ;; Although ag results aren't exactly errors, we treat them as errors
@@ -83,6 +89,17 @@ creating one buffer per unique search."
 (defvar ag-match-face 'match
   "Face name to use for ag matches.")
 
+(defun ag/next-error-function (n &optional reset)
+  "Open the search result at point in the current window or a
+different window, according to `ag-open-in-other-window'."
+  (if ag-reuse-window
+      ;; prevent changing the window
+      (flet ((pop-to-buffer (buffer &rest args)
+                            (switch-to-buffer buffer)))
+        (compilation-next-error-function n reset))
+    ;; just navigate to the results as normal
+    (compilation-next-error-function n reset)))
+
 (define-compilation-mode ag-mode "Ag"
   "Ag results compilation mode"
   (let ((smbl  'compilation-ag-nogroup)
@@ -92,9 +109,9 @@ creating one buffer per unique search."
         ;; in file names.
         (pttrn '("^\\([^:\n]+?\\):\\([1-9][0-9]*\\):\\([1-9][0-9]*\\):" 1 2 3)))
     (set (make-local-variable 'compilation-error-regexp-alist) (list smbl))
-    (set (make-local-variable 'compilation-error-regexp-alist-alist) (list (cons smbl pttrn)))
-    (set (make-local-variable 'compilation-error-face)
-         ag-hit-face))
+    (set (make-local-variable 'compilation-error-regexp-alist-alist) (list (cons smbl pttrn))))
+  (set (make-local-variable 'compilation-error-face) ag-hit-face)
+  (set (make-local-variable 'next-error-function) 'ag/next-error-function)
   (add-hook 'compilation-filter-hook 'ag-filter nil t))
 
 (define-key ag-mode-map (kbd "p") 'compilation-previous-error)
