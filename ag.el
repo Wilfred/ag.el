@@ -123,17 +123,9 @@ different window, according to `ag-open-in-other-window'."
    (regexp (format "*ag regexp:%s dir:%s*" search-string directory))
    (:else (format "*ag text:%s dir:%s*" search-string directory))))
 
-(defun ag/s-join (separator strings)
-  "Join all the strings in STRINGS with SEPARATOR in between."
-  (mapconcat 'identity strings separator))
-
 (defun ag/s-replace (old new s)
   "Replace all occurrences of OLD in NEW in S."
   (replace-regexp-in-string (regexp-quote old) new s t t))
-
-(defun ag/shell-quote (string)
-  "Wrap STRING in single quotes, and quote existing single quotes to make shell safe."
-  (concat "'" (ag/s-replace "'" "'\\''" string) "'"))
 
 (defun ag/search (string directory &optional regexp)
   "Run ag searching for the STRING given in DIRECTORY.
@@ -143,13 +135,14 @@ If REGEXP is non-nil, treat STRING as a regular expression."
                        ag-arguments
                      (cons "--literal" ag-arguments))))
     (if ag-highlight-search
-        (setq arguments (append '("--color" "--color-match" "'30;43'") arguments))
+        (setq arguments (append '("--color" "--color-match" "30;43") arguments))
       (setq arguments (append '("--nocolor") arguments)))
     (unless (file-exists-p default-directory)
       (error "No such directory %s" default-directory))
     (compilation-start
-     (ag/s-join " "
-                (append '("ag") arguments (list (ag/shell-quote string))))
+     (mapconcat 'shell-quote-argument
+                (append '("ag") arguments (list string))
+                " ")
      'ag-mode
      `(lambda (mode-name) ,(ag/buffer-name string directory regexp)))))
 
