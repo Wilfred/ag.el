@@ -123,10 +123,6 @@ different window, according to `ag-open-in-other-window'."
    (regexp (format "*ag regexp:%s dir:%s*" search-string directory))
    (:else (format "*ag text:%s dir:%s*" search-string directory))))
 
-(defun ag/s-replace (old new s)
-  "Replace all occurrences of OLD in NEW in S."
-  (replace-regexp-in-string (regexp-quote old) new s t t))
-
 (defun ag/search (string directory &optional regexp)
   "Run ag searching for the STRING given in DIRECTORY.
 If REGEXP is non-nil, treat STRING as a regular expression."
