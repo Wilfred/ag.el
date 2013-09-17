@@ -168,6 +168,10 @@ buffers.
 
 ## Changelog
 
+### 0.30
+
+Improved quoting of arguments passed to ag.
+
 ### 0.29
 
 Added customisable variable `ag-reuse-window`. If set to `t` (defaults
