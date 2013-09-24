@@ -9,11 +9,16 @@
 	- [Configuration](#configuration)
 		- [Highlighting results](#highlighting-results)
 		- [Path to the ag executable](#path-to-the-ag-executable)
+		- [Visiting the results](#visiting-the-results)
 		- [Hooks](#hooks)
 		- [Multiple search buffers](#multiple-search-buffers)
 		- [Using ag in elisp functions](#using-ag-in-elisp-functions)
 		- [Editing the results inline](#editing-the-results-inline)
 	- [Changelog](#changelog)
+		- [0.31](#031)
+		- [0.30](#030)
+		- [0.29](#029)
+		- [0.28](#028)
 		- [0.27](#027)
 		- [0.26](#026)
 		- [0.25](#025)
@@ -167,6 +172,11 @@ buffer. Press `C-x C-s` when you're done to make the changes to
 buffers.
 
 ## Changelog
+
+### 0.31
+
+Ag.el faces (which are `ag-match-face` and `ag-hit-face`x) are defined
+with `defface`, so you can use `customize-face` on them.
 
 ### 0.30
 
