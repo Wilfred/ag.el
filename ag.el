@@ -83,11 +83,13 @@ hiding the results buffer."
 ;; so `next-error' and `previous-error' work. However, we ensure our
 ;; face inherits from `compilation-info-face' so the results are
 ;; styled appropriately.
-(defvar ag-hit-face compilation-info-face
-  "Face name to use for ag matches.")
+(defface ag-hit-face '((t :inherit compilation-info))
+  "Face name to use for ag matches."
+  :group 'ag)
 
-(defvar ag-match-face 'match
-  "Face name to use for ag matches.")
+(defface ag-match-face '((t :inherit match))
+  "Face name to use for ag matches."
+  :group 'ag)
 
 (defun ag/next-error-function (n &optional reset)
   "Open the search result at point in the current window or a
@@ -110,7 +112,7 @@ different window, according to `ag-open-in-other-window'."
         (pttrn '("^\\([^:\n]+?\\):\\([1-9][0-9]*\\):\\([1-9][0-9]*\\):" 1 2 3)))
     (set (make-local-variable 'compilation-error-regexp-alist) (list smbl))
     (set (make-local-variable 'compilation-error-regexp-alist-alist) (list (cons smbl pttrn))))
-  (set (make-local-variable 'compilation-error-face) ag-hit-face)
+  (set (make-local-variable 'compilation-error-face) 'ag-hit-face)
   (set (make-local-variable 'next-error-function) 'ag/next-error-function)
   (add-hook 'compilation-filter-hook 'ag-filter nil t))
 
@@ -253,7 +255,7 @@ This function is called from `compilation-filter-hook'."
           ;; Highlight ag matches and delete marking sequences.
           (while (re-search-forward "\033\\[30;43m\\(.*?\\)\033\\[[0-9]*m" end 1)
             (replace-match (propertize (match-string 1)
-                                       'face nil 'font-lock-face ag-match-face)
+                                       'face nil 'font-lock-face 'ag-match-face)
                            t t))
           ;; Delete all remaining escape sequences
           (goto-char beg)
