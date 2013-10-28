@@ -59,6 +59,18 @@ hiding the results buffer."
   :type 'boolean
   :group 'ag)
 
+(defcustom ag-project-root-function nil
+  "A function to determine the project root for `ag-project'.
+
+If set to a function, call this function with the name of the
+file or directory for which to determine the project root
+directory.
+
+If set to nil, fall back to finding VCS root directories."
+  :type '(choice (const :tag "Default (VCS root)" nil)
+                 (function :tag "Function"))
+  :group 'ag)
+
 (require 'compile)
 
 ;; Although ag results aren't exactly errors, we treat them as errors
@@ -152,12 +164,17 @@ Otherwise, get the symbol at point."
 (autoload 'vc-hg-root "vc-hg")
 
 (defun ag/project-root (file-path)
-  "Guess the project root of the given FILE-PATH."
-  (or (ag/longest-string
+  "Guess the project root of the given FILE-PATH.
+
+Use `ag-project-root-function' if set, or fall back to VCS
+roots."
+  (if ag-project-root-function
+      (funcall ag-project-root-function file-path)
+    (or (ag/longest-string
        (vc-git-root file-path)
        (vc-svn-root file-path)
        (vc-hg-root file-path))
-      file-path))
+      file-path)))
 
 ;;;###autoload
 (defun ag (string directory)
