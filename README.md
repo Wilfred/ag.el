@@ -12,6 +12,7 @@
 		- [Visiting the results](#visiting-the-results)
 		- [Hooks](#hooks)
 		- [Multiple search buffers](#multiple-search-buffers)
+		- [Customising the project root](#customising-the-project-root)
 		- [Using ag in elisp functions](#using-ag-in-elisp-functions)
 		- [Editing the results inline](#editing-the-results-inline)
 	- [Changelog](#changelog)
@@ -135,6 +136,12 @@ Alternatively, you can make ag.el reuse the same `*ag*` buffer for all
 your searches:
 
     (setq ag-reuse-buffers 't)
+
+### Customising the project root
+
+By default, `ag-project` and `ag-project-regexp` use the root of the
+VCS repo as the directory to search in. You can override this by
+setting or customising `ag-project-root-function`.
     
 ### Using ag in elisp functions
 
@@ -153,6 +160,11 @@ buffer. Press `C-x C-s` when you're done to make the changes to
 buffers.
 
 ## Changelog
+
+### 0.32
+
+Adding `ag-project-root-function` which allows users to override how
+ag.el finds the root of a project.
 
 ### 0.31
 
