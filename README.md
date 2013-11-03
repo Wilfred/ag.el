@@ -161,6 +161,11 @@ buffers.
 
 ## Changelog
 
+### 0.33
+
+Fixed a bug with ag.el not searching if `shell-command-switch` had
+been modified by the user.
+
 ### 0.32
 
 Adding `ag-project-root-function` which allows users to override how

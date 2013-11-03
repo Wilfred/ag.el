@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.32
+;; Version: 0.33
 
 ;;; Commentary:
 
@@ -125,7 +125,8 @@ If REGEXP is non-nil, treat STRING as a regular expression."
   (let ((default-directory (file-name-as-directory directory))
         (arguments (if regexp
                        ag-arguments
-                     (cons "--literal" ag-arguments))))
+                     (cons "--literal" ag-arguments)))
+        (shell-command-switch "-c"))
     (if ag-highlight-search
         (setq arguments (append '("--color" "--color-match" "30;43") arguments))
       (setq arguments (append '("--nocolor") arguments)))
