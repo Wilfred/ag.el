@@ -161,6 +161,11 @@ buffers.
 
 ## Changelog
 
+### 0.34
+
+Specifying the path as an argument to ag, allowing ag.el to do
+searches on Windows.
+
 ### 0.33
 
 Fixed a bug with ag.el not searching if `shell-command-switch` had
