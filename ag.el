@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.34
+;; Version: 0.35
 
 ;;; Commentary:
 
@@ -32,7 +32,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Code:
-(eval-when-compile (require 'cl)) ;; dolist, flet
+(eval-when-compile (require 'cl)) ;; dolist, defun*, flet
 
 (defcustom ag-arguments
   (list "--smart-case" "--nogroup" "--column" "--")
@@ -119,7 +119,8 @@ different window, according to `ag-open-in-other-window'."
    (regexp (format "*ag regexp:%s dir:%s*" search-string directory))
    (:else (format "*ag text:%s dir:%s*" search-string directory))))
 
-(defun ag/search (string directory &optional regexp)
+(defun* ag/search (string directory
+                          &key (regexp nil) (file-regex nil))
   "Run ag searching for the STRING given in DIRECTORY.
 If REGEXP is non-nil, treat STRING as a regular expression."
   (let ((default-directory (file-name-as-directory directory))
@@ -130,6 +131,8 @@ If REGEXP is non-nil, treat STRING as a regular expression."
     (if ag-highlight-search
         (setq arguments (append '("--color" "--color-match" "30;43") arguments))
       (setq arguments (append '("--nocolor") arguments)))
+    (when (char-or-string-p file-regex)
+      (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
     (unless (file-exists-p default-directory)
       (error "No such directory %s" default-directory))
     (compilation-start
@@ -147,6 +150,15 @@ Otherwise, get the symbol at point."
         ((symbol-at-point)
          (substring-no-properties
           (symbol-name (symbol-at-point))))))
+
+(defun ag/buffer-extension-regex ()
+  "If the current buffer has an extension, return
+a PCRE pattern that matches files with that extension.
+Returns an empty string otherwise."
+  (let ((file-name (buffer-file-name)))
+    (if (stringp file-name)
+        (format "\\.%s" (file-name-extension file-name))
+      "")))
 
 (defun ag/longest-string (&rest strings)
   "Given a list of strings and nils, return the longest string."
@@ -186,10 +198,19 @@ with STRING defaulting to the symbol under point."
    (ag/search string directory))
 
 ;;;###autoload
+(defun ag-files (string file-regex directory)
+  "Search using ag in a given DIRECTORY and file type regex FILE-REGEX
+for a given search STRING, with STRING defaulting to the symbol under point."
+  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+                     (read-from-minibuffer "In filenames matching PCRE: " (ag/buffer-extension-regex))
+                     (read-directory-name "Directory: ")))
+  (ag/search string directory :file-regex file-regex))
+
+;;;###autoload
 (defun ag-regexp (string directory)
   "Search using ag in a given directory for a given regexp."
   (interactive "sSearch regexp: \nDDirectory: ")
-  (ag/search string directory t))
+  (ag/search string directory :regexp t))
 
 ;;;###autoload
 (defun ag-project (string)
@@ -197,6 +218,14 @@ with STRING defaulting to the symbol under point."
 for the given string."
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
   (ag/search string (ag/project-root default-directory)))
+
+;;;###autoload
+(defun ag-project-files (string file-regex)
+  "Search using ag in a given DIRECTORY and file type regex FILE-REGEX
+for a given search STRING, with STRING defaulting to the symbol under point."
+  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+                     (read-from-minibuffer "In filenames matching PCRE: " (ag/buffer-extension-regex))))
+  (ag/search string (ag/project-root default-directory) :file-regex file-regex))
 
 ;;;###autoload
 (defun ag-project-regexp (regexp)

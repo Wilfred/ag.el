@@ -48,12 +48,19 @@ You will now have the following interactive commands available for performing
 searches:
 
 * `ag`
+* `ag-files`
 * `ag-regexp`
 * `ag-project`
+* `ag-project-files`
 * `ag-project-regexp`
 
 `*-project` commands automatically choose the directory to search,
 automatically detecting git, Subversion and Mercurial project roots.
+
+`*-files` commands allow you to specify a PCRE pattern for files to
+search in. By default, ag searches in all files. Note that in both
+cases, ag ignores files that are ignored by your VCS (e.g. things
+mentioned in .gitignore).
 
 ### The results buffer
 
@@ -160,6 +167,15 @@ buffer. Press `C-x C-s` when you're done to make the changes to
 buffers.
 
 ## Changelog
+
+### 0.35
+
+Added the `ag-files` and `ag-project-files` commands.
+
+Note that the *internal API changed* in this release: `ag/search` now
+takes `regexp` as a keyword argument instead of a positional
+argument. I'm not aware of any external packages depending on this, so
+I'm not incrementing the major version.
 
 ### 0.34
 
