@@ -16,6 +16,7 @@
     - [Customising the project root](#customising-the-project-root)
     - [Using ag in elisp functions](#using-ag-in-elisp-functions)
     - [Editing the results inline](#editing-the-results-inline)
+  - [Changelog](#changelog)
   - [Alternatives](#alternatives)
   - [Todo](#todo)
 
