@@ -1,23 +1,23 @@
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+**Table of Contents** *generated with [autotoc](https://github.com/Wilfred/autotoc)*
 
 - [ag.el](#agel)
-	- [Screenshot](#screenshot)
-	- [Usage](#usage)
-		- [Installation](#installation)
-		- [Running a search](#running-a-search)
-		- [The results buffer](#the-results-buffer)
-	- [Configuration](#configuration)
-		- [Highlighting results](#highlighting-results)
-		- [Path to the ag executable](#path-to-the-ag-executable)
-		- [Visiting the results](#visiting-the-results)
-		- [Hooks](#hooks)
-		- [Multiple search buffers](#multiple-search-buffers)
-		- [Customising the project root](#customising-the-project-root)
-		- [Using ag in elisp functions](#using-ag-in-elisp-functions)
-		- [Editing the results inline](#editing-the-results-inline)
-	- [Changelog](#changelog)
-	- [Alternatives](#alternatives)
-	- [Todo](#todo)
+  - [Screenshot](#screenshot)
+  - [Usage](#usage)
+    - [Installation](#installation)
+    - [Running a search](#running-a-search)
+    - [The results buffer](#the-results-buffer)
+  - [Configuration](#configuration)
+    - [Highlighting results](#highlighting-results)
+    - [Path to the ag executable](#path-to-the-ag-executable)
+    - [Visiting the results](#visiting-the-results)
+    - [Hooks](#hooks)
+    - [Multiple search buffers](#multiple-search-buffers)
+    - [Using with Projectile](#using-with-projectile)
+    - [Customising the project root](#customising-the-project-root)
+    - [Using ag in elisp functions](#using-ag-in-elisp-functions)
+    - [Editing the results inline](#editing-the-results-inline)
+  - [Alternatives](#alternatives)
+  - [Todo](#todo)
 
 # ag.el
 
@@ -143,6 +143,11 @@ Alternatively, you can make ag.el reuse the same `*ag*` buffer for all
 your searches:
 
     (setq ag-reuse-buffers 't)
+
+### Using with Projectile
+
+[Projectile](https://github.com/bbatsov/projectile) supports ag.el. If
+you have Projectile installed, `C-c p A` runs `ag` on your project.
 
 ### Customising the project root
 
