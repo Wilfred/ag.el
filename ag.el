@@ -232,7 +232,7 @@ for a given search STRING, with STRING defaulting to the symbol under point."
   "Guess the root of the current project and search it with ag
 for the given regexp."
   (interactive "sSearch regexp: ")
-  (ag/search regexp (ag/project-root default-directory) t))
+  (ag/search regexp (ag/project-root default-directory) :regexp t))
 
 (autoload 'symbol-at-point "thingatpt")
 
@@ -245,7 +245,7 @@ for the given regexp."
 to the symbol under point."
    (interactive (list (read-from-minibuffer "Search regexp: " (ag/dwim-at-point))))
 
-   (ag/search regexp (ag/project-root default-directory) t))
+   (ag/search regexp (ag/project-root default-directory) :regexp t))
 
 ;;;###autoload
 (defun ag-kill-buffers ()
