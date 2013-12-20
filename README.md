@@ -174,6 +174,11 @@ buffers.
 
 ## Changelog
 
+### 0.36
+
+Fixed a bug in `ag-regexp` and `ag-project-regexp` due to an internal
+API change (`ag/search` now uses keyword arguments).
+
 ### 0.35
 
 Added the `ag-files` and `ag-project-files` commands.
