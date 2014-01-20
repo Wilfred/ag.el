@@ -320,7 +320,8 @@ of the output.
 
 See also `find-dired'."
   (interactive "DDirectory: \nsFile pattern: ")
-  (let* ((orig-dir dir)
+  (let* ((dired-buffers dired-buffers) ;; do not mess with regular dired buffers
+         (orig-dir dir)
          (dir (file-name-as-directory (expand-file-name dir)))
          (buffer-name (concat "ag-dired pattern:" pattern " dir:" dir))
          (cmd (concat "ag --nocolor -g '" pattern "' " dir " | xargs -r -d '\\n' ls " dired-listing-switches " &")))
