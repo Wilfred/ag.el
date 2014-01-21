@@ -90,7 +90,7 @@ features of `ag` such as automatically ignoring all the vcs files. You
 can search for files matching a pattern using functions
 
 * `ag-dired`
-* `ag-dired-project`
+* `ag-project-dired`
 
 The results are presented as a `dired` buffer. The analogical
 interface to `find` in emacs is `find-dired`.
@@ -190,7 +190,7 @@ buffers.
 
 ### 0.37
 
-Added `ag-dired` and `ag-dired-project` to search for files matching a
+Added `ag-dired` and `ag-project-dired` to search for files matching a
 pattern.
 
 ### 0.36

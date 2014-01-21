@@ -358,7 +358,7 @@ See also `find-dired'."
       (setq mode-line-process '(":%s")))))
 
 ;;;###autoload
-(defun ag-dired-project (pattern)
+(defun ag-project-dired (pattern)
   "Recursively find files in current project matching PATTERN.
 
 See also `ag-dired'."
