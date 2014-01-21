@@ -250,6 +250,19 @@ roots."
              (delete-process ag)
            (error nil)))))
 
+(defun ag/escape-pcre (regexp)
+  "Escape the PCRE-special characters in REGEXP so that it is
+matched literally."
+  (let ((alphanum "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"))
+    (apply 'concat
+            (mapcar
+             (lambda (c)
+               (cond
+                ((not (string-match-p (regexp-quote c) alphanum))
+                 (concat "\\" c))
+                (t c)))
+             (mapcar 'char-to-string (string-to-list regexp))))))
+
 ;;;###autoload
 (defun ag (string directory)
   "Search using ag in a given DIRECTORY for a given search STRING,
@@ -315,16 +328,30 @@ to the symbol under point."
 The PATTERN is matched against the full path to the file, not
 only against the file name.
 
-Basically, run `ag -g PATTERN' and go into Dired mode on a buffer
-of the output.
+The results are presented as a `dired-mode' buffer with
+`default-directory' being DIR.
+
+See also `ag-dired-regexp'."
+  (interactive "DDirectory: \nsFile pattern: ")
+  (ag-dired-regexp dir (ag/escape-pcre pattern)))
+
+;;;###autoload
+(defun ag-dired-regexp (dir regexp)
+  "Recursively find files in DIR matching REGEXP.
+
+The REGEXP is matched against the full path to the file, not
+only against the file name.
+
+The results are presented as a `dired-mode' buffer with
+`default-directory' being DIR.
 
 See also `find-dired'."
-  (interactive "DDirectory: \nsFile pattern: ")
+  (interactive "DDirectory: \nsFile regexp: ")
   (let* ((dired-buffers dired-buffers) ;; do not mess with regular dired buffers
          (orig-dir dir)
          (dir (file-name-as-directory (expand-file-name dir)))
-         (buffer-name (concat "ag-dired pattern:" pattern " dir:" dir))
-         (cmd (concat "ag --nocolor -g '" pattern "' " dir " | xargs -r -d '\\n' ls " dired-listing-switches " &")))
+         (buffer-name (concat "ag-dired pattern:" regexp " dir:" dir))
+         (cmd (concat "ag --nocolor -g '" regexp "' " dir " | xargs -r -d '\\n' ls " dired-listing-switches " &")))
     (with-current-buffer (get-buffer-create buffer-name)
       (switch-to-buffer (current-buffer))
       (widen)
@@ -345,7 +372,7 @@ See also `find-dired'."
       (set (make-local-variable 'dired-sort-inhibit) t)
       (set (make-local-variable 'revert-buffer-function)
            `(lambda (ignore-auto noconfirm)
-              (ag-dired ,orig-dir ,pattern)))
+              (ag-dired ,orig-dir ,regexp)))
       (if (fboundp 'dired-simple-subdir-alist)
           (dired-simple-subdir-alist)
         (set (make-local-variable 'dired-subdir-alist)
@@ -363,7 +390,15 @@ See also `find-dired'."
 
 See also `ag-dired'."
   (interactive "sFile pattern: ")
-  (ag-dired (ag/project-root default-directory) pattern))
+  (ag-dired-regexp (ag/project-root default-directory) (ag/escape-pcre pattern)))
+
+;;;###autoload
+(defun ag-project-dired-regexp (regexp)
+  "Recursively find files in current project matching REGEXP.
+
+See also `ag-dired-regexp'."
+  (interactive "sFile regexp: ")
+  (ag-dired-regexp (ag/project-root default-directory) regexp))
 
 ;;;###autoload
 (defun ag-kill-buffers ()
