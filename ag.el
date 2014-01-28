@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.36
+;; Version: 0.37
 
 ;;; Commentary:
 
@@ -189,6 +189,80 @@ roots."
        (vc-hg-root file-path))
       file-path)))
 
+(defun ag/dired-filter (proc string)
+  "Filter the output of ag to make it suitable for `dired-mode'."
+  (let ((buf (process-buffer proc))
+        (inhibit-read-only t))
+    (if (buffer-name buf)
+        (with-current-buffer buf
+          (save-excursion
+            (save-restriction
+              (widen)
+              (let ((beg (point-max)))
+                (goto-char beg)
+                (insert string)
+                (goto-char beg)
+                (or (looking-at "^")
+                    (forward-line 1))
+                (while (looking-at "^")
+                  (insert "  ")
+                  (forward-line 1))
+                (goto-char beg)
+                (beginning-of-line)
+                (replace-string default-directory "")
+                (goto-char (point-max))
+                (if (search-backward "\n" (process-mark proc) t)
+                    (progn
+                      (dired-insert-set-properties (process-mark proc)
+                                                   (1+ (point)))
+                      (move-marker (process-mark proc) (1+ (point)))))))))
+      (delete-process proc))))
+
+(defun ag/dired-sentinel (proc state)
+  "Update the status/modeline after the process finishes."
+  (let ((buf (process-buffer proc))
+        (inhibit-read-only t))
+    (if (buffer-name buf)
+        (with-current-buffer buf
+          (let ((buffer-read-only nil))
+            (save-excursion
+              (goto-char (point-max))
+              (insert "\n  ag " state)
+              (forward-char -1)     ;Back up before \n at end of STATE.
+              (insert " at " (substring (current-time-string) 0 19))
+              (forward-char 1)
+              (setq mode-line-process
+                    (concat ":" (symbol-name (process-status proc))))
+              ;; Since the buffer and mode line will show that the
+              ;; process is dead, we can delete it now.  Otherwise it
+              ;; will stay around until M-x list-processes.
+              (delete-process proc)
+              (force-mode-line-update)))
+          (message "%s finished." (current-buffer))))))
+
+(defun ag/kill-process ()
+  "Kill the `ag' process running in the current buffer."
+  (interactive)
+  (let ((ag (get-buffer-process (current-buffer))))
+    (and ag (eq (process-status ag) 'run)
+         (eq (process-filter ag) (function find-dired-filter))
+         (condition-case nil
+             (delete-process ag)
+           (error nil)))))
+
+(defun ag/escape-pcre (regexp)
+  "Escape the PCRE-special characters in REGEXP so that it is
+matched literally."
+  (let ((alphanum "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"))
+    (apply 'concat
+            (mapcar
+             (lambda (c)
+               (cond
+                ((not (string-match-p (regexp-quote c) alphanum))
+                 (concat "\\" c))
+                (t c)))
+             (mapcar 'char-to-string (string-to-list regexp))))))
+
 ;;;###autoload
 (defun ag (string directory)
   "Search using ag in a given DIRECTORY for a given search STRING,
@@ -246,6 +320,85 @@ to the symbol under point."
    (interactive (list (read-from-minibuffer "Search regexp: " (ag/dwim-at-point))))
 
    (ag/search regexp (ag/project-root default-directory) :regexp t))
+
+;;;###autoload
+(defun ag-dired (dir pattern)
+  "Recursively find files in DIR matching PATTERN.
+
+The PATTERN is matched against the full path to the file, not
+only against the file name.
+
+The results are presented as a `dired-mode' buffer with
+`default-directory' being DIR.
+
+See also `ag-dired-regexp'."
+  (interactive "DDirectory: \nsFile pattern: ")
+  (ag-dired-regexp dir (ag/escape-pcre pattern)))
+
+;;;###autoload
+(defun ag-dired-regexp (dir regexp)
+  "Recursively find files in DIR matching REGEXP.
+
+The REGEXP is matched against the full path to the file, not
+only against the file name.
+
+The results are presented as a `dired-mode' buffer with
+`default-directory' being DIR.
+
+See also `find-dired'."
+  (interactive "DDirectory: \nsFile regexp: ")
+  (let* ((dired-buffers dired-buffers) ;; do not mess with regular dired buffers
+         (orig-dir dir)
+         (dir (file-name-as-directory (expand-file-name dir)))
+         (buffer-name (concat "ag-dired pattern:" regexp " dir:" dir))
+         (cmd (concat "ag --nocolor -g '" regexp "' " dir " | xargs -r -d '\\n' ls " dired-listing-switches " &")))
+    (with-current-buffer (get-buffer-create buffer-name)
+      (switch-to-buffer (current-buffer))
+      (widen)
+      (kill-all-local-variables)
+      (if (fboundp 'read-only-mode)
+          (read-only-mode -1)
+        (setq buffer-read-only nil))
+      (let ((inhibit-read-only t)) (erase-buffer))
+      (setq default-directory dir)
+      (shell-command cmd (current-buffer))
+      (insert "  " dir ":\n")
+      (insert "  " cmd "\n")
+      (dired-mode dir)
+      (let ((map (make-sparse-keymap)))
+        (set-keymap-parent map (current-local-map))
+        (define-key map "\C-c\C-k" 'ag/kill-process)
+        (use-local-map map))
+      (set (make-local-variable 'dired-sort-inhibit) t)
+      (set (make-local-variable 'revert-buffer-function)
+           `(lambda (ignore-auto noconfirm)
+              (ag-dired ,orig-dir ,regexp)))
+      (if (fboundp 'dired-simple-subdir-alist)
+          (dired-simple-subdir-alist)
+        (set (make-local-variable 'dired-subdir-alist)
+             (list (cons default-directory (point-min-marker)))))
+      (let ((proc (get-buffer-process (current-buffer))))
+        (set-process-filter proc #'ag/dired-filter)
+        (set-process-sentinel proc #'ag/dired-sentinel)
+        ;; Initialize the process marker; it is used by the filter.
+        (move-marker (process-mark proc) 1 (current-buffer)))
+      (setq mode-line-process '(":%s")))))
+
+;;;###autoload
+(defun ag-project-dired (pattern)
+  "Recursively find files in current project matching PATTERN.
+
+See also `ag-dired'."
+  (interactive "sFile pattern: ")
+  (ag-dired-regexp (ag/project-root default-directory) (ag/escape-pcre pattern)))
+
+;;;###autoload
+(defun ag-project-dired-regexp (regexp)
+  "Recursively find files in current project matching REGEXP.
+
+See also `ag-dired-regexp'."
+  (interactive "sFile regexp: ")
+  (ag-dired-regexp (ag/project-root default-directory) regexp))
 
 ;;;###autoload
 (defun ag-kill-buffers ()

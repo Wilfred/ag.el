@@ -6,6 +6,7 @@
     - [Installation](#installation)
     - [Running a search](#running-a-search)
     - [The results buffer](#the-results-buffer)
+    - [Search for files](#search-for-files)
   - [Configuration](#configuration)
     - [Highlighting results](#highlighting-results)
     - [Path to the ag executable](#path-to-the-ag-executable)
@@ -81,6 +82,21 @@ If you've [configured wgrep](#editing-the-results-inline) you can use
 Of course, `C-h m` inside a results buffer witll show all the
 keybindings available to you.
 
+### Search for files
+
+`ag` supports an option `-g` that lets you to list file names matching
+PCRE patterns. It is analogical to `find`, but comes with all the nice
+features of `ag` such as automatically ignoring all the vcs files. You
+can search for files matching a pattern using functions
+
+* `ag-dired`
+* `ag-dired-regexp`
+* `ag-project-dired`
+* `ag-project-dired-regexp`
+
+The results are presented as a `dired-mode` buffer. The analogical
+interface to `find` in emacs is `find-dired`.
+
 ## Configuration
 
 ### Highlighting results
@@ -155,7 +171,7 @@ you have Projectile installed, `C-c p A` runs `ag` on your project.
 By default, `ag-project` and `ag-project-regexp` use the root of the
 VCS repo as the directory to search in. You can override this by
 setting or customising `ag-project-root-function`.
-    
+
 ### Using ag in elisp functions
 
 You can use `ag`, `ag-project` and so on from an elisp
@@ -173,6 +189,11 @@ buffer. Press `C-x C-s` when you're done to make the changes to
 buffers.
 
 ## Changelog
+
+### 0.37
+
+Added `ag-dired` and `ag-project-dired` to search for files matching a
+pattern.
 
 ### 0.36
 
