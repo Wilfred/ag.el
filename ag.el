@@ -33,6 +33,7 @@
 
 ;;; Code:
 (eval-when-compile (require 'cl)) ;; dolist, defun*, flet
+(require 'dired) ;; dired-sort-inhibit
 
 (defcustom ag-arguments
   (list "--smart-case" "--nogroup" "--column" "--")
