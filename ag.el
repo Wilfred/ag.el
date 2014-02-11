@@ -352,7 +352,7 @@ See also `find-dired'."
          (orig-dir dir)
          (dir (file-name-as-directory (expand-file-name dir)))
          (buffer-name (concat "ag-dired pattern:" regexp " dir:" dir))
-         (cmd (concat "ag --nocolor -g '" regexp "' " dir " | xargs -r -d '\\n' ls " dired-listing-switches " &")))
+         (cmd (concat "ag --nocolor -g '" regexp "' " dir " | grep -v '^$' | xargs -I {} ls " dired-listing-switches " {} &")))
     (with-current-buffer (get-buffer-create buffer-name)
       (switch-to-buffer (current-buffer))
       (widen)
