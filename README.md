@@ -190,6 +190,11 @@ buffers.
 
 ## Changelog
 
+### 0.38
+
+`ag-dired` and `ag-project-dired` should now work on Mac OS X
+(previously we assumed xargs supported GNU extensions).
+
 ### 0.37
 
 Added `ag-dired` and `ag-project-dired` to search for files matching a
