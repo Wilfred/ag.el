@@ -2,8 +2,8 @@
 
 - [ag.el](#agel)
   - [Screenshot](#screenshot)
+  - [Installation](#installation)
   - [Usage](#usage)
-    - [Installation](#installation)
     - [Running a search](#running-a-search)
     - [The results buffer](#the-results-buffer)
     - [Search for files](#search-for-files)
@@ -29,11 +29,18 @@ A simple ag frontend, loosely based on ack-and-half.el.
 
 [![screen_thumb](https://f.cloud.github.com/assets/70800/239876/738b5bd8-88d8-11e2-96a1-606e8d17d5ba.png)](https://f.cloud.github.com/assets/70800/239871/d8421a54-88d7-11e2-9cc0-df569b228888.png)
 
-## Usage
+## Installation
 
-### Installation
+ag.el currently works on Linux, Mac and Windows (with a few minor
+issues[1](https://github.com/Wilfred/ag.el/issues/26)). Patches or bug
+reports for other platforms are welcome.
 
-You can install ag.el from [MELPA](http://melpa.milkbox.net/) or
+First, install the `ag` binary. See
+[the installation instructions](https://github.com/ggreer/the_silver_searcher#installation)
+on ag GitHub repo. A
+[precompiled Windows binary is also available](http://blog.kowalczyk.info/software/the-silver-searcher-for-windows.html).
+
+Afterwards, you can install ag.el from [MELPA](http://melpa.milkbox.net/) or
 [Marmalade](http://marmalade-repo.org/packages/ag/0.24). Just
 run `M-x package-install RET ag RET`. Functions are autoloaded, so
 `(require 'ag)` is unnecessary.
@@ -43,6 +50,8 @@ If you want to install it manually, add the following to your
 
     (add-to-list 'load-path "/path/to/ag.el")
     (require 'ag)
+
+## Usage
 
 ### Running a search
 
