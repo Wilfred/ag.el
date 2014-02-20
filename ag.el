@@ -327,6 +327,7 @@ If called with a prefix, prompts for flags to pass to ag."
 
 ;;;###autoload
 (defalias 'ag-project-at-point 'ag-project)
+(make-obsolete 'ag-project-at-point 'ag-project "0.19")
 
 ;;;###autoload
 (defun ag-regexp-project-at-point (regexp)
