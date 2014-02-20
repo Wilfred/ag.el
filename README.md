@@ -199,6 +199,14 @@ buffers.
 
 ## Changelog
 
+### 0.40
+
+`ag-project-regexp` now defaults to the escaped value at point, as an
+escaped regular expression. For example, if point is at `foo-bar`,
+then the suggested search regexp is `foo\-bar`.
+
+`ag-regexp-project-at-point` is now just an obsolete alias for `ag-project-regexp`.
+
 ### 0.39
 
 The commands `ag`, `ag-files`, `ag-regexp`, `ag-project`,
