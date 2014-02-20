@@ -11,6 +11,7 @@
     - [Highlighting results](#highlighting-results)
     - [Path to the ag executable](#path-to-the-ag-executable)
     - [Visiting the results](#visiting-the-results)
+    - [Overriding the arguments passed to ag](#overriding-the-arguments-passed-to-ag)
     - [Hooks](#hooks)
     - [Multiple search buffers](#multiple-search-buffers)
     - [Using with Projectile](#using-with-projectile)
@@ -143,6 +144,14 @@ frame, so the results buffer is still visible. You can override this
 so the results buffer is hidden and the selected result is shown in its place:
 
     (setq ag-reuse-window 't)
+
+### Overriding the arguments passed to ag
+
+ag.el provides a customisable variable `ag-arguments`.
+
+For temporary changes to arguments, the search commands will prompt
+you for arguments if you call them with a prefix argument. For
+example, `C-u M-x ag`.
 
 ### Hooks
 
