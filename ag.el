@@ -147,7 +147,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
 
 (defun ag/dwim-at-point ()
   "If there's an active selection, return that.
-Otherwise, get the symbol at point."
+Otherwise, get the symbol at point, as a string."
   (cond ((use-region-p)
          (buffer-substring-no-properties (region-beginning) (region-end)))
         ((symbol-at-point)
