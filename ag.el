@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.39
+;; Version: 0.40
 
 ;;; Commentary:
 
@@ -320,7 +320,8 @@ If called with a prefix, prompts for flags to pass to ag."
 for the given regexp.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive "sSearch regexp: ")
+  (interactive (list (read-from-minibuffer "Search regexp: "
+                                           (ag/escape-pcre (ag/dwim-at-point)))))
   (ag/search regexp (ag/project-root default-directory) :regexp t))
 
 (autoload 'symbol-at-point "thingatpt")
@@ -330,14 +331,7 @@ If called with a prefix, prompts for flags to pass to ag."
 (make-obsolete 'ag-project-at-point 'ag-project "0.19")
 
 ;;;###autoload
-(defun ag-regexp-project-at-point (regexp)
-  "Same as ``ag-regexp-project'', but with the search regexp defaulting
-to the symbol under point.
-
-If called with a prefix, prompts for flags to pass to ag."
-   (interactive (list (read-from-minibuffer "Search regexp: " (ag/dwim-at-point))))
-
-   (ag/search regexp (ag/project-root default-directory) :regexp t))
+(defalias 'ag-regexp-project-at-point 'ag-project-regexp) ; TODO: mark as obsolete
 
 ;;;###autoload
 (defun ag-dired (dir pattern)
