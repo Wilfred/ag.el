@@ -190,6 +190,13 @@ buffers.
 
 ## Changelog
 
+### 0.39
+
+The commands `ag`, `ag-files`, `ag-regexp`, `ag-project`,
+`ag-project-files` and `ag-project-regexp` can now take a prefix
+argument. For example, `C-u M-x ag`. If given a prefix argument, you
+are also prompted for the flags to pass ag itself.
+
 ### 0.38
 
 `ag-dired` and `ag-project-dired` should now work on Mac OS X
