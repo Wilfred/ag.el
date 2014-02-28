@@ -11,6 +11,7 @@
     - [Highlighting results](#highlighting-results)
     - [Path to the ag executable](#path-to-the-ag-executable)
     - [Visiting the results](#visiting-the-results)
+    - [Overriding the arguments passed to ag](#overriding-the-arguments-passed-to-ag)
     - [Hooks](#hooks)
     - [Multiple search buffers](#multiple-search-buffers)
     - [Using with Projectile](#using-with-projectile)
@@ -153,6 +154,14 @@ so the results buffer is hidden and the selected result is shown in its place:
 
     (setq ag-reuse-window 't)
 
+### Overriding the arguments passed to ag
+
+ag.el provides a customisable variable `ag-arguments`.
+
+For temporary changes to arguments, the search commands will prompt
+you for arguments if you call them with a prefix argument. For
+example, `C-u M-x ag`.
+
 ### Hooks
 
 ag.el provides `ag-mode-hook` which is run when you start a search.
@@ -198,6 +207,26 @@ buffer. Press `C-x C-s` when you're done to make the changes to
 buffers.
 
 ## Changelog
+
+### 0.40
+
+`ag-project-regexp` now defaults to the escaped value at point, as an
+escaped regular expression. For example, if point is at `foo-bar`,
+then the suggested search regexp is `foo\-bar`.
+
+`ag-regexp-project-at-point` is now just an obsolete alias for `ag-project-regexp`.
+
+### 0.39
+
+The commands `ag`, `ag-files`, `ag-regexp`, `ag-project`,
+`ag-project-files` and `ag-project-regexp` can now take a prefix
+argument. For example, `C-u M-x ag`. If given a prefix argument, you
+are also prompted for the flags to pass ag itself.
+
+### 0.38
+
+`ag-dired` and `ag-project-dired` should now work on Mac OS X
+(previously we assumed xargs supported GNU extensions).
 
 ### 0.37
 

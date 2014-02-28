@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.37
+;; Version: 0.40
 
 ;;; Commentary:
 
@@ -125,10 +125,12 @@ different window, according to `ag-open-in-other-window'."
   "Run ag searching for the STRING given in DIRECTORY.
 If REGEXP is non-nil, treat STRING as a regular expression."
   (let ((default-directory (file-name-as-directory directory))
-        (arguments (if regexp
-                       ag-arguments
-                     (cons "--literal" ag-arguments)))
+        (arguments (if current-prefix-arg
+                       (read (read-from-minibuffer "Arg arguments: " (prin1-to-string ag-arguments)))
+                     ag-arguments))
         (shell-command-switch "-c"))
+    (unless regexp
+        (setq arguments (cons "--literal" arguments)))
     (if ag-highlight-search
         (setq arguments (append '("--color" "--color-match" "30;43") arguments))
       (setq arguments (append '("--nocolor") arguments)))
@@ -145,7 +147,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
 
 (defun ag/dwim-at-point ()
   "If there's an active selection, return that.
-Otherwise, get the symbol at point."
+Otherwise, get the symbol at point, as a string."
   (cond ((use-region-p)
          (buffer-substring-no-properties (region-beginning) (region-end)))
         ((symbol-at-point)
@@ -267,7 +269,9 @@ matched literally."
 ;;;###autoload
 (defun ag (string directory)
   "Search using ag in a given DIRECTORY for a given search STRING,
-with STRING defaulting to the symbol under point."
+with STRING defaulting to the symbol under point.
+
+If called with a prefix, prompts for flags to pass to ag."
    (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
                       (read-directory-name "Directory: ")))
    (ag/search string directory))
@@ -275,7 +279,9 @@ with STRING defaulting to the symbol under point."
 ;;;###autoload
 (defun ag-files (string file-regex directory)
   "Search using ag in a given DIRECTORY and file type regex FILE-REGEX
-for a given search STRING, with STRING defaulting to the symbol under point."
+for a given search STRING, with STRING defaulting to the symbol under point.
+
+If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
                      (read-from-minibuffer "In filenames matching PCRE: " (ag/buffer-extension-regex))
                      (read-directory-name "Directory: ")))
@@ -283,21 +289,27 @@ for a given search STRING, with STRING defaulting to the symbol under point."
 
 ;;;###autoload
 (defun ag-regexp (string directory)
-  "Search using ag in a given directory for a given regexp."
+  "Search using ag in a given directory for a given regexp.
+
+If called with a prefix, prompts for flags to pass to ag."
   (interactive "sSearch regexp: \nDDirectory: ")
   (ag/search string directory :regexp t))
 
 ;;;###autoload
 (defun ag-project (string)
   "Guess the root of the current project and search it with ag
-for the given string."
+for the given string.
+
+If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
   (ag/search string (ag/project-root default-directory)))
 
 ;;;###autoload
 (defun ag-project-files (string file-regex)
   "Search using ag in a given DIRECTORY and file type regex FILE-REGEX
-for a given search STRING, with STRING defaulting to the symbol under point."
+for a given search STRING, with STRING defaulting to the symbol under point.
+
+If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
                      (read-from-minibuffer "In filenames matching PCRE: " (ag/buffer-extension-regex))))
   (ag/search string (ag/project-root default-directory) :file-regex file-regex))
@@ -305,22 +317,21 @@ for a given search STRING, with STRING defaulting to the symbol under point."
 ;;;###autoload
 (defun ag-project-regexp (regexp)
   "Guess the root of the current project and search it with ag
-for the given regexp."
-  (interactive "sSearch regexp: ")
+for the given regexp.
+
+If called with a prefix, prompts for flags to pass to ag."
+  (interactive (list (read-from-minibuffer "Search regexp: "
+                                           (ag/escape-pcre (ag/dwim-at-point)))))
   (ag/search regexp (ag/project-root default-directory) :regexp t))
 
 (autoload 'symbol-at-point "thingatpt")
 
 ;;;###autoload
 (defalias 'ag-project-at-point 'ag-project)
+(make-obsolete 'ag-project-at-point 'ag-project "0.19")
 
 ;;;###autoload
-(defun ag-regexp-project-at-point (regexp)
-  "Same as ``ag-regexp-project'', but with the search regexp defaulting
-to the symbol under point."
-   (interactive (list (read-from-minibuffer "Search regexp: " (ag/dwim-at-point))))
-
-   (ag/search regexp (ag/project-root default-directory) :regexp t))
+(defalias 'ag-regexp-project-at-point 'ag-project-regexp) ; TODO: mark as obsolete
 
 ;;;###autoload
 (defun ag-dired (dir pattern)
@@ -352,7 +363,7 @@ See also `find-dired'."
          (orig-dir dir)
          (dir (file-name-as-directory (expand-file-name dir)))
          (buffer-name (concat "ag-dired pattern:" regexp " dir:" dir))
-         (cmd (concat "ag --nocolor -g '" regexp "' " dir " | xargs -r -d '\\n' ls " dired-listing-switches " &")))
+         (cmd (concat "ag --nocolor -g '" regexp "' " dir " | grep -v '^$' | xargs -I {} ls " dired-listing-switches " {} &")))
     (with-current-buffer (get-buffer-create buffer-name)
       (switch-to-buffer (current-buffer))
       (widen)
