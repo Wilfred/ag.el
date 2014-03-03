@@ -176,7 +176,13 @@ Returns an empty string otherwise."
     longest-string))
 
 (autoload 'vc-git-root "vc-git")
-(autoload 'vc-svn-root "vc-svn")
+
+(require 'vc-svn)
+;; Emacs 23.4 doesn't provide vc-svn-root.
+(unless (functionp 'vc-svn-root)
+  (defun vc-svn-root (file)
+    (vc-find-root file vc-svn-admin-directory)))
+
 (autoload 'vc-hg-root "vc-hg")
 
 (defun ag/project-root (file-path)
