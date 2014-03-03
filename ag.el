@@ -218,7 +218,11 @@ roots."
                   (forward-line 1))
                 (goto-char beg)
                 (beginning-of-line)
-                (replace-string default-directory "")
+
+                ;; Remove occurrences of default-directory.
+                (while (search-forward default-directory nil t)
+                  (replace-match "" nil t))
+                
                 (goto-char (point-max))
                 (if (search-backward "\n" (process-mark proc) t)
                     (progn
