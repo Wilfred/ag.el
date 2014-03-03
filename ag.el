@@ -116,9 +116,9 @@ different window, according to `ag-open-in-other-window'."
 
 (defun ag/buffer-name (search-string directory regexp)
   (cond
-   (ag-reuse-buffers "*ag*")
-   (regexp (format "*ag regexp:%s dir:%s*" search-string directory))
-   (:else (format "*ag text:%s dir:%s*" search-string directory))))
+   (ag-reuse-buffers "*ag search*")
+   (regexp (format "*ag search regexp:%s dir:%s*" search-string directory))
+   (:else (format "*ag search text:%s dir:%s*" search-string directory))))
 
 (defun* ag/search (string directory
                           &key (regexp nil) (file-regex nil))
@@ -372,7 +372,7 @@ See also `find-dired'."
   (let* ((dired-buffers dired-buffers) ;; do not mess with regular dired buffers
          (orig-dir dir)
          (dir (file-name-as-directory (expand-file-name dir)))
-         (buffer-name (concat "ag-dired pattern:" regexp " dir:" dir))
+         (buffer-name (concat "*ag dired pattern:" regexp " dir:" dir))
          (cmd (concat "ag --nocolor -g '" regexp "' " dir " | grep -v '^$' | xargs -I {} ls " dired-listing-switches " {} &")))
     (with-current-buffer (get-buffer-create buffer-name)
       (switch-to-buffer (current-buffer))
