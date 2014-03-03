@@ -49,8 +49,9 @@ This requires the ag command to support --color-match, which is only in v0.14+"
   :group 'ag)
 
 (defcustom ag-reuse-buffers nil
-  "Non-nil means we reuse the existing search results buffer, rather than
-creating one buffer per unique search."
+  "Non-nil means we reuse the existing search results buffer or
+dired results buffer, rather than creating one buffer per unique
+search."
   :type 'boolean
   :group 'ag)
 
@@ -372,7 +373,9 @@ See also `find-dired'."
   (let* ((dired-buffers dired-buffers) ;; do not mess with regular dired buffers
          (orig-dir dir)
          (dir (file-name-as-directory (expand-file-name dir)))
-         (buffer-name (concat "*ag dired pattern:" regexp " dir:" dir))
+         (buffer-name (if ag-reuse-buffers
+                          "*ag dired*"
+                        (format "*ag dired pattern:%s dir:%s*" regexp dir)))
          (cmd (concat "ag --nocolor -g '" regexp "' " dir " | grep -v '^$' | xargs -I {} ls " dired-listing-switches " {} &")))
     (with-current-buffer (get-buffer-create buffer-name)
       (switch-to-buffer (current-buffer))
