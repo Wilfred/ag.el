@@ -146,6 +146,19 @@ in your Emacs configuration:
 
     (set-exec-path-from-shell-PATH)
 
+Finally, as a last resort, you can specify the path to ag
+explicitly. This might be the case if:
+
+   - you are are in an environment where, for whatever reason, you
+     can't easily change the path to include ag
+   - you are on windows, where the executable name ends in `.exe'.
+   - you have multiple versions of ag or want to use some other
+     executable that works the same as ag.
+
+To change the ag executable used:
+
+    (setq ag-executable "C:/Wherever/I/Installed/Ag/ag.exe")
+
 ### Visiting the results
 
 By default, ag.el will open results in a different window in the
