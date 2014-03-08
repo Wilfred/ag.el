@@ -224,6 +224,17 @@ buffers.
 
 ## Changelog
 
+### 0.41
+
+Added a setting `ag-executable` which allows you to override the name
+or path of the ag executable.
+
+Added support for Emacs 23.4.
+
+Buffers created by ag.el are now always named `*ag: FOO*`.
+
+`ag-dired` now respects the value of `ag-reuse-buffers`.
+
 ### 0.40
 
 `ag-project-regexp` now defaults to the escaped value at point, as an
