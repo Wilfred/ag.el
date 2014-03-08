@@ -36,6 +36,9 @@ ag.el currently works on Linux, Mac and Windows (with a few minor
 issues[1](https://github.com/Wilfred/ag.el/issues/26)). Patches or bug
 reports for other platforms are welcome.
 
+We currently support Emacs 23.4 or above, patches for other emacsen
+are also welcome.
+
 First, install the `ag` binary. See
 [the installation instructions](https://github.com/ggreer/the_silver_searcher#installation)
 on ag GitHub repo. A
