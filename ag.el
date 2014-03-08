@@ -35,6 +35,12 @@
 (eval-when-compile (require 'cl)) ;; dolist, defun*, flet
 (require 'dired) ;; dired-sort-inhibit
 
+(defcustom ag-executable
+  "ag"
+  "Name of the ag executable to use."
+  :type 'string
+  :group 'ag)
+
 (defcustom ag-arguments
   (list "--smart-case" "--nogroup" "--column" "--")
   "Default arguments passed to ag."
@@ -141,7 +147,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
       (error "No such directory %s" default-directory))
     (compilation-start
      (mapconcat 'shell-quote-argument
-                (append '("ag") arguments (list string "."))
+                (append (list ag-executable) arguments (list string "."))
                 " ")
      'ag-mode
      `(lambda (mode-name) ,(ag/buffer-name string directory regexp)))))
