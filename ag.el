@@ -307,6 +307,7 @@ If called with a prefix, prompts for flags to pass to ag."
 ;;;###autoload
 (defun ag-regexp (string directory)
   "Search using ag in a given directory for a given regexp.
+The regexp should be in PCRE syntax, not Emacs regexp syntax.
 
 If called with a prefix, prompts for flags to pass to ag."
   (interactive "sSearch regexp: \nDDirectory: ")
@@ -334,7 +335,8 @@ If called with a prefix, prompts for flags to pass to ag."
 ;;;###autoload
 (defun ag-project-regexp (regexp)
   "Guess the root of the current project and search it with ag
-for the given regexp.
+for the given regexp. The regexp should be in PCRE syntax, not
+Emacs regexp syntax.
 
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (read-from-minibuffer "Search regexp: "
@@ -367,11 +369,12 @@ See also `ag-dired-regexp'."
 ;;;###autoload
 (defun ag-dired-regexp (dir regexp)
   "Recursively find files in DIR matching REGEXP.
+REGEXP should be in PCRE syntax, not Emacs regexp syntax.
 
 The REGEXP is matched against the full path to the file, not
 only against the file name.
 
-The results are presented as a `dired-mode' buffer with
+Results are presented as a `dired-mode' buffer with
 `default-directory' being DIR.
 
 See also `find-dired'."

@@ -72,8 +72,11 @@ searches:
 `*-project` commands automatically choose the directory to search,
 automatically detecting git, Subversion and Mercurial project roots.
 
-`*-files` commands allow you to specify a PCRE pattern for files to
-search in. By default, ag searches in all files. Note that in both
+`*-regexp` commands allow you to specify a PCRE pattern for your
+search term.
+
+`*-files` commands allow you to specify a PCRE pattern for file names
+to search in. By default, ag searches in all files. Note that in both
 cases, ag ignores files that are ignored by your VCS (e.g. things
 mentioned in .gitignore).
 
