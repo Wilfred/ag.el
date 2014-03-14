@@ -132,9 +132,7 @@ different window, according to `ag-open-in-other-window'."
   "Run ag searching for the STRING given in DIRECTORY.
 If REGEXP is non-nil, treat STRING as a regular expression."
   (let ((default-directory (file-name-as-directory directory))
-        (arguments (if current-prefix-arg
-                       (read (read-from-minibuffer "Arg arguments: " (prin1-to-string ag-arguments)))
-                     ag-arguments))
+        (arguments ag-arguments)
         (shell-command-switch "-c"))
     (unless regexp
         (setq arguments (cons "--literal" arguments)))
@@ -145,12 +143,16 @@ If REGEXP is non-nil, treat STRING as a regular expression."
       (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
     (unless (file-exists-p default-directory)
       (error "No such directory %s" default-directory))
-    (compilation-start
-     (mapconcat 'shell-quote-argument
-                (append (list ag-executable) arguments (list string "."))
-                " ")
-     'ag-mode
-     `(lambda (mode-name) ,(ag/buffer-name string directory regexp)))))
+    (let ((command-string
+           (mapconcat 'shell-quote-argument
+                      (append (list ag-executable) arguments (list string "."))
+                      " ")))
+      (when current-prefix-arg
+        (setq command-string (read-from-minibuffer "ag command: " command-string)))
+      (compilation-start
+       command-string
+       'ag-mode
+       `(lambda (mode-name) ,(ag/buffer-name string directory regexp))))))
 
 (defun ag/dwim-at-point ()
   "If there's an active selection, return that.
