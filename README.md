@@ -198,7 +198,7 @@ your searches:
 ### Using with Projectile
 
 [Projectile](https://github.com/bbatsov/projectile) supports ag.el. If
-you have Projectile installed, `C-c p A` runs `ag` on your project.
+you have Projectile installed, `C-c p A` runs `ag-regexp` on your project.
 
 ### Customising the project root
 
