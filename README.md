@@ -227,6 +227,15 @@ buffers.
 
 ## Changelog
 
+### 0.42
+
+When passing a prefix argument, ag.el now presents you with the whole
+command so you can edit any part, as a string. See
+[#38](https://github.com/Wilfred/ag.el/issues/38).
+
+Documentation and docstring improvements, mostly around clarifying
+what regular expression syntax ag.el expects.
+
 ### 0.41
 
 Added a setting `ag-executable` which allows you to override the name
