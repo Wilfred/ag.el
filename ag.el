@@ -43,7 +43,10 @@
 
 (defcustom ag-arguments
   (list "--smart-case" "--nogroup" "--column" "--")
-  "Default arguments passed to ag."
+  "Default arguments passed to ag.
+
+Ag.el requires --nogroup and --column, so we recommend you add any
+additional arguments to the start of this list."
   :type '(repeat (string))
   :group 'ag)
 
