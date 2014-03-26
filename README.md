@@ -26,6 +26,8 @@
 
 A simple ag frontend, loosely based on ack-and-half.el.
 
+[![Build Status](https://travis-ci.org/Wilfred/ag.el.svg?branch=travis_unit_tests)](https://travis-ci.org/Wilfred/ag.el)
+
 ## Screenshot
 
 [![screen_thumb](https://f.cloud.github.com/assets/70800/239876/738b5bd8-88d8-11e2-96a1-606e8d17d5ba.png)](https://f.cloud.github.com/assets/70800/239871/d8421a54-88d7-11e2-9cc0-df569b228888.png)
