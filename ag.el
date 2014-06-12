@@ -4,7 +4,7 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
-;; Version: 0.42
+;; Version: 0.43
 
 ;;; Commentary:
 
@@ -151,8 +151,17 @@ If REGEXP is non-nil, treat STRING as a regular expression."
            (mapconcat 'shell-quote-argument
                       (append (list ag-executable) arguments (list string "."))
                       " ")))
+      ;; If we're called with a prefix, let the user modify the command before
+      ;; running it. Typically this means they want to pass additional arguments.
       (when current-prefix-arg
-        (setq command-string (read-from-minibuffer "ag command: " command-string)))
+        ;; Make a space in the command-string for the user to enter more arguments.
+        (setq command-string (ag/replace-first command-string " -- " "  -- "))
+        ;; Prompt for the command.
+        (let ((adjusted-point (- (length command-string) (length string) 5)))
+          (setq command-string
+                (read-from-minibuffer "ag command: "
+                                      (cons command-string adjusted-point)))))
+      ;; Call ag.
       (compilation-start
        command-string
        'ag-mode
@@ -187,6 +196,13 @@ Returns an empty string otherwise."
                       (length string))
                (setq longest-string string)))))
     longest-string))
+
+(defun ag/replace-first (string before after)
+  "Replace the first occurrence of BEFORE in STRING with AFTER."
+  (replace-regexp-in-string
+   (concat "\\(" (regexp-quote before) "\\)" ".*\\'")
+   after string
+   nil nil 1))
 
 (autoload 'vc-git-root "vc-git")
 

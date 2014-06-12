@@ -227,6 +227,14 @@ buffers.
 
 ## Changelog
 
+### 0.43
+
+When calling ag with a prefix argument, we now place the point after
+the last argument in the minibuffer. See
+[#48](https://github.com/Wilfred/ag.el/issues/48).
+
+Minor docstring improvements.
+
 ### 0.42
 
 When passing a prefix argument, ag.el now presents you with the whole
