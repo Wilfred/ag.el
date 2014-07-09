@@ -227,6 +227,20 @@ roots."
        (vc-hg-root file-path))
       file-path)))
 
+(defun ag/dired-align-size-column ()
+  (beginning-of-line)
+  (when (looking-at "^  ")
+    (forward-char 2)
+    (search-forward " " nil t 4)
+    (let* ((size-start (point))
+           (size-end (search-forward " " nil t))
+           (width (and size-end (- size-end size-start))))
+      (when (and size-end
+                 (< width 12)
+                 (> width 1))
+        (goto-char size-start)
+        (insert (make-string (- 12 width) ? ))))))
+
 (defun ag/dired-filter (proc string)
   "Filter the output of ag to make it suitable for `dired-mode'."
   (let ((buf (process-buffer proc))
@@ -241,9 +255,12 @@ roots."
                 (insert string)
                 (goto-char beg)
                 (or (looking-at "^")
-                    (forward-line 1))
+                    (progn
+                      (ag/dired-align-size-column)
+                      (forward-line 1)))
                 (while (looking-at "^")
                   (insert "  ")
+                  (ag/dired-align-size-column)
                   (forward-line 1))
                 (goto-char beg)
                 (beginning-of-line)
@@ -251,7 +268,7 @@ roots."
                 ;; Remove occurrences of default-directory.
                 (while (search-forward default-directory nil t)
                   (replace-match "" nil t))
-                
+
                 (goto-char (point-max))
                 (if (search-backward "\n" (process-mark proc) t)
                     (progn
