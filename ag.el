@@ -251,7 +251,7 @@ roots."
                 ;; Remove occurrences of default-directory.
                 (while (search-forward default-directory nil t)
                   (replace-match "" nil t))
-                
+
                 (goto-char (point-max))
                 (if (search-backward "\n" (process-mark proc) t)
                     (progn
@@ -280,6 +280,7 @@ roots."
               ;; will stay around until M-x list-processes.
               (delete-process proc)
               (force-mode-line-update)))
+          (run-hooks 'dired-after-readin-hook)
           (message "%s finished." (current-buffer))))))
 
 (defun ag/kill-process ()
@@ -417,6 +418,7 @@ See also `find-dired'."
         (setq buffer-read-only nil))
       (let ((inhibit-read-only t)) (erase-buffer))
       (setq default-directory dir)
+      (run-hooks 'dired-before-readin-hook)
       (shell-command cmd (current-buffer))
       (insert "  " dir ":\n")
       (insert "  " cmd "\n")
