@@ -227,6 +227,23 @@ buffers.
 
 ## Changelog
 
+### 0.44
+
+Fixed a bug with `ag-dired*` commands where it ignored
+`ag-executable`.
+
+Improved alignment of the output from `ag-dired*` commands.
+
+`ag-dired*` commands now call `dired-before-readin-hook` and
+`dired-after-readin-hook` where appropriate.
+
+Fixed a bug with path name escaping in `ag-dired*` commands.
+
+Fixed a bug with calling ag on Windows such that you can't jump to
+results from the results buffer (you just get 'No Error Here').
+
+Minor docs improvements.
+
 ### 0.43
 
 When calling ag with a prefix argument, we now place the point after
