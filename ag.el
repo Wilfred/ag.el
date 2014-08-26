@@ -534,19 +534,20 @@ This function is called from `compilation-filter-hook'."
 
 
 (defun ag/extension-to-filetype ()
-  "Get filetype for current buffer extension"
+  "Get filetype for current buffer extension."
   (let* ((ag-output (shell-command-to-string (s-concat ag-executable " --list-file-types")))
          (lines (-map 's-trim (s-lines ag-output)))
          (types (--keep (when (s-starts-with? "--" it) (s-chop-prefix "--" it )) lines))
          (extensions (--map (s-split "  " it) (--filter (s-starts-with? "." it) lines)))
          (current-extension (concat "." (file-name-extension(buffer-file-name))))
-         (index-for-type (--find-index (-contains? it current-extension) extensions)))
-   (s-concat "--"
-             (nth index-for-type types)))
+         (indices-for-type (--find-indices (-contains? it current-extension) extensions)))
+   (s-join " " (-map (lambda (index) (s-concat "--" (nth index types))) indices-for-type)
+
+   ))
 )
 
 (defun ag/file-types ()
-  "Get ag --list-file-types and select one with ido"
+  "Get ag --list-file-types and select one with ido."
   (let* ((ag-output (shell-command-to-string (concat ag-executable " --list-file-types")))
          (lines (-map 's-trim (s-lines ag-output)))
          (types (--keep (when (s-starts-with? "--" it)
@@ -557,16 +558,18 @@ This function is called from `compilation-filter-hook'."
               (ido-completing-read "Select file type: " types)))
 )
 
+;;;###autoload
 (defun ag-typed (string directory)
-  "Search ag with file type specification based on curent buffer extension"
+  "Search ag with file type specification based on curent buffer extension."
    (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
                       (read-directory-name "Directory: ")))
    (let ( (filetype (ag/extension-to-filetype)))
    (ag/search string directory :type filetype))
 )
 
+;;;###autoload
 (defun ag-with-type (string directory)
-  "Search ag with custom file type specification"
+  "Search ag with custom file type specification."
    (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
                       (read-directory-name "Directory: ")))
    (let ( (filetype (ag/file-types)))
