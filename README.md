@@ -225,7 +225,13 @@ simply run `wgrep-change-to-wgrep-mode` and edit the `*ag*`
 buffer. Press `C-x C-s` when you're done to make the changes to
 buffers.
 
-## Changelog
+## Changeelog
+
+### 0.45
+
+Fixed another case where `ag-dired*` commands ignored `ag-executable`.
+
+Fixed an issue with `ag-dired` where inputs would be quoted twice.
 
 ### 0.44
 
