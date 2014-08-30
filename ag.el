@@ -453,7 +453,7 @@ See also `find-dired'."
       (set (make-local-variable 'dired-sort-inhibit) t)
       (set (make-local-variable 'revert-buffer-function)
            `(lambda (ignore-auto noconfirm)
-              (ag-dired ,orig-dir ,regexp)))
+              (ag-dired-regexp ,orig-dir ,regexp)))
       (if (fboundp 'dired-simple-subdir-alist)
           (dired-simple-subdir-alist)
         (set (make-local-variable 'dired-subdir-alist)
