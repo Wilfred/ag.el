@@ -541,8 +541,9 @@ This function is called from `compilation-filter-hook'."
          (indices-for-type (--find-indices (-contains? it current-extension) extensions)))
    (s-join " " (-map (lambda (index) (s-concat "--" (nth index types))) indices-for-type))))
 
-(defun ag/file-types ()
-  "Get ag --list-file-types and select one with ido."
+(defun ag/choose-file-type ()
+  "Query the ag executable for which file types it recognises,
+and prompt the user for which type they want."
   (let* ((ag-output (shell-command-to-string (concat ag-executable " --list-file-types")))
          (lines (-map 's-trim (s-lines ag-output)))
          (types (--keep (when (s-starts-with? "--" it)
@@ -563,8 +564,7 @@ This function is called from `compilation-filter-hook'."
   "Search ag with custom file type specification."
    (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
                       (read-directory-name "Directory: ")))
-   (let ( (filetype (ag/file-types)))
-   (ag/search string directory :type filetype)))
+   (ag/search string directory :type (ag/choose-file-type)))
 
 (provide 'ag)
 ;;; ag.el ends here
