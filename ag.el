@@ -138,7 +138,7 @@ different window, according to `ag-open-in-other-window'."
    (:else (format "*ag search text:%s dir:%s*" search-string directory))))
 
 (defun* ag/search (string directory
-                          &key (regexp nil) (file-regex nil) (type nil))
+                          &key (regexp nil) (file-regex nil) (file-type nil))
   "Run ag searching for the STRING given in DIRECTORY.
 If REGEXP is non-nil, treat STRING as a regular expression."
   (let ((default-directory (file-name-as-directory directory))
@@ -151,8 +151,8 @@ If REGEXP is non-nil, treat STRING as a regular expression."
       (setq arguments (append '("--nocolor") arguments)))
     (when (char-or-string-p file-regex)
       (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
-    (when type
-      (setq arguments (cons type arguments)))
+    (when file-type
+      (setq arguments (cons file-type arguments)))
     (unless (file-exists-p default-directory)
       (error "No such directory %s" default-directory))
     (let ((command-string
@@ -342,15 +342,16 @@ If called with a prefix, prompts for flags to pass to ag."
    (ag/search string directory))
 
 ;;;###autoload
-(defun ag-files (string file-regex directory)
-  "Search using ag in a given DIRECTORY and file type regex FILE-REGEX
-for a given search STRING, with STRING defaulting to the symbol under point.
+(defun ag-files (string file-type directory)
+  "Search using ag in a given DIRECTORY for a given search STRING,
+limited to files that match FILE-TYPE. STRING defaults to
+the symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
-                     (read-from-minibuffer "In filenames matching PCRE: " (ag/buffer-extension-regex))
+                     (ag/read-file-type)
                      (read-directory-name "Directory: ")))
-  (ag/search string directory :file-regex file-regex))
+  (apply 'ag/search string directory file-type))
 
 ;;;###autoload
 (defun ag-regexp (string directory)
@@ -371,14 +372,15 @@ If called with a prefix, prompts for flags to pass to ag."
   (ag/search string (ag/project-root default-directory)))
 
 ;;;###autoload
-(defun ag-project-files (string file-regex)
-  "Search using ag in a given DIRECTORY and file type regex FILE-REGEX
-for a given search STRING, with STRING defaulting to the symbol under point.
+(defun ag-project-files (string file-type)
+  "Search using ag for a given search STRING,
+limited to files that match FILE-TYPE. STRING defaults to the
+symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
-                     (read-from-minibuffer "In filenames matching PCRE: " (ag/buffer-extension-regex))))
-  (ag/search string (ag/project-root default-directory) :file-regex file-regex))
+                     (ag/read-file-type)))
+  (apply 'ag/search string (ag/project-root default-directory) file-type))
 
 ;;;###autoload
 (defun ag-project-regexp (regexp)
@@ -530,41 +532,29 @@ This function is called from `compilation-filter-hook'."
           (while (re-search-forward "\033\\[[0-9;]*[mK]" end 1)
             (replace-match "" t t)))))))
 
-
-(defun ag/extension-to-filetype ()
-  "Get filetype for current buffer extension."
-  (let* ((ag-output (shell-command-to-string (s-concat ag-executable " --list-file-types")))
+(defun ag/get-supported-types ()
+  "Query the ag executable for which file types it recognises."
+  (let* ((ag-output (shell-command-to-string (format "%s --list-file-types" ag-executable)))
          (lines (-map 's-trim (s-lines ag-output)))
          (types (--keep (when (s-starts-with? "--" it) (s-chop-prefix "--" it )) lines))
-         (extensions (--map (s-split "  " it) (--filter (s-starts-with? "." it) lines)))
-         (current-extension (concat "." (file-name-extension(buffer-file-name))))
-         (indices-for-type (--find-indices (-contains? it current-extension) extensions)))
-   (s-join " " (-map (lambda (index) (s-concat "--" (nth index types))) indices-for-type))))
+         (extensions (--map (s-split "  " it) (--filter (s-starts-with? "." it) lines))))
+    (-zip types extensions)))
 
-(defun ag/choose-file-type ()
-  "Query the ag executable for which file types it recognises,
-and prompt the user for which type they want."
-  (let* ((ag-output (shell-command-to-string (concat ag-executable " --list-file-types")))
-         (lines (-map 's-trim (s-lines ag-output)))
-         (types (--keep (when (s-starts-with? "--" it)
-                          (s-chop-prefix "--" it )) lines)))
-    (concat "--"
-            (ido-completing-read "Select file type: " types))))
-
-;;;###autoload
-(defun ag-typed (string directory)
-  "Search ag with file type specification based on curent buffer extension."
-   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
-                      (read-directory-name "Directory: ")))
-   (let ((filetype (ag/extension-to-filetype)))
-   (ag/search string directory :type filetype)))
-
-;;;###autoload
-(defun ag-with-type (string directory)
-  "Search ag with custom file type specification."
-   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
-                      (read-directory-name "Directory: ")))
-   (ag/search string directory :type (ag/choose-file-type)))
+(defun ag/read-file-type ()
+  "Prompt the user for a known file type, or let them specify a PCRE regex."
+  (let* ((all-types-with-extensions (ag/get-supported-types))
+         (all-types (mapcar 'car all-types-with-extensions))
+         (file-type
+          (ido-completing-read "Select file type: "
+                               (append '("custom (provide a PCRE regex)") all-types)))
+         (file-type-extensions
+          (cdr (assoc file-type all-types-with-extensions)))
+         )
+    (if file-type-extensions
+        (list :file-type file-type-extensions)
+      (list :file-regex
+            (read-from-minibuffer "Filenames which match PCRE: "
+                                  (ag/buffer-extension-regex))))))
 
 (provide 'ag)
 ;;; ag.el ends here
