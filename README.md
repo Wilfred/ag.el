@@ -32,8 +32,7 @@ A simple ag frontend, loosely based on ack-and-half.el.
 
 ## Installation
 
-ag.el currently works on Linux, Mac and Windows (with a few minor
-issues[1](https://github.com/Wilfred/ag.el/issues/26)). Patches or bug
+ag.el currently works on Linux, Mac and Windows. Patches or bug
 reports for other platforms are welcome.
 
 We currently support Emacs 23.4 or above, patches for other emacsen
