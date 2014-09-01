@@ -24,7 +24,11 @@
 
 # ag.el
 
-A simple ag frontend, loosely based on ack-and-half.el.
+Ag.el allows you to search using `ag` from inside Emacs. You can
+filter by file type, edit results inline, or find files.
+
+Ag.el tries very hard to be Do-What-I-Mean, and will make intelligent
+suggestions about what to search and which directories to search in.
 
 ## Screenshot
 
