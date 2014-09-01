@@ -190,7 +190,7 @@ a PCRE pattern that matches files with that extension.
 Returns an empty string otherwise."
   (let ((file-name (buffer-file-name)))
     (if (stringp file-name)
-        (format "\\.%s" (file-name-extension file-name))
+        (format "\\.%s$" (file-name-extension file-name))
       "")))
 
 (defun ag/longest-string (&rest strings)
