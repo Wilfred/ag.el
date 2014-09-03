@@ -5,7 +5,7 @@
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
 ;; Version: 0.45
-
+;; Package-Requires: ((dash "2.8.0") (s "1.9.0"))
 ;;; Commentary:
 
 ;; Please see README.md for documentation, or read it online at
