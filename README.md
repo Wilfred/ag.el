@@ -1,26 +1,29 @@
-**Table of Contents** *generated with [autotoc](https://github.com/Wilfred/autotoc)*
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
+**Table of Contents**
 
 - [ag.el](#agel)
-  - [Screenshot](#screenshot)
-  - [Installation](#installation)
-  - [Usage](#usage)
-    - [Running a search](#running-a-search)
-    - [The results buffer](#the-results-buffer)
-    - [Search for files](#search-for-files)
-  - [Configuration](#configuration)
-    - [Highlighting results](#highlighting-results)
-    - [Path to the ag executable](#path-to-the-ag-executable)
-    - [Visiting the results](#visiting-the-results)
-    - [Overriding the arguments passed to ag](#overriding-the-arguments-passed-to-ag)
-    - [Hooks](#hooks)
-    - [Multiple search buffers](#multiple-search-buffers)
-    - [Using with Projectile](#using-with-projectile)
-    - [Customising the project root](#customising-the-project-root)
-    - [Using ag in elisp functions](#using-ag-in-elisp-functions)
-    - [Editing the results inline](#editing-the-results-inline)
-  - [Changelog](#changelog)
-  - [Alternatives](#alternatives)
-  - [Todo](#todo)
+    - [Screenshot](#screenshot)
+    - [Installation](#installation)
+    - [Usage](#usage)
+        - [Running a search](#running-a-search)
+        - [The results buffer](#the-results-buffer)
+        - [Search for files](#search-for-files)
+    - [Configuration](#configuration)
+        - [Highlighting results](#highlighting-results)
+        - [Path to the ag executable](#path-to-the-ag-executable)
+        - [Visiting the results](#visiting-the-results)
+        - [Overriding the arguments passed to ag](#overriding-the-arguments-passed-to-ag)
+        - [Hooks](#hooks)
+        - [Multiple search buffers](#multiple-search-buffers)
+        - [Using with Projectile](#using-with-projectile)
+        - [Customising the project root](#customising-the-project-root)
+        - [Using ag in elisp functions](#using-ag-in-elisp-functions)
+        - [Editing the results inline](#editing-the-results-inline)
+    - [Change log](#change-log)
+    - [Alternatives](#alternatives)
+    - [Todo](#todo)
+
+<!-- markdown-toc end -->
 
 # ag.el
 
@@ -228,7 +231,7 @@ simply run `wgrep-change-to-wgrep-mode` and edit the `*ag*`
 buffer. Press `C-x C-s` when you're done to make the changes to
 buffers.
 
-## Changeelog
+## Change log
 
 ### 0.45
 
