@@ -104,7 +104,7 @@ If set to nil, fall back to finding VCS root directories."
 
 (defun ag/next-error-function (n &optional reset)
   "Open the search result at point in the current window or a
-different window, according to `ag-open-in-other-window'."
+different window, according to `ag-reuse-window'."
   (if ag-reuse-window
       ;; prevent changing the window
       (flet ((pop-to-buffer (buffer &rest args)
