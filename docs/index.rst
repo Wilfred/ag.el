@@ -3,20 +3,22 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to ag.el's documentation!
-=================================
+ag.el
+=====
+
+Ag.el allows you to search using ``ag`` from inside Emacs. You can
+filter by file type, edit results inline, or find files.
+
+Ag.el tries very hard to be Do-What-I-Mean, and will make intelligent
+suggestions about what to search and which directories to search in.
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+   installation
+   usage
+   configuration
+   extensions
+   changelog
