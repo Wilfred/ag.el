@@ -16,21 +16,21 @@ are also welcome.
 Ag
 ---
 
-You will need the `ag` binary. See
-[the installation instructions](https://github.com/ggreer/the_silver_searcher#installation)
-on ag GitHub repo. A
-[precompiled Windows binary is also available](http://blog.kowalczyk.info/software/the-silver-searcher-for-windows.html).
+You will need the ``ag`` binary. See
+`the installation instructions <https://github.com/ggreer/the_silver_searcher#installation>`_
+on ag's GitHub repo. A
+`precompiled Windows binary is also available <http://blog.kowalczyk.info/software/the-silver-searcher-for-windows.html>`_.
 
 Ag.el
 -----
 
-Afterwards, you can install ag.el from [MELPA](http://melpa.milkbox.net/) or
-[Marmalade](http://marmalade-repo.org/packages/ag/0.24). Just
-run `M-x package-install RET ag RET`. Functions are autoloaded, so
-`(require 'ag)` is unnecessary.
+Afterwards, you can install ag.el from `MELPA
+<http://melpa.milkbox.net/>`_ (the recommended approach).
+
+Functions are autoloaded, so ``(require 'ag)`` is unnecessary.
 
 If you want to install it manually, add the following to your
-.emacs.d:
+.emacs.d::
 
     (add-to-list 'load-path "/path/to/ag.el")
     (require 'ag)

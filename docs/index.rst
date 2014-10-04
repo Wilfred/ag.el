@@ -12,6 +12,10 @@ filter by file type, edit results inline, or find files.
 Ag.el tries very hard to be Do-What-I-Mean, and will make intelligent
 suggestions about what to search and which directories to search in.
 
+`Source on GitHub <https://github.com/Wilfred/ag.el>`_.
+
+`Bug tracking on GitHub <https://github.com/Wilfred/ag.el/issues>`_.
+
 Contents:
 
 .. toctree::
