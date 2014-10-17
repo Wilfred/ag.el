@@ -113,16 +113,20 @@ different window, according to `ag-reuse-window'."
     ;; just navigate to the results as normal
     (compilation-next-error-function n reset)))
 
+;; Note that we want to use as tight a regexp as we can to try and
+;; handle weird file names (with colons in them) as well as possible.
+;; E.g. we use [1-9][0-9]* rather than [0-9]+ so as to accept ":034:"
+;; in file names.
+(defvar ag/file-column-pattern
+  "^\\(.+?\\):\\([1-9][0-9]*\\):\\([1-9][0-9]*\\):"
+  "A regexp pattern that groups output into filename, line number and column number.")
+
 (define-compilation-mode ag-mode "Ag"
   "Ag results compilation mode"
-  (let ((smbl  'compilation-ag-nogroup)
-        ;; Note that we want to use as tight a regexp as we can to try and
-        ;; handle weird file names (with colons in them) as well as possible.
-        ;; E.g. we use [1-9][0-9]* rather than [0-9]+ so as to accept ":034:"
-        ;; in file names.
-        (pttrn '("^\\(.+?\\):\\([1-9][0-9]*\\):\\([1-9][0-9]*\\):" 1 2 3)))
-    (set (make-local-variable 'compilation-error-regexp-alist) (list smbl))
-    (set (make-local-variable 'compilation-error-regexp-alist-alist) (list (cons smbl pttrn))))
+  (set (make-local-variable 'compilation-error-regexp-alist)
+       (list 'compilation-ag-nogroup))
+  (set (make-local-variable 'compilation-error-regexp-alist-alist)
+       (list (cons 'compilation-ag-nogroup (list ag/file-column-pattern 1 2 3))))
   (set (make-local-variable 'compilation-error-face) 'ag-hit-face)
   (set (make-local-variable 'next-error-function) 'ag/next-error-function)
   (add-hook 'compilation-filter-hook 'ag-filter nil t))
