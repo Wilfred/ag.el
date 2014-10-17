@@ -120,7 +120,7 @@ different window, according to `ag-reuse-window'."
         ;; handle weird file names (with colons in them) as well as possible.
         ;; E.g. we use [1-9][0-9]* rather than [0-9]+ so as to accept ":034:"
         ;; in file names.
-        (pttrn '("^\\([^:\n]+?\\):\\([1-9][0-9]*\\):\\([1-9][0-9]*\\):" 1 2 3)))
+        (pttrn '("^\\(.+?\\):\\([1-9][0-9]*\\):\\([1-9][0-9]*\\):" 1 2 3)))
     (set (make-local-variable 'compilation-error-regexp-alist) (list smbl))
     (set (make-local-variable 'compilation-error-regexp-alist-alist) (list (cons smbl pttrn))))
   (set (make-local-variable 'compilation-error-face) 'ag-hit-face)
