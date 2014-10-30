@@ -88,6 +88,11 @@ If set to nil, fall back to finding VCS root directories."
                  (function :tag "Function"))
   :group 'ag)
 
+(defcustom ag-ignore-list nil
+  "A list of patterns to ignore when searching."
+  :type '(repeat (string))
+  :group 'ag)
+
 (require 'compile)
 
 ;; Although ag results aren't exactly errors, we treat them as errors
@@ -143,6 +148,19 @@ different window, according to `ag-reuse-window'."
    (regexp (format "*ag search regexp:%s dir:%s*" search-string directory))
    (:else (format "*ag search text:%s dir:%s*" search-string directory))))
 
+(defun ag/format-ignore (ignore)
+  "Format IGNORE for the command line option --ignore."
+  (cond ((equal ignore nil) "")
+        ((equal (length ignore) 1) (car ignore))
+        (t
+         (let ((result "{"))
+           (while ignore
+             (setq result (concat result (car ignore) ", "))
+             (setq ignore (cdr ignore)))
+           (setq result (substring result 0 (- (length result) 2))) ;; Remove last ", "
+           (setq result (concat result "}"))
+           result))))
+
 (defun* ag/search (string directory
                           &key (regexp nil) (file-regex nil) (file-type nil))
   "Run ag searching for the STRING given in DIRECTORY.
@@ -159,6 +177,8 @@ If REGEXP is non-nil, treat STRING as a regular expression."
       (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
     (when file-type
       (setq arguments (cons file-type arguments)))
+    (when ag-ignore-list
+      (setq arguments (append `("--ignore" ,(ag/format-ignore ag-ignore-list)) arguments)))
     (unless (file-exists-p default-directory)
       (error "No such directory %s" default-directory))
     (let ((command-string
