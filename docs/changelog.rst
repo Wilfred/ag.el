@@ -11,6 +11,8 @@ Fixed another case where ``ag-dired*`` commands ignored ``ag-executable``.
 
 Fixed an issue with ``ag-dired`` where inputs would be quoted twice.
 
+Added ``ag-ignore-list`` which allows you specify patterns to ignore.
+
 0.44
 ~~~~
 
