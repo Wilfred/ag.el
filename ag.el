@@ -148,13 +148,10 @@ different window, according to `ag-reuse-window'."
    (regexp (format "*ag search regexp:%s dir:%s*" search-string directory))
    (:else (format "*ag search text:%s dir:%s*" search-string directory))))
 
-(defun ag/format-ignore (ignore)
-  "Prepend '--ignore' to every item in IGNORE."
-  (let ((result nil))
-    (while ignore
-      (setq result (append `("--ignore" ,(car ignore)) result))
-      (setq ignore (cdr ignore)))
-    result))
+(defun ag/format-ignore (ignores)
+  "Prepend '--ignore' to every item in IGNORES."
+  (apply 'append
+         (mapcar (lambda (item) (list "--ignore" item)) ignores)))
 
 (defun* ag/search (string directory
                           &key (regexp nil) (file-regex nil) (file-type nil))
