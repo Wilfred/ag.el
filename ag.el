@@ -145,20 +145,20 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
   "Apply FACE to STRING and return STRING."
   (propertize string 'face face))
 
-(defun ag/new-search (term)
-  (interactive "sSearch term: ")
+(defun ag/project (string)
+  "DOCME"
+  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
   (let* ((results-buffer (ag/create-results-buffer))
-         (default-directory "/home/wilfred/projects/ag.el")
-         (command (format  "ag %s --nogroup" term))
+         (directory (ag/project-root default-directory))
+         (command (ag/format-command string directory))
          process)
+    (with-current-buffer results-buffer
+      (setq default-directory directory))
     (ag/insert-results-heading results-buffer command)
 
     (setq process (start-process-shell-command "foobar" results-buffer command))
     (set-process-filter process #'ag/process-filter)
     (switch-to-buffer results-buffer))
-
-  ;; Prevent further modification.
-  ;; (setq buffer-read-only t)
 
   ;; TODO:
   ;; * Update elapsed time as command runs.
@@ -172,24 +172,27 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 
 (defun ag/process-filter (process string)
   (with-current-buffer (process-buffer process)
-    (save-excursion
-      (goto-char (point-max))
-      (insert string)
-      (insert "\n\n"))))
+    (let ((inhibit-read-only t))
+      (save-excursion
+        (goto-char (point-max))
+        (insert string)))))
 
 (defun ag/insert-results-heading (buffer command)
   "Write an ag results heading into BUFFER."
   (with-current-buffer buffer
-    (insert (format "Command:   %s\n" (ag/apply-face command 'ag-info-face)))
-    (insert (format "Directory: %s\n" (ag/apply-face default-directory 'ag-info-face)))
-    (insert (format "Time:      %s (%s)\n" "23 seconds" "running"))
-    (insert (format "Matches:   %s\n\n" (ag/apply-face "25 hits in 4 files" 'ag-totals-face)))))
+    (let ((inhibit-read-only t))
+      (insert (format "Command:   %s\n" (ag/apply-face command 'ag-info-face)))
+      (insert (format "Directory: %s\n" (ag/apply-face default-directory 'ag-info-face)))
+      (insert (format "Time:      %s (%s)\n" "23 seconds" "running"))
+      (insert (format "Matches:   %s\n\n" (ag/apply-face "25 hits in 4 files" 'ag-totals-face))))))
 
 (defun ag/create-results-buffer ()
   "DOCME."
   (let* ((buffer-name (ag/buffer-name "needle" "/etc/foo" nil))
          ;; Create the buffer.
          (buffer (get-buffer-create buffer-name)))
+    (with-current-buffer buffer
+      (setq buffer-read-only t))
     buffer))
 
 ;; Debatable: should this be a public or private function?
