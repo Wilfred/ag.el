@@ -218,9 +218,9 @@ different window, according to `ag-reuse-window'."
   (apply #'append
          (mapcar (lambda (item) (list "--ignore" item)) ignores)))
 
-(cl-defun ag/search (string directory
-                            &key (regexp nil) (file-regex nil) (file-type nil))
-  "Run ag searching for the STRING given in DIRECTORY.
+(cl-defun ag/format-command (string directory
+                                    &key (regexp nil) (file-regex nil) (file-type nil))
+  "Return ag command string for searching for STRING in DIRECTORY.
 If REGEXP is non-nil, treat STRING as a regular expression."
   (let ((default-directory (file-name-as-directory directory))
         (arguments ag-arguments)
@@ -252,11 +252,17 @@ If REGEXP is non-nil, treat STRING as a regular expression."
           (setq command-string
                 (read-from-minibuffer "ag command: "
                                       (cons command-string adjusted-point)))))
-      ;; Call ag.
-      (compilation-start
-       command-string
-       #'ag-mode
-       `(lambda (mode-name) ,(ag/buffer-name string directory regexp))))))
+      command-string)))
+
+(defun* ag/search (string directory
+                          &key (regexp nil) (file-regex nil) (file-type nil))
+  "Run ag searching for the STRING given in DIRECTORY.
+If REGEXP is non-nil, treat STRING as a regular expression."
+  (compilation-start
+   (ag/format-command string directory
+                      :regexp regexp :file-regex file-regex :file-type file-type)
+   #'ag-mode
+   `(lambda (mode-name) ,(ag/buffer-name string directory regexp))))
 
 (defun ag/dwim-at-point ()
   "If there's an active selection, return that.
