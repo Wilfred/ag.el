@@ -135,8 +135,7 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 
 (defun ag/apply-face (string face)
   "Apply FACE to STRING and return STRING."
-  (add-text-properties 0 (length string) `(face ,face) string)
-  string)
+  (propertize string 'face face))
 
 (defun ag/render-output ()
   "DOCME."
