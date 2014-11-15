@@ -154,6 +154,13 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
     ;; Prevent further modification.
     (setq buffer-read-only t)
 
+    ;; TODO:
+    ;; * Update elapsed time as command runs.
+    ;; * Group matches by file, in the same way ag does by default.
+    ;; * Print totals at the top, overall and no. of files
+    ;; * Hide column numbers, they're an internal detail.
+    ;; * Better mode line with total matches, not pass/fail
+    ;; * Reconsider buffer name.
     )
   )
 
