@@ -168,7 +168,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
     (when (char-or-string-p file-regex)
       (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
     (when file-type
-      (setq arguments (cons file-type arguments)))
+      (setq arguments (cons (format "--%s" file-type) arguments)))
     (when ag-ignore-list
       (setq arguments (append (ag/format-ignore ag-ignore-list) arguments)))
     (unless (file-exists-p default-directory)
@@ -566,10 +566,9 @@ This function is called from `compilation-filter-hook'."
           (ido-completing-read "Select file type: "
                                (append '("custom (provide a PCRE regex)") all-types)))
          (file-type-extensions
-          (cdr (assoc file-type all-types-with-extensions)))
-         )
+          (cdr (assoc file-type all-types-with-extensions))))
     (if file-type-extensions
-        (list :file-type file-type-extensions)
+        (list :file-type file-type)
       (list :file-regex
             (read-from-minibuffer "Filenames which match PCRE: "
                                   (ag/buffer-extension-regex))))))

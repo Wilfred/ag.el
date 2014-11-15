@@ -13,6 +13,8 @@ Fixed an issue with ``ag-dired`` where inputs would be quoted twice.
 
 Added ``ag-ignore-list`` which allows you specify patterns to ignore.
 
+Fixed a crash with ``ag-files`` when using a built-in file type.
+
 0.44
 ~~~~
 
