@@ -123,6 +123,45 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
               (lambda ,fun-args ,fun-body)))
      ,@body))
 
+(defface ag-info-face
+  '((((class color) (background light))
+     :background "Grey85"
+     :foreground "LightSkyBlue4")
+    (((class color) (background dark))
+     :background "Grey13"
+     :foreground "LightSkyBlue1"))
+  "Face for search metadata."
+  )
+
+(defun ag/apply-face (string face)
+  "Apply FACE to STRING and return STRING."
+  (add-text-properties 0 (length string) `(face ,face) string)
+  string)
+
+(defun ag/render-output ()
+  "DOCME."
+  (interactive) ;; during dev only.
+  (let* ((buffer-name (ag/buffer-name "needle" "/etc/foo" nil))
+         (buffer (get-buffer-create buffer-name)))
+    ;; Create the buffer.
+    (switch-to-buffer buffer)
+
+    ;; Magit style summary.
+    (insert (format "Command:   %s\n" (ag/apply-face "ag --foo --bar" 'ag-info-face)))
+    (insert (format "Directory: %s\n" (ag/apply-face "/foo/bar" 'ag-info-face)))
+    (insert (format "Time:      %s (%s)\n" "23 seconds" "running"))
+
+    ;; Prevent further modification.
+    (setq buffer-read-only t)
+
+    )
+  )
+
+;; Debatable: should this be a public or private function?
+(defun ag-results-mode ()
+  "DOCME"
+  nil)
+
 (defun ag/next-error-function (n &optional reset)
   "Open the search result at point in the current window or a
 different window, according to `ag-reuse-window'."
