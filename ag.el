@@ -131,37 +131,66 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
      :background "Grey13"
      :foreground "LightSkyBlue1"))
   "Face for search metadata."
-  )
+  :group 'ag)
+
+(defface ag-totals-face
+  '((((class color) (background light))
+     :foreground "firebrick")
+    (((class color) (background dark))
+     :foreground "tomato"))
+  "Face for search totals."
+  :group 'ag)
 
 (defun ag/apply-face (string face)
   "Apply FACE to STRING and return STRING."
   (propertize string 'face face))
 
-(defun ag/render-output ()
-  "DOCME."
-  (interactive) ;; during dev only.
-  (let* ((buffer-name (ag/buffer-name "needle" "/etc/foo" nil))
-         (buffer (get-buffer-create buffer-name)))
-    ;; Create the buffer.
-    (switch-to-buffer buffer)
+(defun ag/new-search (term)
+  (interactive "sSearch term: ")
+  (let* ((results-buffer (ag/create-results-buffer))
+         (default-directory "/home/wilfred/projects/ag.el")
+         (command (format  "ag %s --nogroup" term))
+         process)
+    (ag/insert-results-heading results-buffer command)
 
-    ;; Magit style summary.
-    (insert (format "Command:   %s\n" (ag/apply-face "ag --foo --bar" 'ag-info-face)))
-    (insert (format "Directory: %s\n" (ag/apply-face "/foo/bar" 'ag-info-face)))
-    (insert (format "Time:      %s (%s)\n" "23 seconds" "running"))
+    (setq process (start-process-shell-command "foobar" results-buffer command))
+    (set-process-filter process #'ag/process-filter)
+    (switch-to-buffer results-buffer))
 
-    ;; Prevent further modification.
-    (setq buffer-read-only t)
+  ;; Prevent further modification.
+  ;; (setq buffer-read-only t)
 
-    ;; TODO:
-    ;; * Update elapsed time as command runs.
-    ;; * Group matches by file, in the same way ag does by default.
-    ;; * Print totals at the top, overall and no. of files
-    ;; * Hide column numbers, they're an internal detail.
-    ;; * Better mode line with total matches, not pass/fail
-    ;; * Reconsider buffer name.
-    )
+  ;; TODO:
+  ;; * Update elapsed time as command runs.
+  ;; * Group matches by file, in the same way ag does by default.
+  ;; * Print totals at the top, overall and no. of files
+  ;; * Hide column numbers, they're an internal detail.
+  ;; * Better mode line with total matches, not pass/fail
+  ;; * Reconsider buffer name.
+  ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
   )
+
+(defun ag/process-filter (process string)
+  (with-current-buffer (process-buffer process)
+    (save-excursion
+      (goto-char (point-max))
+      (insert string)
+      (insert "\n\n"))))
+
+(defun ag/insert-results-heading (buffer command)
+  "Write an ag results heading into BUFFER."
+  (with-current-buffer buffer
+    (insert (format "Command:   %s\n" (ag/apply-face command 'ag-info-face)))
+    (insert (format "Directory: %s\n" (ag/apply-face default-directory 'ag-info-face)))
+    (insert (format "Time:      %s (%s)\n" "23 seconds" "running"))
+    (insert (format "Matches:   %s\n\n" (ag/apply-face "25 hits in 4 files" 'ag-totals-face)))))
+
+(defun ag/create-results-buffer ()
+  "DOCME."
+  (let* ((buffer-name (ag/buffer-name "needle" "/etc/foo" nil))
+         ;; Create the buffer.
+         (buffer (get-buffer-create buffer-name)))
+    buffer))
 
 ;; Debatable: should this be a public or private function?
 (defun ag-results-mode ()
