@@ -118,11 +118,19 @@ If set to nil, fall back to finding VCS root directories."
 ;; face inherits from `compilation-info-face' so the results are
 ;; styled appropriately.
 (defface ag-hit-face '((t :inherit compilation-info))
-  "Face name to use for ag matches."
+  "Face for ag matches."
   :group 'ag)
 
 (defface ag-match-face '((t :inherit match))
-  "Face name to use for ag matches."
+  "Face for ag matches."
+  :group 'ag)
+
+(defface ag-success-face '((t :inherit success))
+  "Face for successful runs."
+  :group 'ag)
+
+(defface ag-failure-face '((t :inherit error))
+  "Face for errors that occur."
   :group 'ag)
 
 (defvar ag-search-finished-hook nil
@@ -149,38 +157,101 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
      :background "Grey13"
      :foreground "LightSkyBlue1"))
   "Face for search metadata."
-  )
+  :group 'ag)
+
+(defface ag-totals-face
+  '((((class color) (background light))
+     :foreground "firebrick")
+    (((class color) (background dark))
+     :foreground "tomato"))
+  "Face for search totals."
+  :group 'ag)
+
+(defvar-local ag/start-time nil)
+
+(defvar-local ag/finish-time nil)
+
+(defvar-local ag/command nil)
+
+(defvar-local ag/total-matches nil)
 
 (defun ag/apply-face (string face)
   "Apply FACE to STRING and return STRING."
-  (add-text-properties 0 (length string) `(face ,face) string)
-  string)
+  (propertize string 'face face))
 
-(defun ag/render-output ()
-  "DOCME."
-  (interactive) ;; during dev only.
-  (let* ((buffer-name (ag/buffer-name "needle" "/etc/foo" nil))
-         (buffer (get-buffer-create buffer-name)))
-    ;; Create the buffer.
-    (switch-to-buffer buffer)
+(defun ag/project (string)
+  "DOCME"
+  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
+  (let* ((results-buffer (ag/create-results-buffer))
+         (directory (ag/project-root default-directory))
+         (command (ag/format-command string directory))
+         process)
+    (with-current-buffer results-buffer
+      (setq default-directory directory)
+      (setq ag/command command)
+      (setq ag/total-matches 0)
+      (setq ag/start-time (float-time)))
+    
+    (ag/insert-results-heading results-buffer)
 
-    ;; Magit style summary.
-    (insert (format "Command:   %s\n" (ag/apply-face "ag --foo --bar" 'ag-info-face)))
-    (insert (format "Directory: %s\n" (ag/apply-face "/foo/bar" 'ag-info-face)))
-    (insert (format "Time:      %s (%s)\n" "23 seconds" "running"))
+    (setq process (start-process-shell-command "foobar" results-buffer command))
+    (set-process-filter process #'ag/process-filter)
+    (set-process-sentinel process #'ag/process-sentinel)
 
-    ;; Prevent further modification.
-    (setq buffer-read-only t)
+    (switch-to-buffer results-buffer))
 
-    ;; TODO:
-    ;; * Update elapsed time as command runs.
-    ;; * Group matches by file, in the same way ag does by default.
-    ;; * Print totals at the top, overall and no. of files
-    ;; * Hide column numbers, they're an internal detail.
-    ;; * Better mode line with total matches, not pass/fail
-    ;; * Reconsider buffer name.
-    )
+  ;; TODO:
+  ;; * Update elapsed time as command runs.
+  ;; * Group matches by file, in the same way ag does by default.
+  ;; * Print totals at the top, overall and no. of files
+  ;; * Hide column numbers, they're an internal detail.
+  ;; * Better mode line with total matches, not pass/fail
+  ;; * Reconsider buffer name.
+  ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
   )
+
+(defun ag/process-filter (process string)
+  (with-current-buffer (process-buffer process)
+    (let ((inhibit-read-only t))
+      (incf ag/total-matches (length (s-lines string)))
+      (save-excursion
+        (goto-char (point-max))
+        (insert string)))))
+
+(defun ag/process-sentinel (process string)
+  (let ((buffer (process-buffer process)))
+    (with-current-buffer buffer
+      ;; We assume that all signals from the ag process mean we're done.
+      (setq ag/finish-time (float-time))
+      (ag/insert-results-heading buffer)
+      (message "proc: '%s' string: '%s'" process string))))
+
+(defun ag/insert-results-heading (buffer)
+  "Insert or update an ag results heading in BUFFER."
+  (with-current-buffer buffer
+    (let ((inhibit-read-only t))
+      (save-excursion
+        ;; If there's already a heading, replace it.
+        (when (> (point-max) 1)
+          (goto-char (point-min))
+          (kill-whole-line 5))
+
+        (let ((elapsed-time
+               (- (float-time) ag/start-time)))
+          (insert (format "Command:   %s\n" (ag/apply-face ag/command 'ag-info-face)))
+          (insert (format "Directory: %s\n"
+                          (propertize default-directory 'face 'ag-info-face 'mouse-face 'highlight)))
+          (insert (format "Time:      %d seconds (%s)\n" (round elapsed-time) (if ag/finish-time "completed" "running")))
+          (insert (format "Matches:   %s hits in 4 files\n\n" ag/total-matches)))))))
+
+(defun ag/create-results-buffer ()
+  "DOCME."
+  (let* ((buffer-name (ag/buffer-name "needle" "/etc/foo" nil))
+         ;; Create the buffer.
+         (buffer (get-buffer-create buffer-name)))
+    (with-current-buffer buffer
+      (setq buffer-read-only t))
+    buffer))
 
 ;; Debatable: should this be a public or private function?
 (defun ag-results-mode ()
