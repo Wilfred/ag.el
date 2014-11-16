@@ -100,11 +100,19 @@ If set to nil, fall back to finding VCS root directories."
 ;; face inherits from `compilation-info-face' so the results are
 ;; styled appropriately.
 (defface ag-hit-face '((t :inherit compilation-info))
-  "Face name to use for ag matches."
+  "Face for ag matches."
   :group 'ag)
 
 (defface ag-match-face '((t :inherit match))
-  "Face name to use for ag matches."
+  "Face for ag matches."
+  :group 'ag)
+
+(defface ag-success-face '((t :inherit success))
+  "Face for successful runs."
+  :group 'ag)
+
+(defface ag-failure-face '((t :inherit error))
+  "Face for errors that occur."
   :group 'ag)
 
 (defvar ag-search-finished-hook nil
