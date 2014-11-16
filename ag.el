@@ -1,4 +1,4 @@
-;;; ag.el --- A front-end for ag ('the silver searcher'), the C ack replacement.
+;;; ag.el --- Fast and beautiful text search using ag.
 
 ;; Copyright (C) 2013-2014 Wilfred Hughes <me@wilfred.me.uk>
 ;;
