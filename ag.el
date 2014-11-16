@@ -149,6 +149,14 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
   "Face for search totals."
   :group 'ag)
 
+(defvar-local ag/start-time nil)
+
+(defvar-local ag/finish-time nil)
+
+(defvar-local ag/command nil)
+
+(defvar-local ag/total-matches nil)
+
 (defun ag/apply-face (string face)
   "Apply FACE to STRING and return STRING."
   (propertize string 'face face))
@@ -161,11 +169,17 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
          (command (ag/format-command string directory))
          process)
     (with-current-buffer results-buffer
-      (setq default-directory directory))
-    (ag/insert-results-heading results-buffer command)
+      (setq default-directory directory)
+      (setq ag/command command)
+      (setq ag/total-matches 0)
+      (setq ag/start-time (float-time)))
+    
+    (ag/insert-results-heading results-buffer)
 
     (setq process (start-process-shell-command "foobar" results-buffer command))
     (set-process-filter process #'ag/process-filter)
+    (set-process-sentinel process #'ag/process-sentinel)
+
     (switch-to-buffer results-buffer))
 
   ;; TODO:
@@ -181,19 +195,36 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 (defun ag/process-filter (process string)
   (with-current-buffer (process-buffer process)
     (let ((inhibit-read-only t))
+      (incf ag/total-matches (length (s-lines string)))
       (save-excursion
         (goto-char (point-max))
         (insert string)))))
 
-(defun ag/insert-results-heading (buffer command)
-  "Write an ag results heading into BUFFER."
+(defun ag/process-sentinel (process string)
+  (let ((buffer (process-buffer process)))
+    (with-current-buffer buffer
+      ;; We assume that all signals from the ag process mean we're done.
+      (setq ag/finish-time (float-time))
+      (ag/insert-results-heading buffer)
+      (message "proc: '%s' string: '%s'" process string))))
+
+(defun ag/insert-results-heading (buffer)
+  "Insert or update an ag results heading in BUFFER."
   (with-current-buffer buffer
     (let ((inhibit-read-only t))
-      (insert (format "Command:   %s\n" (ag/apply-face command 'ag-info-face)))
-      (insert (format "Directory: %s\n"
-                      (propertize default-directory 'face 'ag-info-face 'mouse-face 'highlight)))
-      (insert (format "Time:      %s %s\n" "23 seconds" (ag/apply-face  "(finished)" 'ag-success-face)))
-      (insert (format "Matches:   %s\n\n" (ag/apply-face "25 hits in 4 files" 'ag-totals-face))))))
+      (save-excursion
+        ;; If there's already a heading, replace it.
+        (when (> (point-max) 1)
+          (goto-char (point-min))
+          (kill-whole-line 5))
+
+        (let ((elapsed-time
+               (- (float-time) ag/start-time)))
+          (insert (format "Command:   %s\n" (ag/apply-face ag/command 'ag-info-face)))
+          (insert (format "Directory: %s\n"
+                          (propertize default-directory 'face 'ag-info-face 'mouse-face 'highlight)))
+          (insert (format "Time:      %d seconds (%s)\n" (round elapsed-time) (if ag/finish-time "completed" "running")))
+          (insert (format "Matches:   %s hits in 4 files\n\n" ag/total-matches)))))))
 
 (defun ag/create-results-buffer ()
   "DOCME."
