@@ -182,8 +182,9 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 (defun ag/project (string)
   "DOCME"
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
-  (let* ((results-buffer (ag/create-results-buffer))
-         (directory (ag/project-root default-directory))
+  (let* ((directory (ag/project-root default-directory))
+         ;; todo: kill existing buffer
+         (results-buffer (ag/create-results-buffer string directory))
          (command (ag/format-command string directory))
          process)
     (with-current-buffer results-buffer
@@ -244,9 +245,10 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
           (insert (format "Time:      %d seconds (%s)\n" (round elapsed-time) (if ag/finish-time "completed" "running")))
           (insert (format "Matches:   %s hits in 4 files\n\n" ag/total-matches)))))))
 
-(defun ag/create-results-buffer ()
+;; TODO: regexp search terms.
+(defun ag/create-results-buffer (string directory)
   "DOCME."
-  (let* ((buffer-name (ag/buffer-name "needle" "/etc/foo" nil))
+  (let* ((buffer-name (ag/buffer-name string directory nil))
          ;; Create the buffer.
          (buffer (get-buffer-create buffer-name)))
     (with-current-buffer buffer
