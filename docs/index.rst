@@ -25,4 +25,5 @@ Contents:
    usage
    configuration
    extensions
+   developing
    changelog
