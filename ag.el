@@ -190,8 +190,9 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
   (with-current-buffer buffer
     (let ((inhibit-read-only t))
       (insert (format "Command:   %s\n" (ag/apply-face command 'ag-info-face)))
-      (insert (format "Directory: %s\n" (ag/apply-face default-directory 'ag-info-face)))
-      (insert (format "Time:      %s (%s)\n" "23 seconds" "running"))
+      (insert (format "Directory: %s\n"
+                      (propertize default-directory 'face 'ag-info-face 'mouse-face 'highlight)))
+      (insert (format "Time:      %s %s\n" "23 seconds" (ag/apply-face  "(finished)" 'ag-success-face)))
       (insert (format "Matches:   %s\n\n" (ag/apply-face "25 hits in 4 files" 'ag-totals-face))))))
 
 (defun ag/create-results-buffer ()
