@@ -221,7 +221,7 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
       (save-excursion
         (goto-char (point-max))
         (dolist (line lines)
-          (insert line)
+          (insert (propertize line 'mouse-face 'highlight))
           (insert "\n"))))))
 
 (defun ag/process-sentinel (process string)
