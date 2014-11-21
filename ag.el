@@ -213,13 +213,16 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 
 (defun ag/process-filter (process string)
   (with-current-buffer (process-buffer process)
-    (let ((inhibit-read-only t))
-      ;; We seem to always receive whole lines, so we don't need to
-      ;; worry about double-counting lines that we see partially.
-      (incf ag/total-matches (length (s-lines (s-trim string))))
+    (let ((inhibit-read-only t)
+          ;; We seem to always receive whole lines, so we don't need to
+          ;; worry about double-counting lines that we see partially.
+          (lines (s-lines (s-trim string))))
+      (incf ag/total-matches (length lines))
       (save-excursion
         (goto-char (point-max))
-        (insert string)))))
+        (dolist (line lines)
+          (insert line)
+          (insert "\n"))))))
 
 (defun ag/process-sentinel (process string)
   (let ((buffer (process-buffer process)))
