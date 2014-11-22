@@ -225,12 +225,25 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
           (insert (format "Time:      %d seconds (%s)\n" (round elapsed-time) (if ag/finish-time "completed" "running")))
           (insert (format "Matches:   %s hits in 4 files\n\n" ag/total-matches)))))))
 
+(defun ag/wipe-buffer (buffer)
+  "Delete the contents of BUFFER."
+  ;; TODO: stop an associated process.
+  (with-current-buffer buffer
+    (let ((inhibit-read-only t))
+      (widen)
+      (delete-region (point-min) (point-max)))))
+
 ;; TODO: regexp search terms.
 (defun ag/create-results-buffer (string directory)
   "DOCME."
   (let* ((buffer-name (ag/buffer-name string directory nil))
-         ;; Create the buffer.
-         (buffer (get-buffer-create buffer-name)))
+         (buffer (get-buffer buffer-name)))
+    (if buffer
+        ;; Wipe existing buffer.
+        (ag/wipe-buffer buffer)
+      ;; Else create the buffer.
+      (setq buffer (get-buffer-create buffer-name)))
+    
     (with-current-buffer buffer
       (setq buffer-read-only t))
     buffer))
