@@ -215,8 +215,7 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
     (with-current-buffer buffer
       ;; We assume that all signals from the ag process mean we're done.
       (setq ag/finish-time (float-time))
-      (ag/insert-results-heading buffer)
-      (message "proc: '%s' string: '%s'" process string))))
+      (ag/insert-results-heading buffer))))
 
 (defun ag/insert-results-heading (buffer)
   "Insert or update an ag results heading in BUFFER."
