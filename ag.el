@@ -146,6 +146,8 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 
 (defvar-local ag/finish-time nil)
 
+(defvar-local ag/redraw-timer nil)
+
 (defvar-local ag/command nil)
 
 (defvar-local ag/total-matches nil)
@@ -166,10 +168,12 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
       (setq default-directory directory)
       (setq ag/command command)
       (setq ag/total-matches 0)
-      (setq ag/start-time (float-time)))
+      (setq ag/start-time (float-time))
+      (setq ag/redraw-timer
+            (run-with-timer
+             0 1
+             #'ag/insert-results-heading results-buffer)))
     
-    (ag/insert-results-heading results-buffer)
-
     (setq process (start-process-shell-command "foobar" results-buffer command))
     (set-process-filter process #'ag/process-filter)
     (set-process-sentinel process #'ag/process-sentinel)
@@ -177,7 +181,6 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
     (switch-to-buffer results-buffer))
 
   ;; TODO:
-  ;; * Update elapsed time as command runs.
   ;; * Group matches by file, in the same way ag does by default.
   ;; * Print totals at the top, overall and no. of files
   ;; * Hide column numbers, they're an internal detail.
@@ -204,6 +207,7 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
     (with-current-buffer buffer
       ;; We assume that all signals from the ag process mean we're done.
       (setq ag/finish-time (float-time))
+      (cancel-timer ag/redraw-timer)
       (ag/insert-results-heading buffer))))
 
 (defun ag/insert-results-heading (buffer)
