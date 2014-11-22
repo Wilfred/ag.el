@@ -178,6 +178,7 @@ We save the last line here, in case we need to append more text to it.")
       (setq ag/total-matches 0)
       (setq ag/file-matches 0)
       (setq ag/start-time (float-time))
+      ;; TODO: handle error when buffer has been killed.
       (setq ag/redraw-timer
             (run-with-timer
              0 1
