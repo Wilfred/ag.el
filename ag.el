@@ -174,13 +174,13 @@ We save the last line here, in case we need to append more text to it.")
 (defvar-local ag/total-matches nil)
 (defvar-local ag/file-matches nil)
 
-(defun ag/project (output)
+(defun ag/project (search-string)
   "DOCME"
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
   (let* ((directory (ag/project-root default-directory))
          ;; todo: kill existing buffer
-         (results-buffer (ag/create-results-buffer output directory))
-         (command (ag/format-command output directory))
+         (results-buffer (ag/create-results-buffer search-string directory))
+         (command (ag/format-command search-string directory))
          process)
     (with-current-buffer results-buffer
       (setq default-directory directory)
@@ -194,8 +194,10 @@ We save the last line here, in case we need to append more text to it.")
             (run-with-timer
              0 1
              #'ag/insert-results-heading results-buffer)))
-    
-    (setq process (start-process-shell-command "foobar" results-buffer command))
+
+    ;; TODO: should the process name match what we write in the buffer?
+    (setq process (start-process-shell-command (format "ag '%s'" search-string)
+                                               results-buffer command))
     (set-process-filter process #'ag/process-filter)
     (set-process-sentinel process #'ag/process-sentinel)
 
