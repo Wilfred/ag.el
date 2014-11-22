@@ -137,13 +137,19 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 
 (defface ag-info-face
   '((((class color) (background light))
-     :background "Grey85"
-     :foreground "LightSkyBlue4")
+     :foreground "firebrick")
     (((class color) (background dark))
-     :background "Grey13"
-     :foreground "LightSkyBlue1"))
+     :foreground "tomato"))
   "Face for search metadata."
   :group 'ag)
+
+(defface ag-link-face
+  '((((background dark))
+     (:foreground "#7474FFFFFFFF"))
+    (t (:foreground "DarkRed")))
+  "Face for dired links in ag."
+  :group 'ag )
+
 
 (defface ag-totals-face
   '((((class color) (background light))
@@ -163,10 +169,6 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 
 (defvar-local ag/total-matches nil)
 (defvar-local ag/file-matches nil)
-
-(defun ag/apply-face (string face)
-  "Apply FACE to STRING and return STRING."
-  (propertize string 'face face))
 
 (defun ag/project (string)
   "DOCME"
@@ -235,11 +237,28 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 
         (let ((elapsed-time
                (- (float-time) ag/start-time)))
-          (insert (format "Command:   %s\n" (ag/apply-face ag/command 'ag-info-face)))
-          (insert (format "Directory: %s\n"
-                          (propertize default-directory 'face 'ag-info-face 'mouse-face 'highlight)))
-          (insert (format "Time:      %d seconds (%s)\n" (round elapsed-time) (if ag/finish-time "completed" "running")))
-          (insert (format "Matches:   %s hits in %d files\n\n" ag/total-matches ag/file-matches)))))))
+          (insert
+           (ag/heading-line "Command" ag/command 'face 'ag-info-face))
+          (insert
+           (ag/heading-line "Directory" default-directory
+                            'face 'ag-link-face 'mouse-face 'highlight))
+          (insert
+           (ag/heading-line "Time"
+                            (format "%d seconds (%s)"
+                                    (round elapsed-time) (if ag/finish-time "completed" "running"))
+                            'face 'ag-info-face))
+          (insert
+           (ag/heading-line "Matches"
+                            (format "%d hits in %d files" ag/total-matches ag/file-matches)
+                            'face 'ag-info-face))
+          (insert "\n"))))))
+
+(defun ag/heading-line (key value &rest properties)
+  "Return an aligned string whose VALUE is propertized with PROPERTIES."
+  (concat
+   (s-pad-right 11 " " (format "%s:" key))
+   (apply #'propertize value properties)
+   "\n"))
 
 (defun ag/wipe-buffer (buffer)
   "Delete the contents of BUFFER."
