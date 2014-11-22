@@ -50,8 +50,8 @@
   :group 'ag)
 
 (defcustom ag-arguments
-  (list "--smart-case" "--stats")
-  "Additional arguments passed to ag.
+  (list "--line-number" "--smart-case" "--nogroup" "--column" "--nocolor" "--")
+  "Default arguments passed to ag.
 
 Ag.el internally uses --column, --line-number and --color
 options (with specific colors) to match groups, so options
@@ -65,20 +65,6 @@ print line numbers when the input is a stream."
 (defcustom ag-context-lines nil
   "Number of context lines to include before and after a matching line."
   :type 'integer
-  :group 'ag)
-
-(defcustom ag-group-matches t
-  "Group matches in the same file together.
-
-If nil, the file name is repeated at the beginning of every match line."
-  :type 'boolean
-  :group 'ag)
-
-(defcustom ag-highlight-search nil
-  "Non-nil means we highlight the current search term in results.
-
-This requires the ag command to support --color-match, which is only in v0.14+"
-  :type 'boolean
   :group 'ag)
 
 (defcustom ag-reuse-buffers nil
