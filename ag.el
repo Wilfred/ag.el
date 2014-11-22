@@ -162,6 +162,7 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 (defvar-local ag/command nil)
 
 (defvar-local ag/total-matches nil)
+(defvar-local ag/file-matches nil)
 
 (defun ag/apply-face (string face)
   "Apply FACE to STRING and return STRING."
@@ -179,6 +180,7 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
       (setq default-directory directory)
       (setq ag/command command)
       (setq ag/total-matches 0)
+      (setq ag/file-matches 0)
       (setq ag/start-time (float-time))
       (setq ag/redraw-timer
             (run-with-timer
@@ -237,7 +239,7 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
           (insert (format "Directory: %s\n"
                           (propertize default-directory 'face 'ag-info-face 'mouse-face 'highlight)))
           (insert (format "Time:      %d seconds (%s)\n" (round elapsed-time) (if ag/finish-time "completed" "running")))
-          (insert (format "Matches:   %s hits in 4 files\n\n" ag/total-matches)))))))
+          (insert (format "Matches:   %s hits in %d files\n\n" ag/total-matches ag/file-matches)))))))
 
 (defun ag/wipe-buffer (buffer)
   "Delete the contents of BUFFER."
