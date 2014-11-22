@@ -156,20 +156,25 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 
 (defvar-local ag/command nil)
 
+(defvar-local ag/remaining-output nil
+  "We can't guarantee that our process filter will always receive whole lines.
+We save the last line here, in case we need to append more text to it.")
+
 (defvar-local ag/total-matches nil)
 (defvar-local ag/file-matches nil)
 
-(defun ag/project (string)
+(defun ag/project (output)
   "DOCME"
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
   (let* ((directory (ag/project-root default-directory))
          ;; todo: kill existing buffer
-         (results-buffer (ag/create-results-buffer string directory))
-         (command (ag/format-command string directory))
+         (results-buffer (ag/create-results-buffer output directory))
+         (command (ag/format-command output directory))
          process)
     (with-current-buffer results-buffer
       (setq default-directory directory)
       (setq ag/command command)
+      (setq ag/remaining-output "")
       (setq ag/total-matches 0)
       (setq ag/file-matches 0)
       (setq ag/start-time (float-time))
@@ -191,18 +196,23 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
   ;; * Better mode line with total matches, not pass/fail
   ;; * Reconsider buffer name.
   ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
+  ;; * Always highlight match, regardless of ag version.
   )
 
-(defun ag/process-filter (process string)
+(defun ag/process-filter (process output)
   (with-current-buffer (process-buffer process)
+    ;; ag/remaining-output may contain a partial line from the last
+    ;; time we were called, so append.
+    (setq output (concat ag/remaining-output output))
     (let ((inhibit-read-only t)
-          ;; We seem to always receive whole lines, so we don't need to
-          ;; worry about double-counting lines that we see partially.
-          (lines (s-lines (s-trim string))))
-      (incf ag/total-matches (length lines))
+          (lines (s-lines output)))
+      ;; We don't want to count the last line, as it may be a partial line.
+      (incf ag/total-matches (1- (length lines)))
+      (setq ag/remaining-output (-last-item lines))
+
       (save-excursion
         (goto-char (point-max))
-        (dolist (line lines)
+        (dolist (line (-butlast lines))
           (insert (propertize line 'mouse-face 'highlight))
           (insert "\n"))))))
 
@@ -212,6 +222,14 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
       ;; We assume that all signals from the ag process mean we're done.
       (setq ag/finish-time (float-time))
       (cancel-timer ag/redraw-timer)
+
+      ;; The remaining output must now be a completed line.
+      (let ((inhibit-read-only t))
+        (save-excursion
+          (goto-char (point-max))
+          (insert ag/remaining-output)
+          (insert "\n")))
+      
       (ag/insert-results-heading buffer))))
 
 (defun ag/insert-results-heading (buffer)
