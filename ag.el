@@ -45,7 +45,7 @@
   :group 'ag)
 
 (defcustom ag-arguments
-  (list "--line-number" "--smart-case" "--nogroup" "--column" "--stats" "--")
+  (list "--line-number" "--smart-case" "--nogroup" "--column" "--nocolor" "--")
   "Default arguments passed to ag.
 
 Ag.el requires --nogroup and --column, so we recommend you add any
@@ -54,13 +54,6 @@ additional arguments to the start of this list.
 --line-number is required on Window, as otherwise ag will not
 print line numbers when the input is a stream."
   :type '(repeat (string))
-  :group 'ag)
-
-(defcustom ag-highlight-search nil
-  "Non-nil means we highlight the current search term in results.
-
-This requires the ag command to support --color-match, which is only in v0.14+"
-  :type 'boolean
   :group 'ag)
 
 (defcustom ag-reuse-buffers nil
@@ -305,9 +298,6 @@ If REGEXP is non-nil, treat STRING as a regular expression."
         (shell-command-switch "-c"))
     (unless regexp
       (setq arguments (cons "--literal" arguments)))
-    (if ag-highlight-search
-        (setq arguments (append '("--color" "--color-match" "30;43") arguments))
-      (setq arguments (append '("--nocolor") arguments)))
     (when (char-or-string-p file-regex)
       (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
     (when file-type
