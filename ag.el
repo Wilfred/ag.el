@@ -125,17 +125,17 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
      ,@body))
 
 (defface ag-info-face
-  '((((class color) (background light))
-     :foreground "firebrick")
-    (((class color) (background dark))
-     :foreground "tomato"))
+  '((((background dark))
+     (:foreground "#C29D6F156F15"))
+    (t (:foreground "#00006DE06DE0")))
   "Face for search metadata."
   :group 'ag)
 
 (defface ag-link-face
-  '((((background dark))
-     (:foreground "#7474FFFFFFFF"))
-    (t (:foreground "DarkRed")))
+  '((((class color) (background light))
+     :foreground "Blue")
+    (((class color) (background dark))
+     :foreground "Yellow"))
   "Face for dired links in ag."
   :group 'ag )
 
