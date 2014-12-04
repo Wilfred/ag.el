@@ -292,8 +292,8 @@ roots."
                 (beginning-of-line)
 
                 ;; Remove occurrences of default-directory.
-                (while (search-forward default-directory nil t)
-                  (replace-match "" nil t))
+                (while (search-forward (concat " " default-directory) nil t)
+                  (replace-match " " nil t))
 
                 (goto-char (point-max))
                 (if (search-backward "\n" (process-mark proc) t)
