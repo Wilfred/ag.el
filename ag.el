@@ -133,11 +133,11 @@ different window, according to `ag-reuse-window'."
   (set (make-local-variable 'compilation-error-regexp-alist-alist)
        (list (cons 'compilation-ag-nogroup (list ag/file-column-pattern 1 2 3))))
   (set (make-local-variable 'compilation-error-face) 'ag-hit-face)
-  (set (make-local-variable 'next-error-function) 'ag/next-error-function)
+  (set (make-local-variable 'next-error-function) #'ag/next-error-function)
   (add-hook 'compilation-filter-hook 'ag-filter nil t))
 
-(define-key ag-mode-map (kbd "p") 'compilation-previous-error)
-(define-key ag-mode-map (kbd "n") 'compilation-next-error)
+(define-key ag-mode-map (kbd "p") #'compilation-previous-error)
+(define-key ag-mode-map (kbd "n") #'compilation-next-error)
 (define-key ag-mode-map (kbd "k") '(lambda () (interactive) 
                                      (let (kill-buffer-query-functions) (kill-buffer))))
 
@@ -150,7 +150,7 @@ different window, according to `ag-reuse-window'."
 
 (defun ag/format-ignore (ignores)
   "Prepend '--ignore' to every item in IGNORES."
-  (apply 'append
+  (apply #'append
          (mapcar (lambda (item) (list "--ignore" item)) ignores)))
 
 (defun* ag/search (string directory
@@ -174,7 +174,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
     (unless (file-exists-p default-directory)
       (error "No such directory %s" default-directory))
     (let ((command-string
-           (mapconcat 'shell-quote-argument
+           (mapconcat #'shell-quote-argument
                       (append (list ag-executable) arguments (list string "."))
                       " ")))
       ;; If we're called with a prefix, let the user modify the command before
@@ -190,7 +190,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
       ;; Call ag.
       (compilation-start
        command-string
-       'ag-mode
+       #'ag-mode
        `(lambda (mode-name) ,(ag/buffer-name string directory regexp))))))
 
 (defun ag/dwim-at-point ()
@@ -340,14 +340,14 @@ roots."
   "Escape the PCRE-special characters in REGEXP so that it is
 matched literally."
   (let ((alphanum "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"))
-    (apply 'concat
-            (mapcar
-             (lambda (c)
-               (cond
-                ((not (string-match-p (regexp-quote c) alphanum))
-                 (concat "\\" c))
-                (t c)))
-             (mapcar 'char-to-string (string-to-list regexp))))))
+    (apply #'concat
+           (mapcar
+            (lambda (c)
+              (cond
+               ((not (string-match-p (regexp-quote c) alphanum))
+                (concat "\\" c))
+               (t c)))
+            (mapcar #'char-to-string (string-to-list regexp))))))
 
 ;;;###autoload
 (defun ag (string directory)
@@ -369,7 +369,7 @@ If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
                      (ag/read-file-type)
                      (read-directory-name "Directory: ")))
-  (apply 'ag/search string directory file-type))
+  (apply #'ag/search string directory file-type))
 
 ;;;###autoload
 (defun ag-regexp (string directory)
@@ -553,7 +553,7 @@ This function is called from `compilation-filter-hook'."
 (defun ag/get-supported-types ()
   "Query the ag executable for which file types it recognises."
   (let* ((ag-output (shell-command-to-string (format "%s --list-file-types" ag-executable)))
-         (lines (-map 's-trim (s-lines ag-output)))
+         (lines (-map #'s-trim (s-lines ag-output)))
          (types (--keep (when (s-starts-with? "--" it) (s-chop-prefix "--" it )) lines))
          (extensions (--map (s-split "  " it) (--filter (s-starts-with? "." it) lines))))
     (-zip types extensions)))
