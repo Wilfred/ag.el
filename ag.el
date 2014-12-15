@@ -207,6 +207,7 @@ We save the last line here, in case we need to append more text to it.")
     ;; ag/remaining-output may contain a partial line from the last
     ;; time we were called, so append.
     (setq output (concat ag/remaining-output output))
+    ;; TODO: use with-silent-modifications instead here.
     (let ((inhibit-read-only t)
           (lines (s-lines output)))
       ;; We don't want to count the last line, as it may be a partial line.
