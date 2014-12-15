@@ -5,7 +5,7 @@
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
 ;; Version: 0.45
-;; Package-Requires: ((dash "2.8.0") (s "1.9.0"))
+;; Package-Requires: ((dash "2.8.0") (s "1.9.0") (cl-lib "0.5"))
 ;;; Commentary:
 
 ;; Please see README.md for documentation, or read it online at
@@ -33,6 +33,7 @@
 
 ;;; Code:
 (eval-when-compile (require 'cl)) ;; dolist, defun*, flet
+(require 'cl-lib) ;; cl-letf
 (require 'dired) ;; dired-sort-inhibit
 (require 'dash)
 (require 's)
@@ -107,14 +108,23 @@ If set to nil, fall back to finding VCS root directories."
   "Face name to use for ag matches."
   :group 'ag)
 
+(defmacro ag/with-patch-function (fun-name fun-args fun-body &rest body)
+  "Temporarily override the definition of FUN-NAME whilst BODY is executed.
+
+Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/304)."
+  `(cl-letf (((symbol-function ,fun-name)
+              (lambda ,fun-args ,fun-body)))
+     ,@body))
+
 (defun ag/next-error-function (n &optional reset)
   "Open the search result at point in the current window or a
 different window, according to `ag-reuse-window'."
   (if ag-reuse-window
       ;; prevent changing the window
-      (flet ((pop-to-buffer (buffer &rest args)
-                            (switch-to-buffer buffer)))
-        (compilation-next-error-function n reset))
+      (ag/with-patch-function
+       'pop-to-buffer (buffer &rest args) (switch-to-buffer buffer)
+       (compilation-next-error-function n reset))
+
     ;; just navigate to the results as normal
     (compilation-next-error-function n reset)))
 
