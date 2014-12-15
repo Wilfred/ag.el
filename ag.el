@@ -161,7 +161,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
         (arguments ag-arguments)
         (shell-command-switch "-c"))
     (unless regexp
-        (setq arguments (cons "--literal" arguments)))
+      (setq arguments (cons "--literal" arguments)))
     (if ag-highlight-search
         (setq arguments (append '("--color" "--color-match" "30;43") arguments))
       (setq arguments (append '("--nocolor") arguments)))
@@ -355,9 +355,9 @@ matched literally."
 with STRING defaulting to the symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
-   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
-                      (read-directory-name "Directory: ")))
-   (ag/search string directory))
+  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+                     (read-directory-name "Directory: ")))
+  (ag/search string directory))
 
 ;;;###autoload
 (defun ag-files (string file-type directory)
