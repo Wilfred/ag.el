@@ -38,6 +38,7 @@
 (require 'dash)
 (require 's)
 (require 'ido)  ;; completion
+(require 'find-dired) ;; find-dired-filter
 
 (defcustom ag-executable
   "ag"
