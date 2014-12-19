@@ -584,5 +584,12 @@ This function is called from `compilation-filter-hook'."
             (read-from-minibuffer "Filenames which match PCRE: "
                                   (ag/buffer-extension-regex))))))
 
+;; Use hjkl for motion if the user uses evil-mode.
+;; See https://github.com/Wilfred/ag.el/issues/72
+(eval-after-load 'evil
+  `(progn
+     (add-to-list 'evil-motion-state-modes 'ag-mode)
+     (evil-add-hjkl-bindings ag-mode-map 'motion)))
+
 (provide 'ag)
 ;;; ag.el ends here
