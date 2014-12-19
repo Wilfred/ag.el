@@ -4,6 +4,16 @@ Changelog
 Previous Versions
 -----------------
 
+master
+~~~~~~
+
+Replaced calls to ``ido-completing-read`` with
+``completing-read``. This allows helm users to use helm completion. To
+continue using ido for completion, please install
+ido-ubiquitous-mode. This only affects ``ag-files`` and
+``ag-project-files``.
+
+
 0.45
 ~~~~
 
