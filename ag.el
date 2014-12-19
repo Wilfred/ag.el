@@ -574,8 +574,8 @@ This function is called from `compilation-filter-hook'."
   (let* ((all-types-with-extensions (ag/get-supported-types))
          (all-types (mapcar 'car all-types-with-extensions))
          (file-type
-          (ido-completing-read "Select file type: "
-                               (append '("custom (provide a PCRE regex)") all-types)))
+          (completing-read "Select file type: "
+                           (append '("custom (provide a PCRE regex)") all-types)))
          (file-type-extensions
           (cdr (assoc file-type all-types-with-extensions))))
     (if file-type-extensions
