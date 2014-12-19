@@ -13,6 +13,9 @@ continue using ido for completion, please install
 ido-ubiquitous-mode. This only affects ``ag-files`` and
 ``ag-project-files``.
 
+Fixed an issue where pressing ``k`` would kill the search results
+buffer, even if ``evil-mode`` was active. ``k`` now only kills the
+results buffer if you're not using evil.
 
 0.45
 ~~~~
