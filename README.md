@@ -1,5 +1,8 @@
 # ag.el
 
+[![MELPA](http://melpa.org/packages/ag-badge.svg)](http://melpa.org/#/ag)
+[![MELPA Stable](http://stable.melpa.org/packages/ag-badge.svg)](http://stable.melpa.org/#/ag)
+
 Ag.el allows you to search using `ag` from inside Emacs. You can
 filter by file type, edit results inline, or find files.
 
