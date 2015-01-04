@@ -588,7 +588,7 @@ This function is called from `compilation-filter-hook'."
 ;; See https://github.com/Wilfred/ag.el/issues/72
 (eval-after-load 'evil
   `(progn
-     (eval-when-compile (require 'evil-core))
+     (eval-when-compile (require 'evil-core nil t))
      (add-to-list 'evil-motion-state-modes 'ag-mode)
      (evil-add-hjkl-bindings ag-mode-map 'motion)))
 
