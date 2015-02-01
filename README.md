@@ -25,5 +25,3 @@ Bugs: https://github.com/Wilfred/ag.el/issues
   symbol at point.
 * Add aliases for the old command names to ensure backward
   compatibility.
-* Modify `ag-regexp-project-at-point` to quote the default search
-  string, otherwise `"foo.bar"` will match other things.
