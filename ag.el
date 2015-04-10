@@ -737,30 +737,6 @@ See also `ag-dired-regexp'."
              (not (eq buffer current-buffer)))
         (kill-buffer buffer)))))
 
-;; Taken from grep-filter, just changed the color regex.
-(defun ag-filter ()
-  "Handle match highlighting escape sequences inserted by the ag process.
-This function is called from `compilation-filter-hook'."
-  (when ag-highlight-search
-    (save-excursion
-      (forward-line 0)
-      (let ((end (point)) beg)
-        (goto-char compilation-filter-start)
-        (forward-line 0)
-        (setq beg (point))
-        ;; Only operate on whole lines so we don't get caught with part of an
-        ;; escape sequence in one chunk and the rest in another.
-        (when (< (point) end)
-          (setq end (copy-marker end))
-          ;; Highlight ag matches and delete marking sequences.
-          (while (re-search-forward "\033\\[30;43m\\(.*?\\)\033\\[[0-9]*m" end 1)
-            (replace-match (propertize (match-string 1)
-                                       'face nil 'font-lock-face 'ag-match-face)
-                           t t))
-          ;; Delete all remaining escape sequences
-          (goto-char beg)
-          (while (re-search-forward "\033\\[[0-9;]*[mK]" end 1)
-            (replace-match "" t t)))))))
 
 (defun ag/get-supported-types ()
   "Query the ag executable for which file types it recognises."
