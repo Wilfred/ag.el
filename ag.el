@@ -203,6 +203,7 @@ We save the last line here, in case we need to append more text to it.")
   )
 
 (defun ag/process-filter (process output)
+  "Insert OUTPUT into the ag search buffer associated with PROCESS."
   (with-current-buffer (process-buffer process)
     ;; ag/remaining-output may contain a partial line from the last
     ;; time we were called, so append.
@@ -221,6 +222,7 @@ We save the last line here, in case we need to append more text to it.")
           (insert "\n"))))))
 
 (defun ag/process-sentinel (process string)
+  "Update the ag buffer associated with PROCESS as complete."
   (let ((buffer (process-buffer process)))
     (with-current-buffer buffer
       ;; We assume that all signals from the ag process mean we're done.
