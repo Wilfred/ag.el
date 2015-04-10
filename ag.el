@@ -768,39 +768,6 @@ See also `ag-dired-regexp'."
              (not (eq buffer current-buffer)))
         (kill-buffer buffer)))))
 
-;; Based on grep-filter.
-(defun ag-filter ()
-  "Handle escape sequences inserted by the ag process.
-This function is called from `compilation-filter-hook'."
-  (save-excursion
-    (forward-line 0)
-    (let ((end (point)) beg)
-      (goto-char compilation-filter-start)
-      (forward-line 0)
-      (setq beg (point))
-      ;; Only operate on whole lines so we don't get caught with part of an
-      ;; escape sequence in one chunk and the rest in another.
-      (when (< (point) end)
-        (setq end (copy-marker end))
-        (when ag-highlight-search
-          ;; Highlight ag matches and delete marking sequences.
-          (while (re-search-forward "\033\\[30;43m\\(.*?\\)\033\\[0m\033\\[K" end 1)
-            (replace-match (propertize (match-string 1)
-                                       'face nil 'font-lock-face 'ag-match-face)
-                           t t)))
-        ;; Add marker at start of line for files. This is used by the match
-        ;; in `compilation-error-regexp-alist' to extract the file name.
-        (when ag-group-matches
-          (goto-char beg)
-          (while (re-search-forward "\033\\[1;32m\\(.*\\)\033\\[0m\033\\[K" end 1)
-            (replace-match
-             (concat "File: " (propertize (match-string 1) 'face nil 'font-lock-face
-                                          'compilation-info))
-             t t)))
-        ;; Delete all remaining escape sequences
-        (goto-char beg)
-        (while (re-search-forward "\033\\[[0-9;]*[mK]" end 1)
-          (replace-match "" t t))))))
 
 (defun ag/get-supported-types ()
   "Query the ag executable for which file types it recognises."
