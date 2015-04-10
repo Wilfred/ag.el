@@ -304,7 +304,8 @@ We save the last line here, in case we need to append more text to it.")
       (setq buffer (get-buffer-create buffer-name)))
     
     (with-current-buffer buffer
-      (setq buffer-read-only t))
+      (setq buffer-read-only t)
+      (ag-mode))
     buffer))
 
 ;; Debatable: should this be a public or private function?
@@ -332,30 +333,9 @@ different window, according to `ag-reuse-window'."
   "^\\(.+?\\):\\([1-9][0-9]*\\):\\([1-9][0-9]*\\):"
   "A regexp pattern that groups output into filename, line number and column number.")
 
-(defvar ag/file-column-pattern-group
-  "^\\([[:digit:]]+\\):\\([[:digit:]]+\\):"
-  "A regexp pattern to match line number and column number with grouped output.")
-
-(defun ag/compilation-match-grouped-filename ()
-  "Match filename backwards when a line/column match is found in grouped output mode."
-  (save-match-data
-    (save-excursion
-      (when (re-search-backward "^File: \\(.*\\)$" (point-min) t)
-        (list (match-string 1))))))
-
-(define-compilation-mode ag-mode "Ag"
-  "Ag results compilation mode"
-  (set (make-local-variable 'compilation-error-regexp-alist)
-       '(compilation-ag-nogroup compilation-ag-group))
-  (set (make-local-variable 'compilation-error-regexp-alist-alist)
-       (list (cons 'compilation-ag-nogroup  (list ag/file-column-pattern-nogroup 1 2 3))
-             (cons 'compilation-ag-group  (list ag/file-column-pattern-group
-                                                'ag/compilation-match-grouped-filename 1 2))))
-  (set (make-local-variable 'compilation-error-face) 'ag-hit-face)
-  (set (make-local-variable 'next-error-function) #'ag/next-error-function)
-  (set (make-local-variable 'compilation-finish-functions)
-       #'ag/run-finished-hook)
-  (add-hook 'compilation-filter-hook 'ag-filter nil t))
+;; TODO: call ag/run-finished-hook
+(define-derived-mode ag-mode fundamental-mode "Ag"
+  "Mode for ag results buffers.")
 
 (define-key ag-mode-map (kbd "p") #'compilation-previous-error)
 (define-key ag-mode-map (kbd "n") #'compilation-next-error)
