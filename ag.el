@@ -229,7 +229,8 @@ We save the last line here, in case we need to append more text to it.")
       (save-excursion
         (goto-char (point-max))
         (dolist (line (-butlast lines))
-          (insert (propertize line 'mouse-face 'highlight))
+          (insert (propertize (ag--fontify-shell-highlighting line)
+                              'mouse-face 'highlight))
           (insert "\n"))))))
 
 (defun ag/process-sentinel (process string)
@@ -768,6 +769,31 @@ See also `ag-dired-regexp'."
              (not (eq buffer current-buffer)))
         (kill-buffer buffer)))))
 
+(defun ag--fontify-shell-highlighting (text)
+  "Convert colored text output by the ag process to a fontified string.
+
+Color escape sequences for ag substring matches are
+fontified. All other color escape sequences are discarded.
+
+Assumes TEXT is one or more whole lines, so escape sequences
+are complete."
+  (with-temp-buffer
+    (insert text)
+    (let ((beg (point-min)))
+      (goto-char beg)
+
+      ;; Highlight ag matches and delete marking sequences.
+      (while (re-search-forward "\033\\[30;43m\\(.*?\\)\033\\[[0-9]*m" (point-max) 1)
+        (replace-match (propertize (match-string 1)
+                                   'face 'ag-match-face)
+                       t t))
+      
+      ;; Delete all remaining escape sequences
+      (goto-char beg)
+      (while (re-search-forward "\033\\[[0-9;]*[mK]" (point-max) 1)
+        (replace-match "" t t))
+
+      (buffer-substring beg (point-max)))))
 
 (defun ag/get-supported-types ()
   "Query the ag executable for which file types it recognises."
