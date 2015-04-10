@@ -164,7 +164,7 @@ We save the last line here, in case we need to append more text to it.")
 (defvar-local ag/file-matches nil)
 
 (defun ag/project (search-string)
-  "DOCME"
+  "TODO: docme"
   (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
   (let* ((directory (ag/project-root default-directory))
          ;; todo: kill existing buffer
@@ -281,7 +281,7 @@ We save the last line here, in case we need to append more text to it.")
 
 ;; TODO: regexp search terms.
 (defun ag/create-results-buffer (string directory)
-  "DOCME."
+  "TODO: docstring."
   (let* ((buffer-name (ag/buffer-name string directory nil))
          (buffer (get-buffer buffer-name)))
     (if buffer
@@ -296,7 +296,7 @@ We save the last line here, in case we need to append more text to it.")
 
 ;; Debatable: should this be a public or private function?
 (defun ag-results-mode ()
-  "DOCME"
+  "TODO: docstring"
   nil)
 
 (defun ag/next-error-function (n &optional reset)
