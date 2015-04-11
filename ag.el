@@ -124,13 +124,6 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
               (lambda ,fun-args ,fun-body)))
      ,@body))
 
-(defface ag-info-face
-  '((((background dark))
-     (:foreground "#C29D6F156F15"))
-    (t (:foreground "#00006DE06DE0")))
-  "Face for search metadata."
-  :group 'ag)
-
 (defface ag-link-face
   '((((class color) (background light))
      :foreground "Blue")
@@ -267,27 +260,22 @@ We save the last line here, in case we need to append more text to it.")
         (let ((elapsed-time
                (- (float-time) ag/start-time)))
           (insert
-           (ag/heading-line "Command" ag/command 'face 'ag-info-face))
+           (ag/heading-line "Command" ag/command))
           (insert
-           (ag/heading-line "Directory" default-directory
-                            'face 'ag-link-face 'mouse-face 'highlight))
+           (ag/heading-line "Directory" (ag--propertize-path default-directory)))
           (insert
            (ag/heading-line "Time"
                             (format "%d seconds (%s)"
-                                    (round elapsed-time) (if ag/finish-time "completed" "running"))
-                            'face 'ag-info-face))
+                                    (round elapsed-time) (if ag/finish-time "completed" "running"))))
           (insert
            (ag/heading-line "Matches"
-                            (format "%d hits in %d files" ag--line-match-total ag--file-match-total)
-                            'face 'ag-info-face))
+                            (format "%d hits in %d files" ag--line-match-total ag--file-match-total)))
           (insert "\n"))))))
 
 (defun ag/heading-line (key value &rest properties)
   "Return an aligned string whose VALUE is propertized with PROPERTIES."
   (concat
-   (s-pad-right 11 " " (format "%s:" key))
-   (apply #'propertize value properties)
-   "\n"))
+   (s-pad-right 11 " " (format "%s:" key)) value "\n"))
 
 (defun ag/wipe-buffer (buffer)
   "Delete the contents of BUFFER."
