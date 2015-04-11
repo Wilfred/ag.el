@@ -208,7 +208,6 @@ We save the last line here, in case we need to append more text to it.")
   ;; * Better mode line with total matches, not pass/fail
   ;; * Reconsider buffer name.
   ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
-  ;; * Always highlight match, regardless of ag version.
   )
 
 ;; TODO: buffer local.
