@@ -193,14 +193,16 @@ We save the last line here, in case we need to append more text to it.")
     (switch-to-buffer results-buffer))
 
   ;; TODO:
-  ;; * Group matches by file, in the same way ag does by default.
   ;; * Print totals at the top, overall and no. of files
-  ;; * Hide column numbers, they're an internal detail.
   ;; * Better mode line with total matches, not pass/fail
   ;; * Reconsider buffer name.
   ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
   ;; * Always highlight match, regardless of ag version.
   )
+
+;; TODO: buffer local.
+(defvar ag--last-file-name nil
+  "TODO: docme")
 
 (defun ag/process-filter (process output)
   "Insert OUTPUT into the ag search buffer associated with PROCESS."
@@ -218,9 +220,18 @@ We save the last line here, in case we need to append more text to it.")
       (save-excursion
         (goto-char (point-max))
         (dolist (line (-butlast lines))
-          (insert (propertize (ag--fontify-shell-highlighting line)
-                              'mouse-face 'highlight))
-          (insert "\n"))))))
+
+          (destructuring-bind
+              (file-name line-number column-number content-line)
+              (ag--parse-output-line line)
+
+            (unless (equal file-name ag--last-file-name)
+              (insert "\n" file-name "\n")
+              (setq ag--last-file-name file-name))
+            
+            (insert (propertize content-line
+                                'mouse-face 'highlight))
+            (insert "\n")))))))
 
 (defun ag/process-sentinel (process string)
   "Update the ag buffer associated with PROCESS as complete."
