@@ -4,13 +4,27 @@ Changelog
 Previous Versions
 -----------------
 
-master
-------
+1.0 (unreleased)
+~~~~~~~~~~~~~~~~
 
-No changes yes.
+TODO: check we've finished all these.
+
+The results buffer has been rewritten:
+
+* We now visually group results by file.
+* Search results do not include redundant information on every line.
+* We show the total number of lines and files matched.
+* We show the total elapsed time and search status (in progress vs
+  complete) at the top of the buffer.
+* You can navigate to files and the root directory in addition
+  to matched lines.
+* We don't show half-processed lines (these broke highlighting).
+
+Internal API change: internal functions and attributes now start
+``ag--``.
 
 0.46
-~~~~
+~~~~~~~~~~~~~~~~~
 
 Replaced calls to ``ido-completing-read`` with
 ``completing-read``. This allows helm users to use helm completion. To
