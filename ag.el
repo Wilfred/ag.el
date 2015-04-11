@@ -237,12 +237,19 @@ We save the last line here, in case we need to append more text to it.")
               (ag--parse-output-line line)
 
             (unless (equal file-name ag--last-file-name)
-              (insert "\n" file-name "\n")
+              (insert "\n" (ag--propertize-path file-name) "\n")
               (setq ag--last-file-name file-name))
             
             (insert (propertize content-line
                                 'mouse-face 'highlight))
             (insert "\n")))))))
+
+(defun ag--propertize-path (text)
+  "Apply properties to TEXT that represent a path to a file."
+  (propertize
+   text
+   'face 'ag-link-face
+   'mouse-face 'highlight))
 
 (defun ag/process-sentinel (process string)
   "Update the ag buffer associated with PROCESS as complete."
