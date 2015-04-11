@@ -214,9 +214,12 @@ We save the last line here, in case we need to append more text to it.")
               (setq ag--last-file-name file-name)
               (incf ag--file-match-total))
             
-            (insert (propertize content-line
-                                'mouse-face 'highlight))
-            (insert "\n")))))))
+            (insert
+             (s-pad-right 3 " " line-number)
+             " "
+             (propertize content-line
+                         'mouse-face 'highlight)
+             "\n")))))))
 
 (defun ag--propertize-path (text)
   "Apply properties to TEXT that represent a path to a file."
