@@ -343,15 +343,6 @@ different window, according to `ag-reuse-window'."
     ;; just navigate to the results as normal
     (compilation-next-error-function n reset)))
 
-;; Note that we want to use as tight a regexp as we can to try and
-;; handle weird file names (with colons in them) as well as possible.
-;; E.g. we use [1-9][0-9]* rather than [0-9]+ so as to accept ":034:"
-;; in file names.
-(defvar ag/file-column-pattern-nogroup
-  "^\\(.+?\\):\\([1-9][0-9]*\\):\\([1-9][0-9]*\\):"
-  "A regexp pattern that groups output into filename, line number and column number.")
-
-;; TODO: call ag/run-finished-hook
 (define-derived-mode ag-mode fundamental-mode "Ag"
   "Mode for ag results buffers.")
 
