@@ -19,6 +19,7 @@ The results buffer has been rewritten:
 * You can navigate to files and the root directory in addition
   to matched lines.
 * We don't show half-processed lines (these broke highlighting).
+* We handle filenames containing colons under all circumstances.
 
 Internal API change: internal functions and attributes now start
 ``ag--``.
