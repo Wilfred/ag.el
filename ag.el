@@ -160,8 +160,11 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
   "We can't guarantee that our process filter will always receive whole lines.
 We save the last line here, in case we need to append more text to it.")
 
-(defvar-local ag/total-matches nil)
-(defvar-local ag/file-matches nil)
+(defvar-local ag--line-match-total nil)
+(defvar-local ag--file-match-total nil)
+(defvar-local ag--last-file-name nil
+  "TODO: docme")
+
 
 (defun ag/project (search-string)
   "TODO: docme"
@@ -175,8 +178,8 @@ We save the last line here, in case we need to append more text to it.")
       (setq default-directory directory)
       (setq ag/command command)
       (setq ag/remaining-output "")
-      (setq ag/total-matches 0)
-      (setq ag/file-matches 0)
+      (setq ag--line-match-total 0)
+      (setq ag--file-match-total 0)
       (setq ag/start-time (float-time))
       ;; TODO: handle error when buffer has been killed.
       (setq ag/redraw-timer
@@ -193,15 +196,9 @@ We save the last line here, in case we need to append more text to it.")
     (switch-to-buffer results-buffer))
 
   ;; TODO:
-  ;; * Print totals at the top, overall and no. of files
-  ;; * Better mode line with total matches, not pass/fail
   ;; * Reconsider buffer name.
   ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
   )
-
-;; TODO: buffer local.
-(defvar ag--last-file-name nil
-  "TODO: docme")
 
 (defun ag/process-filter (process output)
   "Insert OUTPUT into the ag search buffer associated with PROCESS."
@@ -213,7 +210,7 @@ We save the last line here, in case we need to append more text to it.")
     (let ((inhibit-read-only t)
           (lines (s-lines output)))
       ;; We don't want to count the last line, as it may be a partial line.
-      (incf ag/total-matches (1- (length lines)))
+      (incf ag--line-match-total (1- (length lines)))
       (setq ag/remaining-output (-last-item lines))
 
       (save-excursion
@@ -226,7 +223,8 @@ We save the last line here, in case we need to append more text to it.")
 
             (unless (equal file-name ag--last-file-name)
               (insert "\n" (ag--propertize-path file-name) "\n")
-              (setq ag--last-file-name file-name))
+              (setq ag--last-file-name file-name)
+              (incf ag--file-match-total))
             
             (insert (propertize content-line
                                 'mouse-face 'highlight))
@@ -280,7 +278,7 @@ We save the last line here, in case we need to append more text to it.")
                             'face 'ag-info-face))
           (insert
            (ag/heading-line "Matches"
-                            (format "%d hits in %d files" ag/total-matches ag/file-matches)
+                            (format "%d hits in %d files" ag--line-match-total ag--file-match-total)
                             'face 'ag-info-face))
           (insert "\n"))))))
 
