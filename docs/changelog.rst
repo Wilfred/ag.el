@@ -17,6 +17,9 @@ Fixed an issue where pressing ``k`` would kill the search results
 buffer, even if ``evil-mode`` was active. ``k`` now only kills the
 results buffer if you're not using evil.
 
+Search results buffers now include a summary of the total number of
+results and the number of files matched.
+
 0.45
 ~~~~
 
