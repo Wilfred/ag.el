@@ -144,6 +144,8 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
 
 (defvar-local ag/command nil)
 
+(defvar-local ag/search-term nil)
+
 (defvar-local ag/remaining-output nil
   "We can't guarantee that our process filter will always receive whole lines.
 We save the last line here, in case we need to append more text to it.")
@@ -164,6 +166,7 @@ We save the last line here, in case we need to append more text to it.")
          process)
     (with-current-buffer results-buffer
       (setq default-directory directory)
+      (setq ag/search-term search-string)
       (setq ag/command command)
       (setq ag/remaining-output "")
       (setq ag--line-match-total 0)
@@ -258,6 +261,8 @@ We save the last line here, in case we need to append more text to it.")
         (let ((elapsed-time
                (- (float-time) ag/start-time)))
           (insert
+           (ag/heading-line "Search term" ag/search-term))
+          (insert
            (ag/heading-line "Command" ag/command))
           (insert
            (ag/heading-line "Directory" (ag--propertize-path default-directory)))
@@ -273,7 +278,7 @@ We save the last line here, in case we need to append more text to it.")
 (defun ag/heading-line (key value &rest properties)
   "Return an aligned string whose VALUE is propertized with PROPERTIES."
   (concat
-   (s-pad-right 11 " " (format "%s:" key)) value "\n"))
+   (s-pad-right 13 " " (format "%s:" key)) value "\n"))
 
 (defun ag/wipe-buffer (buffer)
   "Delete the contents of BUFFER."
