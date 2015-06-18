@@ -237,6 +237,14 @@ We save the last line here, in case we need to append more text to it.")
       
       (ag/insert-results-heading buffer))))
 
+(defun ag--pluralize (number unit)
+  "Return UNIT formatted for NUMBER instances."
+  (format "%d %s"
+          number
+          (if (= number 1)
+              unit
+            (concat unit "s"))))
+
 (defun ag/insert-results-heading (buffer)
   "Insert or update an ag results heading in BUFFER."
   (with-current-buffer buffer
@@ -248,7 +256,7 @@ We save the last line here, in case we need to append more text to it.")
           (kill-whole-line 5))
 
         (let ((elapsed-time
-               (- (float-time) ag/start-time)))
+               (round (- (float-time) ag/start-time))))
           (insert
            (ag/heading-line "Search term" ag/search-term))
           (insert
@@ -257,11 +265,14 @@ We save the last line here, in case we need to append more text to it.")
            (ag/heading-line "Directory" (ag--propertize-path default-directory)))
           (insert
            (ag/heading-line "Time"
-                            (format "%d seconds (%s)"
-                                    (round elapsed-time) (if ag/finish-time "completed" "running"))))
+                            (format "%s (%s)"
+                                    (ag--pluralize elapsed-time "second")
+                                    (if ag/finish-time "completed" "running"))))
           (insert
            (ag/heading-line "Matches"
-                            (format "%d hits in %d files" ag--line-match-total ag--file-match-total)))
+                            (format "%s in %s"
+                                    (ag--pluralize ag--line-match-total "hit")
+                                    (ag--pluralize ag--file-match-total "file"))))
           (insert "\n"))))))
 
 (defun ag/heading-line (key value &rest properties)
