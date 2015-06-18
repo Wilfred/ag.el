@@ -116,6 +116,14 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
               (lambda ,fun-args ,fun-body)))
      ,@body))
 
+(defface ag-dim-face
+  '((((class color) (background light))
+     :foreground "grey50")
+    (((class color) (background dark))
+     :foreground "grey50"))
+  "Face for metadata in ag results buffers."
+  :group 'ag)
+
 (defface ag-link-face
   '((((class color) (background light))
      :foreground "Blue")
