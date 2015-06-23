@@ -226,7 +226,7 @@ We save the last line here, in case we need to append more text to it.")
               (incf ag--file-match-total))
             
             (insert
-             (s-pad-right 3 " " line-number)
+             (s-pad-right 3 " " (propertize line-number 'face 'ag-dim-face))
              " "
              (propertize content-line
                          'mouse-face 'highlight)
