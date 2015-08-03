@@ -365,7 +365,7 @@ matched literally."
 with STRING defaulting to the symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+  (interactive (list (ag/read-from-minibuffer "Search regexp")
                      (read-directory-name "Directory: ")))
   (ag/search string directory))
 
@@ -376,7 +376,7 @@ limited to files that match FILE-TYPE. STRING defaults to
 the symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+  (interactive (list (ag/read-from-minibuffer "Search string")
                      (ag/read-file-type)
                      (read-directory-name "Directory: ")))
   (apply #'ag/search string directory file-type))
@@ -396,7 +396,7 @@ If called with a prefix, prompts for flags to pass to ag."
 for the given string.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
+  (interactive (list (ag/read-from-minibuffer "Search string")))
   (ag/search string (ag/project-root default-directory)))
 
 ;;;###autoload
@@ -406,7 +406,7 @@ limited to files that match FILE-TYPE. STRING defaults to the
 symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+  (interactive (list (ag/read-from-minibuffer "Search string")
                      (ag/read-file-type)))
   (apply 'ag/search string (ag/project-root default-directory) file-type))
 
@@ -436,8 +436,7 @@ for the given regexp. The regexp should be in PCRE syntax, not
 Emacs regexp syntax.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (read-from-minibuffer "Search regexp: "
-                                           (ag/escape-pcre (ag/dwim-at-point)))))
+  (interactive (list (ag/escape-pcre (ag/read-from-minibuffer "Search regexp"))))
   (ag/search regexp (ag/project-root default-directory) :regexp t))
 
 (autoload 'symbol-at-point "thingatpt")
