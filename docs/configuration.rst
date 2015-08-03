@@ -74,7 +74,9 @@ example, ``C-u M-x ag``.
 Hooks
 -----
 
-ag.el provides ``ag-mode-hook`` which is run when you start a search.
+ag.el provides ``ag-mode-hook`` which is run when you start a search,
+and ``ag-search-finished-hook`` which is run when the search
+completes.
 
 Multiple search buffers
 -----------------------

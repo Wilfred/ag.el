@@ -25,6 +25,9 @@ the default if no search term is given, but saves a keystroke if you
 don't want the default. You can edit the default value by pressing
 ``M-n`` in the minibuffer.
 
+Added ``ag-search-finished-hook``, a hook that's run when the search
+is completed.
+
 0.45
 ~~~~
 

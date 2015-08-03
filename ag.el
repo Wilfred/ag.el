@@ -108,6 +108,14 @@ If set to nil, fall back to finding VCS root directories."
   "Face name to use for ag matches."
   :group 'ag)
 
+(defvar ag-search-finished-hook nil
+  "Hook run when ag completes a search in a buffer.")
+
+(defun ag/run-finished-hook (buffer how-finished)
+  "Run the ag hook to signal that the search has completed."
+  (with-current-buffer buffer
+    (run-hooks 'ag-search-finished-hook)))
+
 (defmacro ag/with-patch-function (fun-name fun-args fun-body &rest body)
   "Temporarily override the definition of FUN-NAME whilst BODY is executed.
 
@@ -144,6 +152,8 @@ different window, according to `ag-reuse-window'."
        (list (cons 'compilation-ag-nogroup (list ag/file-column-pattern 1 2 3))))
   (set (make-local-variable 'compilation-error-face) 'ag-hit-face)
   (set (make-local-variable 'next-error-function) #'ag/next-error-function)
+  (set (make-local-variable 'compilation-finish-functions)
+       #'ag/run-finished-hook)
   (add-hook 'compilation-filter-hook 'ag-filter nil t))
 
 (define-key ag-mode-map (kbd "p") #'compilation-previous-error)
