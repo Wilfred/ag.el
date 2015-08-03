@@ -365,7 +365,7 @@ matched literally."
 with STRING defaulting to the symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+  (interactive (list (ag/read-from-minibuffer "Search regexp")
                      (read-directory-name "Directory: ")))
   (ag/search string directory))
 
@@ -376,7 +376,7 @@ limited to files that match FILE-TYPE. STRING defaults to
 the symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+  (interactive (list (ag/read-from-minibuffer "Search string")
                      (ag/read-file-type)
                      (read-directory-name "Directory: ")))
   (apply #'ag/search string directory file-type))
@@ -396,7 +396,7 @@ If called with a prefix, prompts for flags to pass to ag."
 for the given string.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
+  (interactive (list (ag/read-from-minibuffer "Search string")))
   (ag/search string (ag/project-root default-directory)))
 
 ;;;###autoload
@@ -406,9 +406,28 @@ limited to files that match FILE-TYPE. STRING defaults to the
 symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+  (interactive (list (ag/read-from-minibuffer "Search string")
                      (ag/read-file-type)))
   (apply 'ag/search string (ag/project-root default-directory) file-type))
+
+(defun ag/read-from-minibuffer (prompt)
+  "Read a value from the minibuffer with PROMPT.
+If there's a string at point, offer that as a default."
+  (let* ((suggested (ag/dwim-at-point))
+         (final-prompt
+          (if suggested
+              (format "%s (default %s): " prompt suggested)
+            (format "%s: " prompt)))
+         ;; Ask the user for input, but add `suggested' to the history
+         ;; so they can use M-n if they want to modify it.
+         (user-input (read-from-minibuffer
+                      final-prompt
+                      nil nil nil nil suggested)))
+    ;; Return the input provided by the user, or use `suggested' if
+    ;; the input was empty.
+    (if (> (length user-input) 0)
+        user-input
+      suggested)))
 
 ;;;###autoload
 (defun ag-project-regexp (regexp)
@@ -417,8 +436,7 @@ for the given regexp. The regexp should be in PCRE syntax, not
 Emacs regexp syntax.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (read-from-minibuffer "Search regexp: "
-                                           (ag/escape-pcre (ag/dwim-at-point)))))
+  (interactive (list (ag/escape-pcre (ag/read-from-minibuffer "Search regexp"))))
   (ag/search regexp (ag/project-root default-directory) :regexp t))
 
 (autoload 'symbol-at-point "thingatpt")
