@@ -5,7 +5,12 @@ Previous Versions
 -----------------
 
 master
-~~~~~~
+------
+
+No changes yes.
+
+0.46
+~~~~
 
 Replaced calls to ``ido-completing-read`` with
 ``completing-read``. This allows helm users to use helm completion. To
