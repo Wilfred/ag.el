@@ -419,7 +419,7 @@ If there's a string at point, offer that as a default."
               (format "%s (default %s): " prompt suggested)
             (format "%s: " prompt)))
          ;; Ask the user for input, but add `suggested' to the history
-         ;; so they can use M-p if they want to modify it.
+         ;; so they can use M-n if they want to modify it.
          (user-input (read-from-minibuffer
                       final-prompt
                       nil nil nil nil suggested)))
