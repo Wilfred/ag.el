@@ -410,6 +410,25 @@ If called with a prefix, prompts for flags to pass to ag."
                      (ag/read-file-type)))
   (apply 'ag/search string (ag/project-root default-directory) file-type))
 
+(defun ag/read-from-minibuffer (prompt)
+  "Read a value from the minibuffer with PROMPT.
+If there's a string at point, offer that as a default."
+  (let* ((suggested (ag/dwim-at-point))
+         (final-prompt
+          (if suggested
+              (format "%s (default %s): " prompt suggested)
+            (format "%s: " prompt)))
+         ;; Ask the user for input, but add `suggested' to the history
+         ;; so they can use M-p if they want to modify it.
+         (user-input (read-from-minibuffer
+                      final-prompt
+                      nil nil nil nil suggested)))
+    ;; Return the input provided by the user, or use `suggested' if
+    ;; the input was empty.
+    (if (> (length user-input) 0)
+        user-input
+      suggested)))
+
 ;;;###autoload
 (defun ag-project-regexp (regexp)
   "Guess the root of the current project and search it with ag
