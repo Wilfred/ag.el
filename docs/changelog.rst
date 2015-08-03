@@ -20,6 +20,11 @@ results buffer if you're not using evil.
 Search results buffers now include a summary of the total number of
 results and the number of files matched.
 
+When choosing a search term, the prompt is now empty. Ag.el will use
+the default if no search term is given, but saves a keystroke if you
+don't want the default. You can edit the default value by pressing
+``M-n`` in the minibuffer.
+
 0.45
 ~~~~
 
