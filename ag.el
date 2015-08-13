@@ -446,7 +446,7 @@ for the given regexp. The regexp should be in PCRE syntax, not
 Emacs regexp syntax.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (ag/escape-pcre (ag/read-from-minibuffer "Search regexp"))))
+  (interactive (list (ag/read-from-minibuffer "Search regexp")))
   (ag/search regexp (ag/project-root default-directory) :regexp t))
 
 (autoload 'symbol-at-point "thingatpt")
