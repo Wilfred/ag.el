@@ -375,7 +375,7 @@ matched literally."
 with STRING defaulting to the symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
-  (interactive (list (ag/read-from-minibuffer "Search regexp")
+  (interactive (list (ag/read-from-minibuffer "Search string")
                      (read-directory-name "Directory: ")))
   (ag/search string directory))
 
