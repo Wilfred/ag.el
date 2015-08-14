@@ -18,10 +18,3 @@ Bugs: https://github.com/Wilfred/ag.el/issues
 ## Alternatives
 
 * There's an ag plugin for helm: https://github.com/syohex/emacs-helm-ag
-
-## Todo
-
-* Remove `*-at-point` commands in favour of always defaulting to the
-  symbol at point.
-* Add aliases for the old command names to ensure backward
-  compatibility.
