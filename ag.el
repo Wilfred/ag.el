@@ -456,7 +456,8 @@ If called with a prefix, prompts for flags to pass to ag."
 (make-obsolete 'ag-project-at-point 'ag-project "0.19")
 
 ;;;###autoload
-(defalias 'ag-regexp-project-at-point 'ag-project-regexp) ; TODO: mark as obsolete
+(defalias 'ag-regexp-project-at-point 'ag-project-regexp)
+(make-obsolete 'ag-regexp-project-at-point 'ag-project-regexp "0.46")
 
 ;;;###autoload
 (defun ag-dired (dir pattern)
