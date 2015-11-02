@@ -32,8 +32,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Code:
-(eval-when-compile (require 'cl)) ;; dolist, defun*, flet
-(require 'cl-lib) ;; cl-letf
+(require 'cl-lib) ;; cl-letf, cl-defun
 (require 'dired) ;; dired-sort-inhibit
 (require 'dash)
 (require 's)
@@ -173,8 +172,8 @@ different window, according to `ag-reuse-window'."
   (apply #'append
          (mapcar (lambda (item) (list "--ignore" item)) ignores)))
 
-(defun* ag/search (string directory
-                          &key (regexp nil) (file-regex nil) (file-type nil))
+(cl-defun ag/search (string directory
+                            &key (regexp nil) (file-regex nil) (file-type nil))
   "Run ag searching for the STRING given in DIRECTORY.
 If REGEXP is non-nil, treat STRING as a regular expression."
   (let ((default-directory (file-name-as-directory directory))
