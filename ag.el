@@ -152,17 +152,18 @@ We save the last line here, in case we need to append more text to it.")
 (defvar-local ag--last-file-name nil
   "TODO: docme")
 
-
-(defun ag/project (search-string)
-  "TODO: docme"
-  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
-  (let* ((directory (ag/project-root default-directory))
-         ;; todo: kill existing buffer
-         (results-buffer (ag/create-results-buffer search-string directory))
-         (command (ag/format-command search-string directory))
+;; TODO:
+;; * Reconsider buffer name.
+;; * Handle errors gracefully, without confusing them with a zero-result exit code.
+(defun ag--start-search (search-string root-directory)
+  "Initiate an ag search for SEARCH-STRING in ROOT-DIRECTORY."
+  (let* (
+         ;; TODO: kill existing buffer
+         (results-buffer (ag/create-results-buffer search-string root-directory))
+         (command (ag/format-command search-string root-directory))
          process)
     (with-current-buffer results-buffer
-      (setq default-directory directory)
+      (setq default-directory root-directory)
       (setq ag/search-term search-string)
       (setq ag/command command)
       (setq ag/remaining-output "")
@@ -181,11 +182,13 @@ We save the last line here, in case we need to append more text to it.")
     (set-process-filter process #'ag/process-filter)
     (set-process-sentinel process #'ag/process-sentinel)
 
-    (switch-to-buffer results-buffer))
+    (switch-to-buffer results-buffer)))
 
-  ;; TODO:
-  ;; * Reconsider buffer name.
-  ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
+(defun ag/project (search-string)
+  "TODO: docme"
+  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))))
+  (switch-to-buffer (ag--start-search search-string))
+
   )
 
 (defun ag/process-filter (process output)
@@ -586,7 +589,7 @@ for the given string.
 
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (ag/read-from-minibuffer "Search string")))
-  (ag/search string (ag/project-root default-directory)))
+  (ag--start-search string (ag/project-root default-directory)))
 
 ;;;###autoload
 (defun ag-project-files (string file-type)
