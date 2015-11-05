@@ -770,7 +770,6 @@ See also `ag-dired-regexp'."
              (not (eq buffer current-buffer)))
         (kill-buffer buffer)))))
 
-;; TODO: decide between ag/ and ag-- for private variables.
 (defun ag--parse-output-line (line)
   "Split LINE into filename, line number, column number and match text."
 
