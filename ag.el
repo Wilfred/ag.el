@@ -212,21 +212,21 @@ We save the last line here, in case we need to append more text to it.")
     (let ((inhibit-read-only t)
           (lines (s-lines output)))
       ;; We don't want to count the last line, as it may be a partial line.
-      (incf ag--line-match-total (1- (length lines)))
+      (cl-incf ag--line-match-total (1- (length lines)))
       (setq ag--remaining-output (-last-item lines))
 
       (save-excursion
         (goto-char (point-max))
         (dolist (line (-butlast lines))
 
-          (destructuring-bind
+          (cl-destructuring-bind
               (file-name line-number column-number content-line)
               (ag--parse-output-line line)
 
             (unless (equal file-name ag--last-file-name)
               (insert "\n" (ag--propertize-path file-name) "\n")
               (setq ag--last-file-name file-name)
-              (incf ag--file-match-total))
+              (cl-incf ag--file-match-total))
             
             (insert
              (s-pad-right 3 " " (propertize line-number 'face 'ag-dim-face))
@@ -416,8 +416,8 @@ If REGEXP is non-nil, treat STRING as a regular expression."
                                       (cons command-string adjusted-point)))))
       command-string)))
 
-(defun* ag--search (string directory
-                           &key (regexp nil) (file-regex nil) (file-type nil))
+(cl-defun ag--search (string directory
+                             &key (regexp nil) (file-regex nil) (file-type nil))
   "Run ag searching for the STRING given in DIRECTORY.
 If REGEXP is non-nil, treat STRING as a regular expression."
   (compilation-start
