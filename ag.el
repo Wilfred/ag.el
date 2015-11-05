@@ -195,13 +195,6 @@ We save the last line here, in case we need to append more text to it.")
 
     (switch-to-buffer results-buffer)))
 
-(defun ag--project (search-string)
-  "TODO: docme"
-  (interactive (list (read-from-minibuffer "Search string: " (ag--dwim-at-point))))
-  (switch-to-buffer (ag--start-search search-string))
-
-  )
-
 (defun ag--process-filter (process output)
   "Insert OUTPUT into the ag search buffer associated with PROCESS."
   (with-current-buffer (process-buffer process)
