@@ -227,18 +227,20 @@ We save the last line here, in case we need to append more text to it.")
 (defun ag--process-sentinel (process string)
   "Update the ag buffer associated with PROCESS as complete."
   (let ((buffer (process-buffer process)))
+    ;; We assume that all signals from the ag process mean we're done.
+    (setq ag--finish-time (float-time))
     (cancel-timer ag--redraw-timer)
-    (with-current-buffer buffer
-      ;; We assume that all signals from the ag process mean we're done.
-      (setq ag--finish-time (float-time))
-      ;; The remaining output must now be a completed line.
-      (let ((inhibit-read-only t))
-        (save-excursion
-          (goto-char (point-max))
-          (insert ag--remaining-output)
-          (insert "\n")))
-      
-      (ag--insert-results-heading buffer))))
+
+    (when (buffer-live-p buffer)
+      (with-current-buffer buffer
+        ;; The remaining output must now be a completed line.
+        (let ((inhibit-read-only t))
+          (save-excursion
+            (goto-char (point-max))
+            (insert ag--remaining-output)
+            (insert "\n")))
+
+        (ag--insert-results-heading buffer)))))
 
 (defun ag--pluralize (number unit)
   "Return UNIT formatted for NUMBER instances."
