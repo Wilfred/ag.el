@@ -227,11 +227,10 @@ We save the last line here, in case we need to append more text to it.")
 (defun ag--process-sentinel (process string)
   "Update the ag buffer associated with PROCESS as complete."
   (let ((buffer (process-buffer process)))
+    (cancel-timer ag--redraw-timer)
     (with-current-buffer buffer
       ;; We assume that all signals from the ag process mean we're done.
       (setq ag--finish-time (float-time))
-      (cancel-timer ag--redraw-timer)
-
       ;; The remaining output must now be a completed line.
       (let ((inhibit-read-only t))
         (save-excursion
