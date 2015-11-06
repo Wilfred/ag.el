@@ -209,13 +209,13 @@ We save the last line here, in case we need to append more text to it.")
               (insert "\n" (ag--propertize-path file-name) "\n")
               (setq ag--last-file-name file-name)
               (cl-incf ag--file-match-total))
-            
-            (insert
-             (s-pad-right 3 " " (propertize line-number 'face 'ag-dim-face))
-             " "
-             (propertize content-line
-                         'mouse-face 'highlight)
-             "\n")))))))
+
+            (let* ((dim-number (s-pad-right 3 " " (propertize line-number 'face 'ag-dim-face)))
+                   (hoverable-line (propertize content-line 'mouse-face 'highlight))
+                   (annotated-line
+                    (propertize (format "%s %s" dim-number hoverable-line)
+                                'ag-file-name file-name)))
+              (insert annotated-line "\n"))))))))
 
 (defun ag--propertize-path (text)
   "Apply properties to TEXT that represent a path to a file."
@@ -326,6 +326,14 @@ different window, according to `ag-reuse-window'."
     ;; just navigate to the results as normal
     (compilation-next-error-function n reset)))
 
+(defun ag--goto-result ()
+  "Goto the search result at point."
+  (interactive)
+  (let ((file-name (get-text-property (point) 'ag-file-name)))
+    ;; TODO: get the correct line and column too.
+    (when file-name
+      (find-file file-name))))
+
 (define-derived-mode ag-mode fundamental-mode "Ag"
   "Mode for ag results buffers.")
 
@@ -333,6 +341,7 @@ different window, according to `ag-reuse-window'."
 (define-key ag-mode-map (kbd "n") #'compilation-next-error)
 (define-key ag-mode-map (kbd "k") '(lambda () (interactive) 
                                      (let (kill-buffer-query-functions) (kill-buffer))))
+(define-key ag-mode-map (kbd "RET") #'ag--goto-result)
 
 (defun ag--buffer-name (search-string directory regexp)
   "Return a buffer name formatted according to ag.el conventions."
