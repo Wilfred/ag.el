@@ -50,7 +50,7 @@
   :group 'ag)
 
 (defcustom ag-arguments
-  (list "--line-number" "--smart-case" "--nogroup" "--column" "--nocolor" "--")
+  (list "--line-number" "--smart-case" "--nogroup" "--column" "--")
   "Default arguments passed to ag.
 
 Ag.el internally uses --column, --line-number and --color
