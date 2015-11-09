@@ -71,11 +71,18 @@ search."
   :type 'boolean
   :group 'ag)
 
+;; TODO: rename this to `ag-hit-reuse-window' to avoid confusion with
+;; `ag-results-reuse-window'.
 (defcustom ag-reuse-window nil
-  "Non-nil means we open search results in the same window,
-hiding the results buffer."
+  "When non-nil, selecting a search result uses the current window.
+As a result, selecting a result hides the ag results buffer."
   :type 'boolean
   :group 'ag)
+
+(defcustom ag-results-reuse-window nil
+  "When non-nil, performing an ag search uses the current window.
+As a result, we hide whatever buffer the user had open before
+they started the ag search.")
 
 (defcustom ag-project-root-function nil
   "A function to determine the project root for `ag-project'.
@@ -123,6 +130,11 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
   `(cl-letf (((symbol-function ,fun-name)
               (lambda ,fun-args ,fun-body)))
      ,@body))
+
+(defmacro ag/with-function-disabled (fun-name &rest body)
+  "Temporarily disable function FUN-NAME so it does nothing."
+  (declare (indent 1)) ; Indent like `when'.
+  `(ag/with-patch-function ,fun-name (&rest args) nil ,@body))
 
 (defun ag/next-error-function (n &optional reset)
   "Open the search result at point in the current window or a
@@ -196,7 +208,8 @@ If REGEXP is non-nil, treat STRING as a regular expression."
     (let ((command-string
            (mapconcat #'shell-quote-argument
                       (append (list ag-executable) arguments (list string "."))
-                      " ")))
+                      " "))
+          results-buffer)
       ;; If we're called with a prefix, let the user modify the command before
       ;; running it. Typically this means they want to pass additional arguments.
       (when current-prefix-arg
@@ -207,11 +220,21 @@ If REGEXP is non-nil, treat STRING as a regular expression."
           (setq command-string
                 (read-from-minibuffer "ag command: "
                                       (cons command-string adjusted-point)))))
-      ;; Call ag.
-      (compilation-start
-       command-string
-       #'ag-mode
-       `(lambda (mode-name) ,(ag/buffer-name string directory regexp))))))
+      ;; The proper Emacs approach is to set `display-buffer-alist'
+      ;; rather than to change the active buffer here. However,
+      ;; `compilation-start' doesn't respect this variable, see
+      ;; http://lists.gnu.org/archive/html/emacs-devel/2007-11/msg01638.html
+      ;; Instead, we temporarily disable `display-buffer'.
+      (ag/with-function-disabled 'display-buffer
+        (setq results-buffer
+              ;; Call ag.
+              (compilation-start
+               command-string
+               #'ag-mode
+               `(lambda (mode-name) ,(ag/buffer-name string directory regexp)))))
+      (if ag-results-reuse-window
+          (display-buffer results-buffer)
+        (display-buffer results-buffer '(nil (allow-no-window . t)))))))
 
 (defun ag/dwim-at-point ()
   "If there's an active selection, return that.
