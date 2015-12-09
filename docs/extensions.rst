@@ -19,7 +19,7 @@ Editing the results inline
 
 `wgrep <https://github.com/mhayashi1120/Emacs-wgrep>`_ has support for
 ag.el. If you install wgrep-ag
-(`available on MELPA <http://melpa.milkbox.net/?#/wgrep-ag>`_), you can
+(`available on MELPA <https://melpa.org/#/wgrep-ag>`_), you can
 simply run ``wgrep-change-to-wgrep-mode`` and edit the ``*ag*``
 buffer. Press ``C-x C-s`` when you're done to make the changes to
 buffers.
