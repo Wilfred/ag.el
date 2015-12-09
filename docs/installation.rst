@@ -25,7 +25,7 @@ Ag.el
 -----
 
 Afterwards, you can install ag.el from `MELPA
-<http://melpa.milkbox.net/>`_ (the recommended approach).
+<https://melpa.org/>`_ (the recommended approach).
 
 Functions are autoloaded, so ``(require 'ag)`` is unnecessary.
 
