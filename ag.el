@@ -51,7 +51,7 @@
 Ag.el requires --nogroup and --column, so we recommend you add any
 additional arguments to the start of this list.
 
---line-number is required on Window, as otherwise ag will not
+--line-number is required on Windows, as otherwise ag will not
 print line numbers when the input is a stream."
   :type '(repeat (string))
   :group 'ag)
