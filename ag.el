@@ -281,10 +281,16 @@ We save the last line here, in case we need to append more text to it.")
                                      (ag--pluralize ag--file-match-total "file"))))
           (insert "\n"))))))
 
-(defun ag--heading-line (key value &rest properties)
-  "Return an aligned string whose VALUE is propertized with PROPERTIES."
+(defconst ag--heading-label-width 13)
+
+(defun ag--heading-line (label text)
+  "Return an aligned string with font faces set for a heading."
   (concat
-   (s-pad-right 13 " " (format "%s:" key)) value "\n"))
+   (propertize
+    (s-pad-right ag--heading-label-width " " (format "%s:" label))
+    'face 'ag-dim-face)
+   text
+   "\n"))
 
 (defun ag--wipe-buffer (buffer)
   "Delete the contents of BUFFER."
