@@ -214,7 +214,8 @@ We save the last line here, in case we need to append more text to it.")
                    (hoverable-line (propertize content-line 'mouse-face 'highlight))
                    (annotated-line
                     (propertize (format "%s %s" dim-number hoverable-line)
-                                'ag-file-name file-name)))
+                                'ag-file-name file-name
+                                'ag-line-number (read line-number))))
               (insert annotated-line "\n"))))))))
 
 (defun ag--propertize-path (text)
@@ -329,10 +330,13 @@ different window, according to `ag-reuse-window'."
 (defun ag--goto-result ()
   "Goto the search result at point."
   (interactive)
-  (let ((file-name (get-text-property (point) 'ag-file-name)))
-    ;; TODO: get the correct line and column too.
+  (let ((file-name (get-text-property (point) 'ag-file-name))
+        (line-number (get-text-property (point) 'ag-line-number)))
+    ;; TODO: get the correct column too.
     (when file-name
-      (find-file file-name))))
+      (find-file file-name)
+      (goto-char (point-min))
+      (forward-line (1- line-number)))))
 
 (define-derived-mode ag-mode fundamental-mode "Ag"
   "Mode for ag results buffers.")
