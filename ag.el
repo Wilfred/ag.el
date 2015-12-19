@@ -326,6 +326,7 @@ We save the last line here, in case we need to append more text to it.")
       (ag-mode))
     buffer))
 
+;; TODO: lines should be truncated by default in this mode.
 (defun ag-results-mode ()
   "TODO: docstring"
   nil)
