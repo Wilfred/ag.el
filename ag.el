@@ -392,7 +392,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
    #'ag-mode
    `(lambda (mode-name) ,(ag--buffer-name string directory regexp))))
 
-(defun ag--dwim-at-point ()
+(defun ag--input-at-point ()
   "If there's an active selection, return that.
 Otherwise, get the symbol at point, as a string."
   (cond ((use-region-p)
@@ -602,7 +602,7 @@ If called with a prefix, prompts for flags to pass to ag."
 (defun ag--read-from-minibuffer (prompt)
   "Read a value from the minibuffer with PROMPT.
 If there's a string at point, offer that as a default."
-  (let* ((suggested (ag--dwim-at-point))
+  (let* ((suggested (ag--input-at-point))
          (final-prompt
           (if suggested
               (format "%s (default %s): " prompt suggested)
