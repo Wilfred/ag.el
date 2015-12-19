@@ -315,11 +315,6 @@ We save the last line here, in case we need to append more text to it.")
       (ag-mode))
     buffer))
 
-;; TODO: lines should be truncated by default in this mode.
-(defun ag-results-mode ()
-  "TODO: docstring"
-  nil)
-
 (defun ag--goto-result ()
   "Goto the search result at point."
   (interactive)
@@ -331,6 +326,7 @@ We save the last line here, in case we need to append more text to it.")
       (goto-char (point-min))
       (forward-line (1- line-number)))))
 
+;; TODO: lines should be truncated by default in this mode.
 (define-derived-mode ag-mode fundamental-mode "Ag"
   "Mode for ag results buffers.")
 
