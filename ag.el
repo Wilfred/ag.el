@@ -92,6 +92,7 @@ If set to nil, fall back to finding VCS root directories."
 ;; so `next-error' and `previous-error' work. However, we ensure our
 ;; face inherits from `compilation-info-face' so the results are
 ;; styled appropriately.
+;; TODO: set `next-error-function'.
 (defface ag-hit-face '((t :inherit compilation-info))
   "Face for ag matches."
   :group 'ag)
