@@ -423,6 +423,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
                                       (cons command-string adjusted-point)))))
       command-string)))
 
+;; TODO: remove.
 (cl-defun ag--search (string directory
                              &key (regexp nil) (file-regex nil) (file-type nil))
   "Run ag searching for the STRING given in DIRECTORY.
@@ -597,7 +598,7 @@ with STRING defaulting to the symbol under point.
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (ag--read-from-minibuffer "Search string")
                      (read-directory-name "Directory: ")))
-  (ag--search string directory))
+  (ag--start-search string (ag--project-root directory)))
 
 ;;;###autoload
 (defun ag-files (string file-type directory)
