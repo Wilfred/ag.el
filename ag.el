@@ -317,7 +317,6 @@ We save the last line here, in case we need to append more text to it.")
       (ag-mode))
     buffer))
 
-;; Debatable: should this be a public or private function?
 (defun ag-results-mode ()
   "TODO: docstring"
   nil)
