@@ -86,8 +86,6 @@ If set to nil, fall back to finding VCS root directories."
   :type '(repeat (string))
   :group 'ag)
 
-(require 'compile)
-
 ;; Although ag results aren't exactly errors, we treat them as errors
 ;; so `next-error' and `previous-error' work. However, we ensure our
 ;; face inherits from `compilation-info-face' so the results are
@@ -321,18 +319,6 @@ We save the last line here, in case we need to append more text to it.")
   "TODO: docstring"
   nil)
 
-(defun ag--next-error-function (n &optional reset)
-  "Open the search result at point in the current window or a
-different window, according to `ag-reuse-window'."
-  (if ag-reuse-window
-      ;; prevent changing the window
-      (ag--with-patch-function
-       'pop-to-buffer (buffer &rest args) (switch-to-buffer buffer)
-       (compilation-next-error-function n reset))
-
-    ;; just navigate to the results as normal
-    (compilation-next-error-function n reset)))
-
 (defun ag--goto-result ()
   "Goto the search result at point."
   (interactive)
@@ -347,8 +333,8 @@ different window, according to `ag-reuse-window'."
 (define-derived-mode ag-mode fundamental-mode "Ag"
   "Mode for ag results buffers.")
 
-(define-key ag-mode-map (kbd "p") #'compilation-previous-error)
-(define-key ag-mode-map (kbd "n") #'compilation-next-error)
+(define-key ag-mode-map (kbd "p") #'previous-error)
+(define-key ag-mode-map (kbd "n") #'next-error)
 (define-key ag-mode-map (kbd "k") '(lambda () (interactive) 
                                      (let (kill-buffer-query-functions) (kill-buffer))))
 (define-key ag-mode-map (kbd "RET") #'ag--goto-result)
