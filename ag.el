@@ -183,7 +183,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
       (setq arguments (cons "--literal" arguments)))
     (if ag-highlight-search
         (setq arguments (append '("--color" "--color-match" "30;43") arguments))
-      (setq arguments (append '("--nocolor") arguments)))
+      (setq arguments (append '("--nocolor" "--vimgrep") arguments)))
     (when (char-or-string-p file-regex)
       (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
     (when file-type
