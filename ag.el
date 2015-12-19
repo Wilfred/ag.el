@@ -211,10 +211,8 @@ We save the last line here, in case we need to append more text to it.")
         (goto-char (point-max))
         (dolist (line (-butlast lines))
 
-          (cl-destructuring-bind
-              (file-name line-number column-number content-line)
-              (ag--parse-output-line line)
-
+          (-let [(file-name line-number column-number content-line)
+                 (ag--parse-output-line line)]
             (unless (equal file-name ag--last-file-name)
               (insert "\n" (ag--propertize-path file-name) "\n")
               (setq ag--last-file-name file-name)
