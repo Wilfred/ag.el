@@ -182,8 +182,15 @@ If REGEXP is non-nil, treat STRING as a regular expression."
     (unless regexp
       (setq arguments (cons "--literal" arguments)))
     (if ag-highlight-search
+        ;; We're highlighting, so pass additional arguments for
+        ;; highlighting the current search term using shell escape
+        ;; sequences.
         (setq arguments (append '("--color" "--color-match" "30;43") arguments))
-      (setq arguments (append '("--nocolor" "--vimgrep") arguments)))
+      ;; We're not highlighting.
+      (if (eq system-type 'windows-nt)
+          ;; Use --vimgrep to work around issue #97 on Windows.
+          (setq arguments (append '("--vimgrep") arguments))
+        (setq arguments (append '("--nocolor") arguments))))
     (when (char-or-string-p file-regex)
       (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
     (when file-type
