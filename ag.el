@@ -266,6 +266,8 @@ Returns an empty string otherwise."
 
 (autoload 'vc-hg-root "vc-hg")
 
+(autoload 'vc-bzr-root "vc-bzr")
+
 (defun ag/project-root (file-path)
   "Guess the project root of the given FILE-PATH.
 
@@ -276,7 +278,8 @@ roots."
     (or (ag/longest-string
        (vc-git-root file-path)
        (vc-svn-root file-path)
-       (vc-hg-root file-path))
+       (vc-hg-root file-path)
+       (vc-bzr-root file-path))
       file-path)))
 
 (defun ag/dired-align-size-column ()
