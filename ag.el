@@ -50,7 +50,7 @@
   :group 'ag)
 
 (defcustom ag-arguments
-  (list "--smart-case" "--stats" "--")
+  (list "--smart-case" "--stats")
   "Additional arguments passed to ag.
 
 Ag.el internally uses --column, --line-number and --color
@@ -210,6 +210,10 @@ If REGEXP is non-nil, treat STRING as a regular expression."
   (let ((default-directory (file-name-as-directory directory))
         (arguments ag-arguments)
         (shell-command-switch "-c"))
+    ;; Add double dashes at the end of command line if not specified in
+    ;; ag-arguments.
+    (unless (equal (car (last arguments)) "--")
+      (setq arguments (append arguments '("--"))))
     (setq arguments
           (append '("--line-number" "--column" "--color" "--color-match" "30;43"
                     "--color-path" "1;32")
