@@ -215,16 +215,16 @@ If REGEXP is non-nil, treat STRING as a regular expression."
                     "--color-path" "1;32")
                   arguments))
     (if ag-group-matches
-        (setq arguments (append '("--group") arguments))
-      (setq arguments (append '("--nogroup") arguments)))
+        (setq arguments (cons "--group" arguments))
+      (setq arguments (cons "--nogroup" arguments)))
     (when ag-context-lines
       (let ((ctx (number-to-string ag-context-lines)))
-        (setq arguments (append (list "-A" ctx "-B" ctx) arguments))))
+        (setq arguments (append `("-A" ,ctx "-B" ,ctx) arguments))))
     (unless regexp
       (setq arguments (cons "--literal" arguments)))
     (when (eq system-type 'windows-nt)
       ;; Use --vimgrep to work around issue #97 on Windows.
-      (setq arguments (append '("--vimgrep") arguments)))
+      (setq arguments (cons "--vimgrep" arguments)))
     (when (char-or-string-p file-regex)
       (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
     (when file-type
