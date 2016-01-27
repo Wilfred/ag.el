@@ -38,6 +38,11 @@
 (require 's)
 (require 'find-dired) ;; find-dired-filter
 
+(defgroup ag nil
+  "A front-end for ag - The Silver Searcher."
+  :group 'tools
+  :group 'matching)
+
 (defcustom ag-executable
   "ag"
   "Name of the ag executable to use."
@@ -45,17 +50,23 @@
   :group 'ag)
 
 (defcustom ag-arguments
-  (list "--line-number" "--smart-case" "--nogroup" "--column" "--stats" "--")
-  "Default arguments passed to ag.
+  (list "--smart-case" "--stats" "--")
+  "Additional arguments passed to ag.
 
-Ag.el requires --column, so we recommend you add any additional
-arguments to the start of this list.  It also expects colored
-output with specific colors, to match groups, so you shouldn't
-change or disable them.
+Ag.el internally uses --column, --line-number and --color
+options (with specific colors) to match groups, so options
+specifid here should no contraddict them.
 
 --line-number is required on Windows, as otherwise ag will not
 print line numbers when the input is a stream."
   :type '(repeat (string))
+  :group 'ag)
+
+(defcustom ag-group-matches nil
+  "Group matches inn the same file together.
+
+If nil, the file name is repeated at the beginning of every match line."
+  :type 'boolean
   :group 'ag)
 
 (defcustom ag-highlight-search nil
@@ -195,7 +206,12 @@ If REGEXP is non-nil, treat STRING as a regular expression."
         (arguments ag-arguments)
         (shell-command-switch "-c"))
     (setq arguments
-          (append '("--color" "--color-match" "30;43" "--color-path" "1;32") arguments))
+          (append '("--line-number" "--column" "--color" "--color-match" "30;43"
+                    "--color-path" "1;32")
+                  arguments))
+    (if ag-group-matches
+        (setq arguments (append '("--group") arguments))
+      (setq arguments (append '("--nogroup") arguments)))
     (unless regexp
       (setq arguments (cons "--literal" arguments)))
     (when (eq system-type 'windows-nt)
@@ -609,7 +625,7 @@ This function is called from `compilation-filter-hook'."
                            t t)))
         ;; Add marker at start of line for files. This is used by the match
         ;; in `compilation-error-regexp-alist' to extract the file name.
-        (when (ag/display-grouped)
+        (when ag-group-matches
           (goto-char beg)
           (while (re-search-forward "\033\\[1;32m\\(.*\\)\033\\[0m\033\\[K" end 1)
             (replace-match (concat "File: " (match-string 1)) t t)))
@@ -617,10 +633,6 @@ This function is called from `compilation-filter-hook'."
         (goto-char beg)
         (while (re-search-forward "\033\\[[0-9;]*[mK]" end 1)
           (replace-match "" t t))))))
-
-(defun ag/display-grouped ()
-  "Whether match output is grouped by file."
-  (not (member "--nogroup" ag-arguments)))
 
 (defun ag/get-supported-types ()
   "Query the ag executable for which file types it recognises."
