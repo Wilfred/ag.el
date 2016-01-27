@@ -62,6 +62,11 @@ print line numbers when the input is a stream."
   :type '(repeat (string))
   :group 'ag)
 
+(defcustom ag-context-lines nil
+  "Number of context lines to include before and after a matching line."
+  :type 'integer
+  :group 'ag)
+
 (defcustom ag-group-matches nil
   "Group matches inn the same file together.
 
@@ -212,6 +217,9 @@ If REGEXP is non-nil, treat STRING as a regular expression."
     (if ag-group-matches
         (setq arguments (append '("--group") arguments))
       (setq arguments (append '("--nogroup") arguments)))
+    (when ag-context-lines
+      (let ((ctx (number-to-string ag-context-lines)))
+        (setq arguments (append (list "-A" ctx "-B" ctx) arguments))))
     (unless regexp
       (setq arguments (cons "--literal" arguments)))
     (when (eq system-type 'windows-nt)
