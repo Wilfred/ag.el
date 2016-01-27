@@ -628,7 +628,10 @@ This function is called from `compilation-filter-hook'."
         (when ag-group-matches
           (goto-char beg)
           (while (re-search-forward "\033\\[1;32m\\(.*\\)\033\\[0m\033\\[K" end 1)
-            (replace-match (concat "File: " (match-string 1)) t t)))
+            (replace-match
+             (concat "File: " (propertize (match-string 1) 'face nil 'font-lock-face
+                                          'compilation-info))
+             t t)))
         ;; Delete all remaining escape sequences
         (goto-char beg)
         (while (re-search-forward "\033\\[[0-9;]*[mK]" end 1)
