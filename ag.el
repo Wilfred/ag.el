@@ -55,7 +55,7 @@
 
 Ag.el internally uses --column, --line-number and --color
 options (with specific colors) to match groups, so options
-specifid here should no contraddict them.
+specified here should no contraddict them.
 
 --line-number is required on Windows, as otherwise ag will not
 print line numbers when the input is a stream."
