@@ -7,6 +7,11 @@ Previous Versions
 master
 ------
 
+No changes yet.
+
+0.47
+~~~~
+
 Added a workaround for an ag bug on windows where results were shown
 without filenames (see issue #97). Note this only applies when
 ``ag-highlight-search`` is nil.
