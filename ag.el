@@ -195,6 +195,8 @@ If REGEXP is non-nil, treat STRING as a regular expression."
       (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
     (when file-type
       (setq arguments (cons (format "--%s" file-type) arguments)))
+    (when (integerp current-prefix-arg)
+      (setq arguments (cons (format "--context=%d" (abs current-prefix-arg)) arguments)))
     (when ag-ignore-list
       (setq arguments (append (ag/format-ignore ag-ignore-list) arguments)))
     (unless (file-exists-p default-directory)
@@ -205,7 +207,9 @@ If REGEXP is non-nil, treat STRING as a regular expression."
                       " ")))
       ;; If we're called with a prefix, let the user modify the command before
       ;; running it. Typically this means they want to pass additional arguments.
-      (when current-prefix-arg
+      ;; The numeric value is used for context lines: positive is just context
+      ;; number (no modification), negative allows further modification.
+      (when (and current-prefix-arg (not (and (integerp current-prefix-arg) (> current-prefix-arg 0))))
         ;; Make a space in the command-string for the user to enter more arguments.
         (setq command-string (ag/replace-first command-string " -- " "  -- "))
         ;; Prompt for the command.
