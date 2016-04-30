@@ -221,9 +221,6 @@ If REGEXP is non-nil, treat STRING as a regular expression."
     (if ag-group-matches
         (setq arguments (cons "--group" arguments))
       (setq arguments (cons "--nogroup" arguments)))
-    (when ag-context-lines
-      (let ((ctx (number-to-string ag-context-lines)))
-        (setq arguments (append `("-A" ,ctx "-B" ,ctx) arguments))))
     (unless regexp
       (setq arguments (cons "--literal" arguments)))
     (when (eq system-type 'windows-nt)
@@ -233,8 +230,10 @@ If REGEXP is non-nil, treat STRING as a regular expression."
       (setq arguments (append `("--file-search-regex" ,file-regex) arguments)))
     (when file-type
       (setq arguments (cons (format "--%s" file-type) arguments)))
-    (when (integerp current-prefix-arg)
-      (setq arguments (cons (format "--context=%d" (abs current-prefix-arg)) arguments)))
+    (if (integerp current-prefix-arg)
+        (setq arguments (cons (format "--context=%d" (abs current-prefix-arg)) arguments))
+      (when ag-context-lines
+        (setq arguments (cons (format "--context=%d" ag-context-lines) arguments))))
     (when ag-ignore-list
       (setq arguments (append (ag/format-ignore ag-ignore-list) arguments)))
     (unless (file-exists-p default-directory)
