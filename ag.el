@@ -89,7 +89,7 @@ If set to nil, fall back to finding VCS root directories."
   :group 'ag)
 
 (defcustom ag-ignore-list nil
-  "A list of patterns to ignore when searching."
+  "A list of patterns for files/directories to ignore when searching."
   :type '(repeat (string))
   :group 'ag)
 
