@@ -7,7 +7,12 @@ Previous Versions
 master
 ------
 
-No changes yet.
+Ag search commands now show N lines of context when called with
+numeric prefix argument N.
+
+Ag search commands can now group output. See ``ag-group-matches``.
+
+Docstring improvements.
 
 0.47
 ~~~~
