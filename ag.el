@@ -384,7 +384,7 @@ matched literally."
 
 ;;;###autoload
 (defun ag (string directory)
-  "Search using ag in a given DIRECTORY for a given search STRING,
+  "Search using ag in a given DIRECTORY for a given literal search STRING,
 with STRING defaulting to the symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
@@ -394,9 +394,9 @@ If called with a prefix, prompts for flags to pass to ag."
 
 ;;;###autoload
 (defun ag-files (string file-type directory)
-  "Search using ag in a given DIRECTORY for a given search STRING,
-limited to files that match FILE-TYPE. STRING defaults to
-the symbol under point.
+  "Search using ag in a given DIRECTORY for a given literal search STRING,
+limited to files that match FILE-TYPE. STRING defaults to the
+symbol under point.
 
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (ag/read-from-minibuffer "Search string")
@@ -416,7 +416,7 @@ If called with a prefix, prompts for flags to pass to ag."
 ;;;###autoload
 (defun ag-project (string)
   "Guess the root of the current project and search it with ag
-for the given string.
+for the given literal search STRING.
 
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (ag/read-from-minibuffer "Search string")))
@@ -424,7 +424,7 @@ If called with a prefix, prompts for flags to pass to ag."
 
 ;;;###autoload
 (defun ag-project-files (string file-type)
-  "Search using ag for a given search STRING,
+  "Search using ag for a given literal search STRING,
 limited to files that match FILE-TYPE. STRING defaults to the
 symbol under point.
 
@@ -473,8 +473,8 @@ If called with a prefix, prompts for flags to pass to ag."
 (make-obsolete 'ag-regexp-project-at-point 'ag-project-regexp "0.46")
 
 ;;;###autoload
-(defun ag-dired (dir pattern)
-  "Recursively find files in DIR matching PATTERN.
+(defun ag-dired (dir string)
+  "Recursively find files in DIR matching literal search STRING.
 
 The PATTERN is matched against the full path to the file, not
 only against the file name.
@@ -484,7 +484,7 @@ The results are presented as a `dired-mode' buffer with
 
 See also `ag-dired-regexp'."
   (interactive "DDirectory: \nsFile pattern: ")
-  (ag-dired-regexp dir (ag/escape-pcre pattern)))
+  (ag-dired-regexp dir (ag/escape-pcre string)))
 
 ;;;###autoload
 (defun ag-dired-regexp (dir regexp)
