@@ -55,7 +55,7 @@
 
 Ag.el internally uses --column, --line-number and --color
 options (with specific colors) to match groups, so options
-specified here should no contraddict them.
+specified here should not conflict.
 
 --line-number is required on Windows, as otherwise ag will not
 print line numbers when the input is a stream."
@@ -67,8 +67,8 @@ print line numbers when the input is a stream."
   :type 'integer
   :group 'ag)
 
-(defcustom ag-group-matches nil
-  "Group matches inn the same file together.
+(defcustom ag-group-matches t
+  "Group matches in the same file together.
 
 If nil, the file name is repeated at the beginning of every match line."
   :type 'boolean
