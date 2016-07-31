@@ -223,7 +223,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
       (setq arguments (cons "--nogroup" arguments)))
     (unless regexp
       (setq arguments (cons "--literal" arguments)))
-    (when (eq system-type 'windows-nt)
+    (when (or (eq system-type 'windows-nt) (eq system-type 'cygwin))
       ;; Use --vimgrep to work around issue #97 on Windows.
       (setq arguments (cons "--vimgrep" arguments)))
     (when (char-or-string-p file-regex)
