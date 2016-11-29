@@ -161,6 +161,8 @@ We save the last line here, in case we need to append more text to it.")
          (results-buffer (ag--create-results-buffer search-string root-directory))
          (command (ag--format-command search-string root-directory))
          process)
+    (with-current-buffer ag--debug-buf
+      (erase-buffer))
     (with-current-buffer results-buffer
       (setq default-directory root-directory)
       (setq ag--search-term search-string)
@@ -183,8 +185,15 @@ We save the last line here, in case we need to append more text to it.")
 
     (switch-to-buffer results-buffer)))
 
+(defvar ag--debug-buf
+  (get-buffer-create "*ag debug*"))
+
 (defun ag--process-filter (process output)
   "Insert OUTPUT into the ag search buffer associated with PROCESS."
+  (with-current-buffer ag--debug-buf
+    (insert "--- BEGIN ---\n"
+            output
+            "--- END ---\n"))
   (with-current-buffer (process-buffer process)
     ;; ag--remaining-output may contain a partial line from the last
     ;; time we were called, so append.
