@@ -411,13 +411,10 @@ Returns an empty string otherwise."
 (defun ag--longest-string (&rest strings)
   "Given a list of strings and nils, return the longest string."
   (let ((longest-string nil))
-    (dolist (string strings)
-      (cond ((null longest-string)
-             (setq longest-string string))
-            ((stringp string)
-             (when (< (length longest-string)
-                      (length string))
-               (setq longest-string string)))))
+    (dolist (string (-non-nil strings))
+      (when (< (length longest-string)
+               (length string))
+        (setq longest-string string)))
     longest-string))
 
 (defun ag--replace-first (string before after)
