@@ -37,6 +37,8 @@
 (require 'dash)
 (require 's)
 (require 'find-dired) ;; find-dired-filter
+;; TODO: use autolaod to declare this function instead.
+(require 'projectile) ;; projectile-project-root
 
 (defgroup ag nil
   "A front-end for ag - The Silver Searcher."
