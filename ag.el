@@ -97,15 +97,6 @@ If set to nil, fall back to finding VCS root directories."
   :type '(repeat (string))
   :group 'ag)
 
-;; Although ag results aren't exactly errors, we treat them as errors
-;; so `next-error' and `previous-error' work. However, we ensure our
-;; face inherits from `compilation-info-face' so the results are
-;; styled appropriately.
-;; TODO: set `next-error-function'.
-(defface ag-hit-face '((t :inherit compilation-info))
-  "Face for ag matches."
-  :group 'ag)
-
 (defface ag-match-face '((t :inherit match))
   "Face for ag matches."
   :group 'ag)
