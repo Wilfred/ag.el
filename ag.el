@@ -32,7 +32,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Code:
-(require 'cl-lib) ;; cl-letf, cl-defun
+(require 'cl-lib) ;; cl-defun
 (require 'dired) ;; dired-sort-inhibit
 (require 'dash)
 (require 's)
@@ -118,14 +118,6 @@ If set to nil, fall back to `projectile-project-root'."
   "Run the ag hook to signal that the search has completed."
   (with-current-buffer buffer
     (run-hooks 'ag-search-finished-hook)))
-
-(defmacro ag--with-patch-function (fun-name fun-args fun-body &rest body)
-  "Temporarily override the definition of FUN-NAME whilst BODY is executed.
-
-Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/304)."
-  `(cl-letf (((symbol-function ,fun-name)
-              (lambda ,fun-args ,fun-body)))
-     ,@body))
 
 (defface ag-dim-face
   '((((class color) (background light))
