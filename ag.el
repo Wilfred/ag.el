@@ -157,6 +157,9 @@ We save the last line here, in case we need to append more text to it.")
 (defvar-local ag--last-file-name nil
   "TODO: docme")
 
+(defvar ag--debug-buf
+  (get-buffer-create "*ag debug*"))
+
 ;; TODO:
 ;; * Reconsider buffer name.
 ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
@@ -190,9 +193,6 @@ We save the last line here, in case we need to append more text to it.")
     (set-process-sentinel process #'ag--process-sentinel)
 
     (switch-to-buffer results-buffer)))
-
-(defvar ag--debug-buf
-  (get-buffer-create "*ag debug*"))
 
 (defun ag--process-filter (process output)
   "Insert OUTPUT into the ag search buffer associated with PROCESS."
