@@ -99,6 +99,25 @@ If set to nil, fall back to finding VCS root directories."
   "Face for ag matches."
   :group 'ag)
 
+(defun ag--find-file (button)
+  "Open the file referenced by BUTTON."
+  (find-file (button-get button 'path))
+  (goto-char (point-min)))
+
+(define-button-type 'ag-path-button
+  'action 'ag--find-file
+  'follow-link t
+  'help-echo "Open file or directory")
+
+(defun ag--path-button (path)
+  "Return a button that navigates to PATH."
+  (with-temp-buffer
+    (insert-text-button
+     path
+     :type 'ag-path-button
+     'path path)
+    (buffer-string)))
+
 (defvar ag-search-finished-hook nil
   "Hook run when ag completes a search in a buffer.")
 
@@ -122,15 +141,6 @@ Assumes FUNCTION is already defined (see http://emacs.stackexchange.com/a/3452/3
      :foreground "grey50"))
   "Face for metadata in ag results buffers."
   :group 'ag)
-
-(defface ag-link-face
-  '((((class color) (background light))
-     :foreground "Blue")
-    (((class color) (background dark))
-     :foreground "Yellow"))
-  "Face for dired links in ag."
-  :group 'ag )
-
 
 (defvar-local ag--start-time nil)
 
@@ -212,7 +222,7 @@ We save the last line here, in case we need to append more text to it.")
           (-let [(file-name line-number column-number content-line)
                  (ag--parse-output-line line)]
             (unless (equal file-name ag--last-file-name)
-              (insert "\n" (ag--propertize-path file-name) "\n")
+              (insert "\n" (ag--path-button file-name) "\n")
               (setq ag--last-file-name file-name)
               (cl-incf ag--file-match-total))
 
@@ -223,13 +233,6 @@ We save the last line here, in case we need to append more text to it.")
                                 'ag-file-name file-name
                                 'ag-line-number (read line-number))))
               (insert annotated-line "\n"))))))))
-
-(defun ag--propertize-path (text)
-  "Apply properties to TEXT that represent a path to a file."
-  (propertize
-   text
-   'face 'ag-link-face
-   'mouse-face 'highlight))
 
 (defun ag--process-sentinel (process string)
   "Update the ag buffer associated with PROCESS as complete."
@@ -274,7 +277,8 @@ We save the last line here, in case we need to append more text to it.")
           (insert
            (ag--heading-line "Command" ag--command))
           (insert
-           (ag--heading-line "Directory" (ag--propertize-path default-directory)))
+           (ag--heading-line "Directory"
+                             (ag--path-button default-directory)))
           (insert
            (ag--heading-line "Time"
                              (format "%s (%s)"
