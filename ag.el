@@ -5,7 +5,7 @@
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
 ;; Version: 1.0
-;; Package-Requires: ((dash "2.8.0") (s "1.9.0") (cl-lib "0.5"))
+;; Package-Requires: ((dash "2.8.0") (s "1.9.0") (cl-lib "0.5") (projectile "0.14.0"))
 ;;; Commentary:
 
 ;; Please see README.md for documentation, or read it online at
@@ -87,7 +87,7 @@ If set to a function, call this function with the name of the
 file or directory for which to determine the project root
 directory.
 
-If set to nil, fall back to finding VCS root directories."
+If set to nil, fall back to `projectile-project-root'."
   :type '(choice (const :tag "Default (VCS root)" nil)
                  (function :tag "Function"))
   :group 'ag)
@@ -443,15 +443,6 @@ Returns an empty string otherwise."
         (format "\\.%s$" (ag--escape-pcre (file-name-extension file-name)))
       "")))
 
-(defun ag--longest-string (&rest strings)
-  "Given a list of strings and nils, return the longest string."
-  (let ((longest-string nil))
-    (dolist (string (-non-nil strings))
-      (when (< (length longest-string)
-               (length string))
-        (setq longest-string string)))
-    longest-string))
-
 (defun ag--replace-first (string before after)
   "Replace the first occurrence of BEFORE in STRING with AFTER."
   (replace-regexp-in-string
@@ -474,16 +465,15 @@ Returns an empty string otherwise."
 (defun ag--project-root (file-path)
   "Guess the project root of the given FILE-PATH.
 
-Use `ag-project-root-function' if set, or fall back to VCS
-roots."
+Use `ag-project-root-function' if set, or fall back to
+`projectile-project-root'."
   (if ag-project-root-function
       (funcall ag-project-root-function file-path)
-    (or (ag--longest-string
-         (vc-git-root file-path)
-         (vc-svn-root file-path)
-         (vc-hg-root file-path)
-         (vc-bzr-root file-path))
-        file-path)))
+    (or
+     (ignore-errors
+       ;; This raises an error if we're not in a project.
+       (projectile-project-root))
+     file-path)))
 
 (defun ag--dired-align-size-column ()
   (beginning-of-line)
