@@ -17,7 +17,3 @@ Documentation: http://agel.readthedocs.org/en/latest/index.html
 Bugs: https://github.com/Wilfred/ag.el/issues
 
 ![screenshot](ag_el_screenshot.png)
-
-## Alternatives
-
-* There's an ag plugin for helm: https://github.com/syohex/emacs-helm-ag
