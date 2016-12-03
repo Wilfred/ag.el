@@ -160,7 +160,8 @@ We save the last line here, in case we need to append more text to it.")
          (command (ag--format-command search-string root-directory))
          process)
     (with-current-buffer ag--debug-buf
-      (erase-buffer))
+      (erase-buffer)
+      (setq default-directory root-directory))
     (with-current-buffer results-buffer
       (setq default-directory root-directory)
       (setq ag--search-term search-string)
