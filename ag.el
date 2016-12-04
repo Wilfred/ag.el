@@ -195,9 +195,9 @@ We save the last line here, in case we need to append more text to it.")
     (switch-to-buffer results-buffer)))
 
 (defun ag--propertize-match (line-number content-line file-name)
-  (let* ((dim-number (s-pad-right 3 " " (propertize line-number 'face 'ag-dim-face)))
-         (hoverable-line (propertize content-line 'mouse-face 'highlight)))
-    (propertize (format "%s %s" dim-number hoverable-line)
+  (let* ((dim-number (s-pad-right 3 " " (propertize line-number 'face 'ag-dim-face))))
+    (propertize (format "%s %s" dim-number content-line)
+                'mouse-face 'highlight
                 'ag-file-name file-name
                 'ag-line-number (read line-number))))
 
