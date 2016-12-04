@@ -1,6 +1,7 @@
 # Summary
 
 * [Introduction](README.md)
+* [Installation](docs/installation.md)
 * [Getting Started](docs/getting_started.md)
 * [Results Buffers](docs/results_buffers.md)
 * [Advanced Searching](docs/advanced_searching.md)

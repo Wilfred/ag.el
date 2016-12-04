@@ -1,16 +1,11 @@
-# ag.el
+# ag.el [![MELPA](http://melpa.org/packages/ag-badge.svg)](http://melpa.org/#/ag) [![MELPA Stable](http://stable.melpa.org/packages/ag-badge.svg)](http://stable.melpa.org/#/ag)
 
-[![MELPA](http://melpa.org/packages/ag-badge.svg)](http://melpa.org/#/ag)
-[![MELPA Stable](http://stable.melpa.org/packages/ag-badge.svg)](http://stable.melpa.org/#/ag)
+Fast, beautiful text search in Emacs.
 
-Ag.el allows you to search using `ag` from inside Emacs. You can
-filter by file type, edit results inline, or find files.
-
-Ag.el tries very hard to be Do-What-I-Mean, and will make intelligent
-suggestions about what to search and which directories to search in.
-
-Documentation: http://agel.readthedocs.org/en/latest/index.html
-
-Bugs: https://github.com/Wilfred/ag.el/issues
+`ag` is a *really* fast text search tool written in C (similar to
+grep). Ag.el provides seamless integration of `ag` with Emacs.
 
 ![screenshot](ag_el_screenshot.png)
+
+New users should start with [installation](docs/installation.md) and then
+[getting started](docs/getting_started.md).
