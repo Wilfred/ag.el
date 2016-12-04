@@ -13,7 +13,10 @@ if you've just modified some files.
 
 ## Moving Between Results
 
-n, p, follow minor mode
+Press `n` and `p` (bound to `ag-next-result` and `ag-prev-result`) to
+move between results in the result buffer.
+
+follow minor mode
 
 ## Editing Results
 

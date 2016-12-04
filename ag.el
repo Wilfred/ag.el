@@ -331,8 +331,8 @@ We save the last line here, in case we need to append more text to it.")
 
 (define-key ag-mode-map (kbd "RET") #'ag--goto-result)
 
-(define-key ag-mode-map (kbd "p") #'previous-error)
-(define-key ag-mode-map (kbd "n") #'next-error)
+(define-key ag-mode-map (kbd "p") #'ag-prev-result)
+(define-key ag-mode-map (kbd "n") #'ag-next-result)
 (define-key ag-mode-map (kbd "k") '(lambda () (interactive) 
                                      (let (kill-buffer-query-functions) (kill-buffer))))
 (define-key ag-mode-map (kbd "g") #'ag-rerun)
@@ -736,6 +736,28 @@ See also `ag-dired-regexp'."
   "Re-run the search in the current ag buffer."
   (interactive)
   (ag--start-search ag--search-term default-directory))
+
+(defun ag--move-result (amount)
+  "Move point by AMOUNT matches in a results buffer.
+AMOUNT may be negative to move backwards."
+  (let ((moved 0)
+        (direction (if (< amount 0) -1 1)))
+    (beginning-of-line)
+    (while (< moved (abs amount))
+      (unless (zerop (forward-line direction))
+        (user-error "No more results"))
+      (when (get-text-property (point) 'ag-line-number)
+        (cl-incf moved)))))
+
+(defun ag-next-result ()
+  "Move point to the next result in the ag buffer."
+  (interactive)
+  (ag--move-result 1))
+
+(defun ag-prev-result ()
+  "Move point to the previous result in the ag buffer."
+  (interactive)
+  (ag--move-result -1))
 
 (defun ag--parse-output-line (line)
   "Split LINE into filename, line number, column number and match text."
