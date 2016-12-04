@@ -1,11 +1,15 @@
 # Results Buffers
 
-The results buffer shows all the matches found by `ag`.
+The results buffer shows all the matches found by `ag` when the
+command was run.
 
 You can press `RET` or click on any result to jump directly to that
 file.
 
 ## Re-Running The Search
+
+Press `g` (bound to `ag-rerun`) to repeat the search. This is useful
+if you've just modified some files.
 
 ## Moving Between Results
 

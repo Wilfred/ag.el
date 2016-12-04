@@ -337,11 +337,13 @@ We save the last line here, in case we need to append more text to it.")
 (define-derived-mode ag-mode fundamental-mode "Ag"
   "Mode for ag results buffers.")
 
+(define-key ag-mode-map (kbd "RET") #'ag--goto-result)
+
 (define-key ag-mode-map (kbd "p") #'previous-error)
 (define-key ag-mode-map (kbd "n") #'next-error)
 (define-key ag-mode-map (kbd "k") '(lambda () (interactive) 
                                      (let (kill-buffer-query-functions) (kill-buffer))))
-(define-key ag-mode-map (kbd "RET") #'ag--goto-result)
+(define-key ag-mode-map (kbd "g") #'ag-rerun)
 
 (defun ag--buffer-name (search-string directory regexp)
   "Return a buffer name formatted according to ag.el conventions."
@@ -759,6 +761,11 @@ See also `ag-dired-regexp'."
              (eq (buffer-local-value 'major-mode buffer) 'ag-mode)
              (not (eq buffer current-buffer)))
         (kill-buffer buffer)))))
+
+(defun ag-rerun ()
+  "Re-run the search in the current ag buffer."
+  (interactive)
+  (ag--start-search ag--search-term default-directory))
 
 (defun ag--parse-output-line (line)
   "Split LINE into filename, line number, column number and match text."
