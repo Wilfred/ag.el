@@ -36,9 +36,8 @@
 (require 'dired) ;; dired-sort-inhibit
 (require 'dash)
 (require 's)
-(require 'find-dired) ;; find-dired-filter
-;; TODO: use autolaod to declare this function instead.
-(require 'projectile) ;; projectile-project-root
+(autoload 'find-dired-filter "find-dired")
+(autoload 'projectile-project-root "projectile")
 
 (defgroup ag nil
   "A front-end for ag - The Silver Searcher."
