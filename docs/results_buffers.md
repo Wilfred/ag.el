@@ -8,4 +8,4 @@
 
 ## ag-dired
 
-Feeling like a search pro? Let's talk about [search terms]().
+Have you mastered your results buffers? Let's talk about [search terms]().
