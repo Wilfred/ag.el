@@ -1,0 +1,21 @@
+{
+  "name": "ag.el",
+  "version": "1.0.0",
+  "description": "fast, beautiful search for Emacs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wilfred/ag.el.git"
+  },
+  "author": "Wilfred Hughes <me@wilfred.me.uk>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Wilfred/ag.el/issues"
+  },
+  "homepage": "https://github.com/Wilfred/ag.el#readme",
+  "dependencies": {
+    "gitbook-cli": "^2.3.0"
+  }
+}
