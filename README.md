@@ -5,7 +5,7 @@ Fast, beautiful text search in Emacs.
 `ag` is a *really* fast text search tool written in C (similar to
 grep). Ag.el provides seamless integration of `ag` with Emacs.
 
-![screenshot](ag_el_screenshot.png)
+New users should start with [Installation](docs/installation.md) and then
+[Your First Search](docs/your_first_search.md).
 
-New users should start with [installation](docs/installation.md) and then
-[getting started](docs/getting_started.md).
+![screenshot](ag_el_screenshot.png)

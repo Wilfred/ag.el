@@ -2,6 +2,8 @@
 
 ## Text Search
 
+## Case Sensitivity
+
 ## Regexp Search
 
 ## Searching Directories

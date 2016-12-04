@@ -2,9 +2,9 @@
 
 * [Introduction](README.md)
 * [Installation](docs/installation.md)
-* [Getting Started](docs/getting_started.md)
+* [Your First Search](docs/your_first_search.md)
 * [Results Buffers](docs/results_buffers.md)
-* [Advanced Searching](docs/advanced_searching.md)
 * [Search Terms](docs/search_terms.md)
+* [Advanced Searching](docs/advanced_searching.md)
 * [Including Files](docs/files_included.md)
-* [How To Contribute](docs/how_to_contribute.md)
+* [How To Contribute](docs/contributing.md)
