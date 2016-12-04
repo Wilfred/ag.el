@@ -10,12 +10,6 @@
 
 ## Searching File Names
 
-## Searching Individual Files
-
-Use M-x occur.
-
-## Interactive Search
-
-Use Counsel!
+## ag-dired
 
 Mastered searching? Let's look at [using results buffers]().

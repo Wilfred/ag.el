@@ -8,10 +8,11 @@ Open a file, then type `M-x ag-project`.
 
 ## What Just Happened?
 
-`ag` searched all the files in
+`ag` searched every single text file in the current project, and
+opened a results buffer showing matches.
 
-DWIM
-
-Not a regexp.
+Note that this **is not regexp search**, `ag-project` searches for the
+string exactly as written. See
+[Advanced Searching](advanced_searching.md) for regular expressions.
 
 Ready for more? Let's talk about [results buffers](results_buffers.md).
