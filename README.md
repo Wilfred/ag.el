@@ -6,14 +6,12 @@
 [![Coverage Status](https://coveralls.io/repos/github/Wilfred/ag.el/badge.svg)](https://coveralls.io/github/Wilfred/ag.el)
 [![Documentation Status](https://readthedocs.org/projects/agel/badge/?version=latest)](http://agel.readthedocs.io/en/latest/?badge=latest)
 
-Ag.el allows you to search using `ag` from inside Emacs. You can
-filter by file type, edit results inline, or find files.
+Fast, beautiful text search in Emacs.
 
-Ag.el tries very hard to be Do-What-I-Mean, and will make intelligent
-suggestions about what to search and which directories to search in.
-
-Documentation: http://agel.readthedocs.org/en/latest/index.html
-
-Bugs: https://github.com/Wilfred/ag.el/issues
+`ag` is a *really* fast text search tool written in C (similar to
+grep). Ag.el provides seamless integration of `ag` with Emacs.
 
 ![screenshot](ag_el_screenshot.png)
+
+New users should start with [installation](docs/installation.md) and then
+[getting started](docs/getting_started.md).

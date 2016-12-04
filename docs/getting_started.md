@@ -9,4 +9,4 @@ DWIM
 
 Not a regexp.
 
-Ready for more? Let's move on to [usage]().
+Ready for more? Let's move on to [results buffers]().
