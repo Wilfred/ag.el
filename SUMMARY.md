@@ -7,4 +7,6 @@
 * [Search Terms](docs/search_terms.md)
 * [Advanced Searching](docs/advanced_searching.md)
 * [Including Files](docs/files_included.md)
+* [Searching Without ag.el](docs/searching_without_ag_el.md)
+* Bugs
 * [How To Contribute](docs/contributing.md)
