@@ -194,6 +194,13 @@ We save the last line here, in case we need to append more text to it.")
 
     (switch-to-buffer results-buffer)))
 
+(defun ag--propertize-match (line-number content-line file-name)
+  (let* ((dim-number (s-pad-right 3 " " (propertize line-number 'face 'ag-dim-face)))
+         (hoverable-line (propertize content-line 'mouse-face 'highlight)))
+    (propertize (format "%s %s" dim-number hoverable-line)
+                'ag-file-name file-name
+                'ag-line-number (read line-number))))
+
 (defun ag--process-filter (process output)
   "Insert OUTPUT into the ag search buffer associated with PROCESS."
   (with-current-buffer ag--debug-buf
@@ -222,13 +229,9 @@ We save the last line here, in case we need to append more text to it.")
               (setq ag--last-file-name file-name)
               (cl-incf ag--file-match-total))
 
-            (let* ((dim-number (s-pad-right 3 " " (propertize line-number 'face 'ag-dim-face)))
-                   (hoverable-line (propertize content-line 'mouse-face 'highlight))
-                   (annotated-line
-                    (propertize (format "%s %s" dim-number hoverable-line)
-                                'ag-file-name file-name
-                                'ag-line-number (read line-number))))
-              (insert annotated-line "\n"))))))))
+            (insert
+             (ag--propertize-match line-number content-line file-name)
+             "\n")))))))
 
 (defun ag--process-sentinel (process string)
   "Update the ag buffer associated with PROCESS as complete."
