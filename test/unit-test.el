@@ -11,3 +11,12 @@
    (equal (buffer-name)
           (format "*ag search text:defun dir:%s*"
                   (f-abbrev default-directory)))))
+
+(ert-deftest ag--buffer-name ()
+  "Ensure buffer names take the expected form."
+  ;; Simple case
+  (should
+   (equal (ag--buffer-name "foo" "/") "*ag: / foo*"))
+  ;; Abbreviate paths where possible
+  (should
+   (equal (ag--buffer-name "foo" (f-expand "~/bar")) "*ag: ~/bar foo*")))

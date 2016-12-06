@@ -1,4 +1,4 @@
-;;; ag.el --- Fast and beautiful text search using ag.
+;;; ag.el --- Fast and beautiful text search using ag.  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2013-2014 Wilfred Hughes <me@wilfred.me.uk>
 ;;
@@ -116,7 +116,7 @@ If set to nil, fall back to `projectile-project-root'."
   "Return a button that navigates to PATH."
   (with-temp-buffer
     (insert-text-button
-     path
+     (f-abbrev path)
      :type 'ag-path-button
      'path path)
     (buffer-string)))
@@ -187,8 +187,9 @@ We save the last line here, in case we need to append more text to it.")
              #'ag--insert-results-heading results-buffer)))
 
     ;; TODO: should the process name match what we write in the buffer?
-    (setq process (start-process-shell-command (format "ag '%s'" search-string)
-                                               results-buffer command))
+    (let ((default-directory root-directory))
+      (setq process (start-process-shell-command (format "ag '%s'" search-string)
+                                                 results-buffer command)))
     (set-process-filter process #'ag--process-filter)
     (set-process-sentinel process #'ag--process-sentinel)
 
@@ -261,34 +262,35 @@ We save the last line here, in case we need to append more text to it.")
 
 (defun ag--insert-results-heading (buffer)
   "Insert or update an ag results heading in BUFFER."
-  (with-current-buffer buffer
-    (let ((inhibit-read-only t))
-      (save-excursion
-        ;; If there's already a heading, replace it.
-        (when (> (point-max) 1)
-          (goto-char (point-min))
-          (kill-whole-line 5))
+  (when (buffer-live-p buffer)
+    (with-current-buffer buffer
+      (let ((inhibit-read-only t))
+        (save-excursion
+          ;; If there's already a heading, replace it.
+          (when (> (point-max) 1)
+            (goto-char (point-min))
+            (kill-whole-line 5))
 
-        (let ((elapsed-time
-               (round (- (float-time) ag--start-time))))
-          (insert
-           (ag--heading-line "Search term" ag--search-term))
-          (insert
-           (ag--heading-line "Command" ag--command))
-          (insert
-           (ag--heading-line "Directory"
-                             (ag--path-button default-directory)))
-          (insert
-           (ag--heading-line "Time"
-                             (format "%s (%s)"
-                                     (ag--pluralize elapsed-time "second")
-                                     (if ag--finish-time "completed" "running"))))
-          (insert
-           (ag--heading-line "Matches"
-                             (format "%s in %s"
-                                     (ag--pluralize ag--line-match-total "hit")
-                                     (ag--pluralize ag--file-match-total "file"))))
-          (insert "\n"))))))
+          (let ((elapsed-time
+                 (round (- (float-time) ag--start-time))))
+            (insert
+             (ag--heading-line "Search term" ag--search-term))
+            (insert
+             (ag--heading-line "Command" ag--command))
+            (insert
+             (ag--heading-line "Directory"
+                               (ag--path-button default-directory)))
+            (insert
+             (ag--heading-line "Time"
+                               (format "%s (%s)"
+                                       (ag--pluralize elapsed-time "second")
+                                       (if ag--finish-time "completed" "running"))))
+            (insert
+             (ag--heading-line "Matches"
+                               (format "%s in %s"
+                                       (ag--pluralize ag--line-match-total "hit")
+                                       (ag--pluralize ag--file-match-total "file"))))
+            (insert "\n")))))))
 
 (defconst ag--heading-label-width 13)
 
@@ -312,7 +314,7 @@ We save the last line here, in case we need to append more text to it.")
 ;; TODO: regexp search terms.
 (defun ag--create-results-buffer (string directory)
   "TODO: docstring."
-  (let* ((buffer-name (ag--buffer-name string directory nil))
+  (let* ((buffer-name (ag--buffer-name string directory))
          (buffer (get-buffer buffer-name)))
     (if buffer
         ;; Wipe existing buffer.
@@ -349,12 +351,11 @@ We save the last line here, in case we need to append more text to it.")
                                      (let (kill-buffer-query-functions) (kill-buffer))))
 (define-key ag-mode-map (kbd "g") #'ag-rerun)
 
-(defun ag--buffer-name (search-string directory regexp)
+(defun ag--buffer-name (search-string directory)
   "Return a buffer name formatted according to ag.el conventions."
-  (cond
-   (ag-reuse-buffers "*ag search*")
-   (regexp (format "*ag search regexp:%s dir:%s*" search-string directory))
-   (:else (format "*ag search text:%s dir:%s*" search-string directory))))
+  (setq directory (f-abbrev directory))
+  (if ag-reuse-buffers "*ag*"
+    (format "*ag: %s %s*" directory search-string)))
 
 (defun ag--format-ignore (ignores)
   "Prepend '--ignore' to every item in IGNORES."
@@ -423,7 +424,7 @@ If REGEXP is non-nil, treat STRING as a regular expression."
    (ag--format-command string directory
                        :regexp regexp :file-regex file-regex :file-type file-type)
    #'ag-mode
-   `(lambda (mode-name) ,(ag--buffer-name string directory regexp))))
+   `(lambda (mode-name) ,(ag--buffer-name string directory))))
 
 (defun ag--input-at-point ()
   "If there's an active selection, return that.
@@ -579,7 +580,7 @@ with STRING defaulting to the symbol under point.
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (ag--read-from-minibuffer "Search string")
                      (read-directory-name "Directory: ")))
-  (ag--start-search string (ag--project-root directory)))
+  (ag--start-search string directory))
 
 ;;;###autoload
 (defun ag-files (string file-type directory)
