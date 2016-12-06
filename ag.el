@@ -330,6 +330,7 @@ We save the last line here, in case we need to append more text to it.")
   "Mode for ag results buffers.")
 
 (define-key ag-mode-map (kbd "RET") #'ag--goto-result)
+(define-key ag-mode-map (kbd "<mouse-2>") #'ag--goto-result)
 
 (define-key ag-mode-map (kbd "p") #'ag-prev-result)
 (define-key ag-mode-map (kbd "n") #'ag-next-result)
