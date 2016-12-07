@@ -274,23 +274,19 @@ We save the last line here, in case we need to append more text to it.")
           (let ((elapsed-time
                  (round (- (float-time) ag--start-time))))
             (insert
-             (ag--heading-line "Search term" ag--search-term))
-            (insert
-             (ag--heading-line "Command" ag--command))
-            (insert
+             (ag--heading-line "Search term" ag--search-term)
+             (ag--heading-line "Command" ag--command)
              (ag--heading-line "Directory"
-                               (ag--path-button default-directory)))
-            (insert
+                               (ag--path-button default-directory))
              (ag--heading-line "Time"
                                (format "%s (%s)"
                                        (ag--pluralize elapsed-time "second")
-                                       (if ag--finish-time "completed" "running"))))
-            (insert
+                                       (if ag--finish-time "completed" "running")))
              (ag--heading-line "Matches"
                                (format "%s in %s"
                                        (ag--pluralize ag--line-match-total "hit")
-                                       (ag--pluralize ag--file-match-total "file"))))
-            (insert "\n")))))))
+                                       (ag--pluralize ag--file-match-total "file")))
+             "\n")))))))
 
 (defconst ag--heading-label-width 13)
 
