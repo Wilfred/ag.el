@@ -10,7 +10,7 @@
   (switch-to-buffer (ag-project "defun"))
   (should
    (equal (buffer-name)
-          (format "*ag: defun %s*" default-directory))))
+          (format "*ag: defun %s*" (f-abbrev default-directory)))))
 
 (ert-deftest ag--buffer-name ()
   "Ensure buffer names take the expected form."
