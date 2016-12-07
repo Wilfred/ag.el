@@ -152,26 +152,17 @@ We save the last line here, in case we need to append more text to it.")
 
 ;; TODO:
 ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
-(cl-defun ag--start-search (search-string root-directory &key (literal t))
-  "Initiate an ag search for SEARCH-STRING in ROOT-DIRECTORY.
-If LITERAL is nil, treat SEARCH-STRING as a regular expression."
-  (let* (
-         ;; TODO: kill existing buffer
-         (results-buffer (ag--create-results-buffer search-string root-directory))
-         (command (ag--format-command search-string root-directory :regexp (not literal)))
+(cl-defun ag--start-search (search-term directory &key (literal t))
+  "Initiate an ag search for SEARCH-TERM in ROOT-DIRECTORY.
+If LITERAL is nil, treat SEARCH-TERM as a regular expression."
+  (let* ((command (ag--format-command search-term directory :regexp (not literal)))
+         (results-buffer (ag--create-results-buffer search-term command directory))
          process)
     (with-current-buffer ag--debug-buf
       (erase-buffer)
-      (setq default-directory root-directory))
+      (setq default-directory directory))
     (with-current-buffer results-buffer
-      (setq default-directory root-directory)
-      (setq ag--search-term search-string)
       (setq ag--literal-search literal)
-      (setq ag--command command)
-      (setq ag--remaining-output "")
-      (setq ag--line-match-total 0)
-      (setq ag--file-match-total 0)
-      (setq ag--start-time (float-time))
       ;; TODO: handle error when buffer has been killed.
       (setq ag--redraw-timer
             (run-with-timer
@@ -179,8 +170,8 @@ If LITERAL is nil, treat SEARCH-STRING as a regular expression."
              #'ag--insert-results-heading results-buffer)))
 
     ;; TODO: should the process name match what we write in the buffer?
-    (let ((default-directory root-directory))
-      (setq process (start-process-shell-command (format "ag '%s'" search-string)
+    (let ((default-directory directory))
+      (setq process (start-process-shell-command (format "ag '%s'" search-term)
                                                  results-buffer command)))
     (set-process-filter process #'ag--process-filter)
     (set-process-sentinel process #'ag--process-sentinel)
@@ -317,10 +308,9 @@ If LITERAL is nil, treat SEARCH-STRING as a regular expression."
       (widen)
       (delete-region (point-min) (point-max)))))
 
-;; TODO: regexp search terms.
-(defun ag--create-results-buffer (string directory)
-  "TODO: docstring."
-  (let* ((buffer-name (ag--buffer-name string directory))
+(defun ag--create-results-buffer (search-term command directory)
+  "Create a buffer for showing ag search results."
+  (let* ((buffer-name (ag--buffer-name search-term directory))
          (buffer (get-buffer buffer-name)))
     (if buffer
         ;; Wipe existing buffer.
@@ -330,7 +320,15 @@ If LITERAL is nil, treat SEARCH-STRING as a regular expression."
     
     (with-current-buffer buffer
       (setq buffer-read-only t)
-      (ag-mode))
+      (setq default-directory directory)
+      (ag-mode)
+      (setq ag--command command)
+      (setq ag--search-term search-term)
+      (setq ag--remaining-output "")
+      (setq ag--line-match-total 0)
+      (setq ag--file-match-total 0)
+      ;; Set the start time last, to give more accurate times.
+      (setq ag--start-time (float-time)))
     buffer))
 
 (defun ag--goto-result ()
@@ -357,11 +355,11 @@ If LITERAL is nil, treat SEARCH-STRING as a regular expression."
                                      (let (kill-buffer-query-functions) (kill-buffer))))
 (define-key ag-mode-map (kbd "g") #'ag-rerun)
 
-(defun ag--buffer-name (search-string directory)
+(defun ag--buffer-name (search-term directory)
   "Return a buffer name formatted according to ag.el conventions."
   (setq directory (f-abbrev directory))
   (if ag-reuse-buffers "*ag*"
-    (format "*ag: %s %s*" search-string directory)))
+    (format "*ag: %s %s*" search-term directory)))
 
 (defun ag--format-ignore (ignores)
   "Prepend '--ignore' to every item in IGNORES."

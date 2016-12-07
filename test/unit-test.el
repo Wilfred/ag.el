@@ -28,16 +28,9 @@
    (equal (ag--pluralize 1000 "thing") "1,000 things")))
 
 (ert-deftest ag--insert-results-heading ()
-  (with-temp-buffer
-    (insert "old heading should be replaced\n\n")
-
-    (setq ag--search-term "bananas")
-    (setq ag--command "ag --foo")
-    (setq ag--start-time (float-time))
-    (setq ag--line-match-total 0)
-    (setq ag--file-match-total 0)
-    
+  (with-current-buffer (ag--create-results-buffer "bananas" "ag -- foo" "/")
     (ag--insert-results-heading (current-buffer))
     (should
-     (s-starts-with? "Search term: bananas\nCommand:     ag --foo"
+     (s-starts-with? "Search term: bananas\nCommand:     ag -- foo"
                      (buffer-string)))))
+
