@@ -98,7 +98,8 @@ If set to nil, fall back to `projectile-project-root'."
   :type '(repeat (string))
   :group 'ag)
 
-(defface ag-match-face '((t :inherit match))
+(defface ag-match-face
+  '((t (:underline t :weight bold)))
   "Face for ag matches."
   :group 'ag)
 
