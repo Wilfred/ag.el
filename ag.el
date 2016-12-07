@@ -136,6 +136,7 @@ If set to nil, fall back to `projectile-project-root'."
 (defvar-local ag--command nil)
 
 (defvar-local ag--search-term nil)
+(defvar-local ag--literal-search nil)
 
 (defvar-local ag--remaining-output nil
   "We can't guarantee that our process filter will always receive whole lines.
@@ -151,12 +152,13 @@ We save the last line here, in case we need to append more text to it.")
 
 ;; TODO:
 ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
-(defun ag--start-search (search-string root-directory)
-  "Initiate an ag search for SEARCH-STRING in ROOT-DIRECTORY."
+(cl-defun ag--start-search (search-string root-directory &key (literal t))
+  "Initiate an ag search for SEARCH-STRING in ROOT-DIRECTORY.
+If LITERAL is nil, treat SEARCH-STRING as a regular expression."
   (let* (
          ;; TODO: kill existing buffer
          (results-buffer (ag--create-results-buffer search-string root-directory))
-         (command (ag--format-command search-string root-directory))
+         (command (ag--format-command search-string root-directory :regexp (not literal)))
          process)
     (with-current-buffer ag--debug-buf
       (erase-buffer)
@@ -164,6 +166,7 @@ We save the last line here, in case we need to append more text to it.")
     (with-current-buffer results-buffer
       (setq default-directory root-directory)
       (setq ag--search-term search-string)
+      (setq ag--literal-search literal)
       (setq ag--command command)
       (setq ag--remaining-output "")
       (setq ag--line-match-total 0)
@@ -270,13 +273,19 @@ We save the last line here, in case we need to append more text to it.")
           ;; If there's already a heading, replace it.
           (when (> (point-max) 1)
             (goto-char (point-min))
-            (kill-whole-line 5))
+            (while (not (looking-at "\n"))
+              (forward-line 1))
+            (delete-region (point-min) (point)))
 
           (let ((elapsed-time
                  (round (- (float-time) ag--start-time))))
             (insert
              (ag--heading-line "Search term" ag--search-term)
              (ag--heading-line "Command" ag--command)
+             (ag--heading-line "Search type"
+                               (if ag--literal-search
+                                   "Literal string"
+                                 "Regular expression (PCRE syntax)"))
              (ag--heading-line "Directory"
                                (ag--path-button default-directory))
              (ag--heading-line "Time"
@@ -555,7 +564,7 @@ with STRING defaulting to the symbol under point.
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (ag--read-from-minibuffer "Search string")
                      (read-directory-name "Directory: ")))
-  (ag--start-search string directory))
+  (ag--start-search string directory :literal t))
 
 ;;;###autoload
 (defun ag-files (string file-type directory)
@@ -576,7 +585,7 @@ The regexp should be in PCRE syntax, not Emacs regexp syntax.
 
 If called with a prefix, prompts for flags to pass to ag."
   (interactive "sSearch regexp: \nDDirectory: ")
-  (ag--search string directory :regexp t))
+  (ag--start-search string directory :literal nil))
 
 ;;;###autoload
 (defun ag-project (string)
@@ -585,7 +594,8 @@ for the given string.
 
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (ag--read-from-minibuffer "Search string")))
-  (ag--start-search string (ag--project-root default-directory)))
+  (ag--start-search string (ag--project-root default-directory)
+                    :literal t))
 
 ;;;###autoload
 (defun ag-project-files (string file-type)
@@ -625,7 +635,8 @@ Emacs regexp syntax.
 
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (ag--read-from-minibuffer "Search regexp")))
-  (ag--search regexp (ag--project-root default-directory) :regexp t))
+  (ag--start-search regexp (ag--project-root default-directory)
+                    :literal nil))
 
 (autoload 'symbol-at-point "thingatpt")
 
@@ -745,7 +756,8 @@ See also `ag-dired-regexp'."
 (defun ag-rerun ()
   "Re-run the search in the current ag buffer."
   (interactive)
-  (ag--start-search ag--search-term default-directory))
+  (ag--start-search ag--search-term default-directory
+                    :literal ag--literal-search))
 
 (defun ag--move-result (amount)
   "Move point by AMOUNT matches in a results buffer.

@@ -29,7 +29,7 @@
 
 (ert-deftest ag--insert-results-heading ()
   (with-temp-buffer
-    (insert "old heading should be replaced")
+    (insert "old heading should be replaced\n\n")
 
     (setq ag--search-term "bananas")
     (setq ag--command "ag --foo")
