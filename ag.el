@@ -160,7 +160,6 @@ We save the last line here, in case we need to append more text to it.")
   (get-buffer-create "*ag debug*"))
 
 ;; TODO:
-;; * Reconsider buffer name.
 ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
 (defun ag--start-search (search-string root-directory)
   "Initiate an ag search for SEARCH-STRING in ROOT-DIRECTORY."
@@ -355,7 +354,7 @@ We save the last line here, in case we need to append more text to it.")
   "Return a buffer name formatted according to ag.el conventions."
   (setq directory (f-abbrev directory))
   (if ag-reuse-buffers "*ag*"
-    (format "*ag: %s %s*" directory search-string)))
+    (format "*ag: %s %s*" search-string directory)))
 
 (defun ag--format-ignore (ignores)
   "Prepend '--ignore' to every item in IGNORES."
