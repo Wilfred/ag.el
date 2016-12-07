@@ -1,5 +1,6 @@
 (require 'ert)
 (require 'ag)
+(require 'f)
 
 (ert-deftest ag--escape-pcre ()
   (should (equal (ag/escape-pcre "ab.*(") "ab\\.\\*\\(")))
