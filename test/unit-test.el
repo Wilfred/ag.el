@@ -19,3 +19,9 @@
   ;; Abbreviate paths where possible
   (should
    (equal (ag--buffer-name "foo" (f-expand "~/bar")) "*ag: foo ~/bar*")))
+
+(ert-deftest ag--pluralize ()
+  (should
+   (equal (ag--pluralize 1 "thing") "1 thing"))
+  (should
+   (equal (ag--pluralize 1000 "thing") "1,000 things")))
