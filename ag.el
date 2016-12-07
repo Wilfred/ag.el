@@ -223,7 +223,7 @@ We save the last line here, in case we need to append more text to it.")
         (goto-char (point-max))
         (dolist (line (-butlast lines))
 
-          (-let [(file-name line-number column-number content-line)
+          (-let [(file-name line-number _column-number content-line)
                  (ag--parse-output-line line)]
             (unless (equal file-name ag--last-file-name)
               (insert "\n" (ag--path-button file-name) "\n")
