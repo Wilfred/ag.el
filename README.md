@@ -1,4 +1,4 @@
-# ag.el [![MELPA](http://melpa.org/packages/ag-badge.svg)](http://melpa.org/#/ag) [![MELPA Stable](http://stable.melpa.org/packages/ag-badge.svg)](http://stable.melpa.org/#/ag)
+# ag.el [![MELPA](http://melpa.org/packages/ag-badge.svg)](http://melpa.org/#/ag) [![MELPA Stable](http://stable.melpa.org/packages/ag-badge.svg)](http://stable.melpa.org/#/ag) [![Build Status](https://travis-ci.org/Wilfred/ag.el.svg?branch=pretty_output_buffer)](https://travis-ci.org/Wilfred/ag.el)
 
 Fast, beautiful text search in Emacs.
 
