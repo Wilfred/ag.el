@@ -55,8 +55,8 @@ Krzysztof Kowalczyk also
 If you're on **Cygwin**, there's a package `the_silver_searcher` in
 the 'Utils' category of the main Cygwin distribution.
 
-See also
-[the official ag installation notes](https://github.com/ggreer/the_silver_searcher#installing).
+Ag itself also provides
+[installation instructions](https://github.com/ggreer/the_silver_searcher#installing).
 
 ## Install ag.el
 
