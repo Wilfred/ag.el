@@ -1,4 +1,4 @@
-# ag.el [![MELPA](http://melpa.org/packages/ag-badge.svg)](http://melpa.org/#/ag) [![MELPA Stable](http://stable.melpa.org/packages/ag-badge.svg)](http://stable.melpa.org/#/ag) [![Build Status](https://travis-ci.org/Wilfred/ag.el.svg?branch=pretty_output_buffer)](https://travis-ci.org/Wilfred/ag.el)
+# ag.el [![MELPA](http://melpa.org/packages/ag-badge.svg)](http://melpa.org/#/ag) [![MELPA Stable](http://stable.melpa.org/packages/ag-badge.svg)](http://stable.melpa.org/#/ag) [![Build Status](https://travis-ci.org/Wilfred/ag.el.svg?branch=pretty_output_buffer)](https://travis-ci.org/Wilfred/ag.el) [![Coverage Status](https://coveralls.io/repos/github/Wilfred/ag.el/badge.svg?branch=pretty_output_buffer)](https://coveralls.io/github/Wilfred/ag.el?branch=pretty_output_buffer)
 
 Fast, beautiful text search in Emacs.
 
