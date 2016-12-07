@@ -223,7 +223,7 @@ We save the last line here, in case we need to append more text to it.")
              (ag--propertize-match line-number content-line file-name)
              "\n")))))))
 
-(defun ag--process-sentinel (process string)
+(defun ag--process-sentinel (process _string)
   "Update the ag buffer associated with PROCESS as complete."
   (let ((buffer (process-buffer process)))
     ;; We assume that all signals from the ag process mean we're done.
