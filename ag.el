@@ -346,12 +346,14 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
   "Goto the search result at point."
   (interactive)
   (let ((file-name (get-text-property (point) 'ag-file-name))
-        (line-number (get-text-property (point) 'ag-line-number)))
-    ;; TODO: get the correct column too.
+        (line-number (get-text-property (point) 'ag-line-number))
+        ;; TODO: factor out this constant
+        (column-offset (max (- (current-column) 4) 0)))
     (when file-name
       (find-file file-name)
       (goto-char (point-min))
-      (forward-line (1- line-number)))))
+      (forward-line (1- line-number))
+      (forward-char column-offset))))
 
 ;; TODO: lines should be truncated by default in this mode.
 (define-derived-mode ag-mode fundamental-mode "Ag"
