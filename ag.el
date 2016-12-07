@@ -241,13 +241,25 @@ We save the last line here, in case we need to append more text to it.")
 
         (ag--insert-results-heading buffer)))))
 
+(defun ag--format-int (integer)
+  "Format INTEGER as a string, with , separating thousands."
+  (let* ((number (abs integer))
+         (parts nil))
+    (while (> number 999)
+      (push (format "%03d" (mod number 1000))
+            parts)
+      (setq number (/ number 1000)))
+    (push (format "%d" number) parts)
+    (concat
+     (if (< integer 0) "-" "")
+     (s-join "," parts))))
+
 (defun ag--pluralize (number unit)
   "Return UNIT formatted for NUMBER instances."
-  (format "%d %s"
-          number
-          (if (= number 1)
-              unit
-            (concat unit "s"))))
+  (format "%s %s%s"
+          (ag--format-int number)
+          unit
+          (if (= number 1) "" "s")))
 
 (defun ag--insert-results-heading (buffer)
   "Insert or update an ag results heading in BUFFER."
