@@ -281,12 +281,15 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
           (let ((elapsed-time
                  (round (- (float-time) ag--start-time))))
             (insert
-             (ag--heading-line "Search term" ag--search-term)
+             (ag--heading-line
+              "Search term"
+              (format "%s %s"
+                      ag--search-term
+                      (propertize
+                       (if ag--literal-search "(literal string)"
+                         "(regular expression, PCRE syntax)")
+                       'face 'ag-dim-face)))
              (ag--heading-line "Command" ag--command)
-             (ag--heading-line "Search type"
-                               (if ag--literal-search
-                                   "Literal string"
-                                 "Regular expression (PCRE syntax)"))
              (ag--heading-line "Directory"
                                (ag--path-button default-directory))
              (ag--heading-line "Time"
