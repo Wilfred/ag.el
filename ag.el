@@ -87,8 +87,10 @@ If set to nil, fall back to `projectile-project-root'."
   :type '(repeat (string))
   :group 'ag)
 
+;; TODO: rename to ag-search-term-face
 (defface ag-match-face
-  '((t (:underline t :weight bold)))
+  '((((class color) (background light)) :foreground "DarkGoldenrod4" :weight bold)
+    (((class color) (background  dark)) :foreground "LightGoldenrod2" :weight bold))
   "Face for ag matches."
   :group 'ag)
 
@@ -296,11 +298,9 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
              (ag--heading-line
               "Search term"
               (format "%s %s"
-                      ag--search-term
-                      (propertize
-                       (if ag--literal-search "(literal string)"
-                         "(regular expression, PCRE syntax)")
-                       'face 'ag-dim-face)))
+                      (propertize ag--search-term 'face 'ag-match-face)
+                      (if ag--literal-search "(literal string)"
+                        "(regular expression, PCRE syntax)")))
              (ag--heading-line "Command"
                                (ag--debug-button ag--command))
              (ag--heading-line "Directory"
@@ -317,13 +317,10 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
 (defconst ag--heading-label-width 13)
 
 (defun ag--heading-line (label text)
-  "Return an aligned string with font faces set for a heading."
+  "Return an aligned string for a heading."
   (concat
-   (propertize
-    (s-pad-right ag--heading-label-width " " (format "%s:" label))
-    'face 'ag-dim-face)
-   text
-   "\n"))
+   (s-pad-right ag--heading-label-width " " (format "%s:" label))
+   text "\n"))
 
 (defun ag--wipe-buffer (buffer)
   "Delete the contents of BUFFER."
