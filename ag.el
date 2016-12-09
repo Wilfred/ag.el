@@ -92,13 +92,16 @@ If set to nil, fall back to `projectile-project-root'."
   "Face for ag matches."
   :group 'ag)
 
+(defvar ag--debug-buf
+  (get-buffer-create "*ag debug*"))
+
 (defun ag--find-file (button)
   "Open the file referenced by BUTTON."
   (find-file (button-get button 'path))
   (goto-char (point-min)))
 
 (define-button-type 'ag-path-button
-  'action 'ag--find-file
+  'action #'ag--find-file
   'follow-link t
   'help-echo "Open file or directory")
 
@@ -109,6 +112,22 @@ If set to nil, fall back to `projectile-project-root'."
      (f-abbrev path)
      :type 'ag-path-button
      'path path)
+    (buffer-string)))
+
+(defun ag--open-debug (_button)
+  "Open the file referenced by BUTTON."
+  (switch-to-buffer ag--debug-buf)
+  (goto-char (point-min)))
+
+(define-button-type 'ag-debug-button
+  'action #'ag--open-debug
+  'follow-link t
+  'help-echo "Open debug buffer")
+
+(defun ag--debug-button (command)
+  "Return a button that opens the debug buffer."
+  (with-temp-buffer
+    (insert-text-button command :type 'ag-debug-button)
     (buffer-string)))
 
 (defvar ag-search-finished-hook nil
@@ -142,9 +161,6 @@ We save the last line here, in case we need to append more text to it.")
 (defvar-local ag--last-file-name nil
   "TODO: docme")
 
-(defvar ag--debug-buf
-  (get-buffer-create "*ag debug*"))
-
 ;; TODO:
 ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
 (cl-defun ag--start-search (search-term directory &key (literal t))
@@ -155,7 +171,8 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
          process)
     (with-current-buffer ag--debug-buf
       (erase-buffer)
-      (setq default-directory directory))
+      (setq default-directory directory)
+      (insert "$ " command "\n"))
     (with-current-buffer results-buffer
       (setq ag--literal-search literal)
       ;; TODO: handle error when buffer has been killed.
@@ -278,7 +295,8 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
                        (if ag--literal-search "(literal string)"
                          "(regular expression, PCRE syntax)")
                        'face 'ag-dim-face)))
-             (ag--heading-line "Command" ag--command)
+             (ag--heading-line "Command"
+                               (ag--debug-button ag--command))
              (ag--heading-line "Directory"
                                (ag--path-button default-directory))
              (ag--heading-line "Time"
