@@ -199,9 +199,8 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
 (defun ag--process-filter (process output)
   "Insert OUTPUT into the ag search buffer associated with PROCESS."
   (with-current-buffer ag--debug-buf
-    (insert "--- BEGIN ---\n"
-            output
-            "--- END ---\n"))
+    (insert "\n--- ag--process-filter called ---\n"
+            output))
   (with-current-buffer (process-buffer process)
     ;; ag--remaining-output may contain a partial line from the last
     ;; time we were called, so append.
@@ -228,13 +227,16 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
              (ag--propertize-match line-number content-line file-name)
              "\n")))))))
 
-(defun ag--process-sentinel (process _string)
+(defun ag--process-sentinel (process string)
   "Update the ag buffer associated with PROCESS as complete."
   (let ((buffer (process-buffer process)))
     ;; We assume that all signals from the ag process mean we're done.
     (setq ag--finish-time (float-time))
     (cancel-timer ag--redraw-timer)
 
+    (with-current-buffer ag--debug-buf
+      (insert "\n--- ag--process-sentinel called ---\n"
+              string))
     (when (buffer-live-p buffer)
       (with-current-buffer buffer
         ;; The remaining output must now be a completed line.
