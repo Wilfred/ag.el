@@ -172,7 +172,8 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
     (with-current-buffer ag--debug-buf
       (erase-buffer)
       (setq default-directory directory)
-      (insert "$ " command "\n"))
+      (insert "$ " command "\n")
+      (setq buffer-read-only t))
     (with-current-buffer results-buffer
       (setq ag--literal-search literal)
       ;; TODO: handle error when buffer has been killed.
@@ -200,8 +201,10 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
 (defun ag--process-filter (process output)
   "Insert OUTPUT into the ag search buffer associated with PROCESS."
   (with-current-buffer ag--debug-buf
-    (insert "\n--- ag--process-filter called ---\n"
-            output))
+    (goto-char (point-max))
+    (let ((inhibit-read-only t))
+      (insert "\n--- ag--process-filter called ---\n"
+              output)))
   (with-current-buffer (process-buffer process)
     ;; ag--remaining-output may contain a partial line from the last
     ;; time we were called, so append.
@@ -236,8 +239,10 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
     (cancel-timer ag--redraw-timer)
 
     (with-current-buffer ag--debug-buf
-      (insert "\n--- ag--process-sentinel called ---\n"
-              string))
+      (goto-char (point-max))
+      (let ((inhibit-read-only t))
+        (insert "\n--- ag--process-sentinel called ---\n"
+                string)))
     (when (buffer-live-p buffer)
       (with-current-buffer buffer
         ;; The remaining output must now be a completed line.
