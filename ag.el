@@ -175,10 +175,10 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
              0 1
              #'ag--insert-results-heading results-buffer)))
 
-    ;; TODO: should the process name match what we write in the buffer?
     (let ((default-directory directory))
-      (setq process (start-process-shell-command (format "ag '%s'" search-term)
-                                                 results-buffer command)))
+      (setq process (start-process-shell-command
+                     (format "ag %s %s" search-term directory)
+                     results-buffer command)))
     (set-process-filter process #'ag--process-filter)
     (set-process-sentinel process #'ag--process-sentinel)
 
