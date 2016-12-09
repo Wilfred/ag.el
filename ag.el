@@ -114,11 +114,6 @@ If set to nil, fall back to `projectile-project-root'."
 (defvar ag-search-finished-hook nil
   "Hook run when ag completes a search in a buffer.")
 
-(defun ag--run-finished-hook (buffer how-finished)
-  "Run the ag hook to signal that the search has completed."
-  (with-current-buffer buffer
-    (run-hooks 'ag-search-finished-hook)))
-
 (defface ag-dim-face
   '((((class color) (background light))
      :foreground "grey50")
@@ -235,7 +230,9 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
             (insert ag--remaining-output)
             (insert "\n")))
 
-        (ag--insert-results-heading buffer)))))
+        (ag--insert-results-heading buffer)
+
+        (run-hooks 'ag-search-finished-hook)))))
 
 (defun ag--format-int (integer)
   "Format INTEGER as a string, with , separating thousands."
