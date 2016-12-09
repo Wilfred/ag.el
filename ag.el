@@ -181,9 +181,10 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
          (results-buffer (ag--create-results-buffer search-term command directory))
          process)
     (with-current-buffer ag--debug-buf
-      (erase-buffer)
-      (setq default-directory directory)
-      (insert "$ " command "\n")
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (setq default-directory directory)
+        (insert "$ " command "\n"))
       (setq buffer-read-only t))
     (with-current-buffer results-buffer
       (setq ag--literal-search literal)
@@ -322,8 +323,7 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
              (ag--heading-line "Matches"
                                (format "%s in %s"
                                        (ag--pluralize ag--line-match-total "hit")
-                                       (ag--pluralize ag--file-match-total "file")))
-             "\n")))))))
+                                       (ag--pluralize ag--file-match-total "file"))))))))))
 
 (defconst ag--heading-label-width 13)
 
