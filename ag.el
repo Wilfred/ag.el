@@ -197,11 +197,11 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
     (switch-to-buffer results-buffer)))
 
 (defun ag--propertize-match (line-number content-line file-name)
-  (let* ((dim-number (s-pad-right 3 " " (propertize line-number 'face 'ag-dim-face))))
+  (let* ((dim-number (s-pad-right 3 " " (propertize (format "%s" line-number) 'face 'ag-dim-face))))
     (propertize (format "%s %s" dim-number content-line)
                 'mouse-face 'highlight
                 'ag-file-name file-name
-                'ag-line-number (read line-number))))
+                'ag-line-number line-number)))
 
 (defun ag--process-filter (process output)
   "Insert OUTPUT into the ag search buffer associated with PROCESS."
@@ -813,9 +813,6 @@ AMOUNT may be negative to move backwards."
 
 (defun ag--parse-output-line (line)
   "Split LINE into filename, line number, column number and match text."
-
-  ;; E.g. line is "[1;32mag.el[0m[K:[1;33m715[0m[K:2:([30;43mdefvar[0m[K leftover nil)"
-  ;; TODO: write unit tests.
   (let* ((parts (ag--split-shell-escapes line))
          (file-name (nth 1 parts))
          (line-number (nth 6 parts))
@@ -828,7 +825,9 @@ AMOUNT may be negative to move backwards."
            (parts (s-match column-num-regex remainder)))
 
       ;; TODO: refactor this, maybe more variable names?
-      (list file-name line-number (nth 1 parts)
+      (list file-name
+            (read line-number)
+            (read (nth 1 parts))
             (ag--fontify-shell-highlighting (nth 2 parts))))))
 
 (defvar ag--color-shell-regexp
