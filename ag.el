@@ -164,6 +164,8 @@ We save the last line here, in case we need to append more text to it.")
 (defvar-local ag--last-file-name nil
   "TODO: docme")
 
+(defvar-local ag--spinner nil)
+
 ;; TODO:
 ;; * Handle errors gracefully, without confusing them with a zero-result exit code.
 (cl-defun ag--start-search (search-term directory &key (literal t))
@@ -364,8 +366,6 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
       (goto-char (point-min))
       (forward-line (1- line-number))
       (forward-char column-offset))))
-
-(defvar-local ag--spinner nil)
 
 (defun ag--start-spinner ()
   "Create and start a spinner on this buffer."
