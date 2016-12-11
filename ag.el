@@ -5,7 +5,7 @@
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
 ;; Version: 1.0
-;; Package-Requires: ((dash "2.8.0") (s "1.9.0") (cl-lib "0.5") (projectile "0.14.0") (spinner "1.7.3"))
+;; Package-Requires: ((dash "2.8.0") (s "1.9.0") (cl-lib "0.5") (projectile "0.14.0") (spinner "1.7.3") (f "0.18.2"))
 ;;; Commentary:
 
 ;; Please see README.md for documentation, or read it online at
@@ -35,6 +35,7 @@
 (require 'cl-lib) ;; cl-defun
 (require 'dired) ;; dired-sort-inhibit
 (require 'dash)
+(require 'f)
 (require 's)
 (require 'spinner)
 (autoload 'find-dired-filter "find-dired")
