@@ -335,12 +335,8 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
 (defun ag--create-results-buffer (search-term command directory)
   "Create a buffer for showing ag search results."
   (let* ((buffer-name (ag--buffer-name search-term directory))
-         (buffer (get-buffer buffer-name)))
-    (if buffer
-        ;; Wipe existing buffer.
-        (ag--wipe-buffer buffer)
-      ;; Else create the buffer.
-      (setq buffer (get-buffer-create buffer-name)))
+         (buffer (get-buffer-create buffer-name)))
+    (ag--wipe-buffer buffer)
     
     (with-current-buffer buffer
       (setq buffer-read-only t)
