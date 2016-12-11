@@ -5,7 +5,7 @@
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 11 January 2013
 ;; Version: 1.0
-;; Package-Requires: ((dash "2.8.0") (s "1.9.0") (cl-lib "0.5") (projectile "0.14.0"))
+;; Package-Requires: ((dash "2.8.0") (s "1.9.0") (cl-lib "0.5") (projectile "0.14.0") (spinner "1.7.3"))
 ;;; Commentary:
 
 ;; Please see README.md for documentation, or read it online at
@@ -179,6 +179,7 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
       (setq buffer-read-only t))
     (with-current-buffer results-buffer
       (setq ag--literal-search literal)
+      (ag--start-spinner)
       ;; TODO: handle error when buffer has been killed.
       (setq ag--redraw-timer
             (run-with-timer
@@ -240,6 +241,7 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
     ;; We assume that all signals from the ag process mean we're done.
     (setq ag--finish-time (float-time))
     (cancel-timer ag--redraw-timer)
+    (spinner-stop ag--spinner)
 
     (with-current-buffer ag--debug-buf
       (goto-char (point-max))
@@ -366,8 +368,17 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
       (forward-line (1- line-number))
       (forward-char column-offset))))
 
+(defvar-local ag--spinner nil)
+
+(defun ag--start-spinner ()
+  "Create and start a spinner on this buffer."
+  (unless ag--spinner
+    (setq ag--spinner (spinner-create 'progress-bar t)))
+  (spinner-start ag--spinner))
+
 ;; TODO: lines should be truncated by default in this mode.
-(define-derived-mode ag-mode fundamental-mode "Ag"
+(define-derived-mode ag-mode fundamental-mode
+  '("Ag" (:eval (spinner-print ag--spinner)))
   "Mode for ag results buffers.")
 
 (define-key ag-mode-map (kbd "RET") #'ag--goto-result)
