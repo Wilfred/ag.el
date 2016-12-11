@@ -31,6 +31,6 @@
   (with-current-buffer (ag--create-results-buffer "bananas" "ag -- foo" "/")
     (ag--insert-results-heading (current-buffer))
     (should
-     (s-starts-with? "Search term: bananas\nCommand:     ag -- foo"
+     (s-starts-with? "Search term: bananas (regular expression, PCRE syntax)\nCommand:     ag -- foo"
                      (buffer-string)))))
 
