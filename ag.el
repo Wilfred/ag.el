@@ -36,6 +36,7 @@
 (require 'dired) ;; dired-sort-inhibit
 (require 'dash)
 (require 's)
+(require 'spinner)
 (autoload 'find-dired-filter "find-dired")
 (autoload 'projectile-project-root "projectile")
 
