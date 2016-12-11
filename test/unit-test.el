@@ -35,8 +35,21 @@
                      (buffer-string)))))
 
 (ert-deftest ag--parse-output-line ()
+  "Ensure we can parse lines with or without shell escape characters."
+  (should
+   (equal
+    (ag--parse-output-line
+     "ag.el:715:2:(defvar leftover nil)")
+    (list "ag.el" 715 2 "(defvar leftover nil)")))
   (should
    (equal
     (ag--parse-output-line
      "[1;32mag.el[0m[K:[1;33m715[0m[K:2:([30;43mdefvar[0m[K leftover nil)")
     (list "ag.el" 715 2 "(defvar leftover nil)"))))
+
+(ert-deftest ag--strip-shell-highlighting ()
+  (should
+   (equal
+    (ag--strip-shell-highlighting
+     "[1;32mag.el[0m[K:[1;33m715[0m[K:2:([30;43mdefvar[0m[K leftover nil)")
+    "ag.el:715:2:(defvar leftover nil)")))

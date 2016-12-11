@@ -846,52 +846,21 @@ AMOUNT may be negative to move backwards."
 
 (defun ag--parse-output-line (line)
   "Split LINE into filename, line number, column number and match text."
-  (let* ((parts (ag--split-shell-escapes line))
-         (file-name (nth 1 parts))
-         (line-number (nth 6 parts))
-         (remainder (s-join "" (-slice parts 9))))
+  (-let [(file-name line-number column-number text)
+         (s-split-up-to ":" line 3)]
+    (list (ag--strip-shell-highlighting file-name)
+          (read (ag--strip-shell-highlighting line-number))
+          (read (ag--strip-shell-highlighting column-number))
+          (ag--fontify-shell-highlighting text))))
 
-    ;; remainder is of the form :123:search text here..."
-    (let* ((column-num-regex
-            (rx ":" (group (one-or-more digit)) ":"
-                (group (* anything))))
-           (parts (s-match column-num-regex remainder)))
-
-      ;; TODO: refactor this, maybe more variable names?
-      (list file-name
-            (read line-number)
-            (read (nth 1 parts))
-            (ag--fontify-shell-highlighting (nth 2 parts))))))
-
-(defvar ag--color-shell-regexp
-  "\033\\[[0-9;]*[mK]"
-  "Regular expression matching shell color escape codes.")
-
-(defun ag--split-shell-escapes (line)
-  "Given a line of text containing shell color escape sequences,
-split on those escape sequences."
-  (let ((result nil)
-        (match-start (string-match ag--color-shell-regexp line)))
-    ;; TODO: write as a do-while?
-    (while (not (null match-start))
-
-      ;; Append the text before the escape sequence.
-      (unless (zerop match-start)
-        (push (substring line 0 match-start) result))
-
-      ;; Append the escape sequence itself.
-      (push (substring line match-start (match-end 0)) result)
-
-      ;; Keep searching.
-      (setq line (substring line (match-end 0)))
-      (setq match-start (string-match ag--color-shell-regexp line)))
-
-    ;; If we didn't end with an escape sequence, we have leftover text
-    ;; we need to append.
-    (unless (s-blank? line)
-      (push line result))
-    
-    (nreverse result)))
+(defun ag--strip-shell-highlighting (text)
+  "Remove all ANSI escape codes from TEXT."
+  (with-temp-buffer
+    (insert text)
+    (goto-char (point-min))
+    (while (re-search-forward "\033\\[[0-9;]*[mK]" (point-max) 1)
+      (replace-match "" t t))
+    (buffer-string)))
 
 (defun ag--fontify-shell-highlighting (text)
   "Convert colored text output by the ag process to a fontified string.
