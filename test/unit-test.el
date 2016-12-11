@@ -34,3 +34,9 @@
      (s-starts-with? "Search term: bananas (regular expression, PCRE syntax)\nCommand:     ag -- foo"
                      (buffer-string)))))
 
+(ert-deftest ag--parse-output-line ()
+  (should
+   (equal
+    (ag--parse-output-line
+     "[1;32mag.el[0m[K:[1;33m715[0m[K:2:([30;43mdefvar[0m[K leftover nil)")
+    (list "ag.el" 715 2 "(defvar leftover nil)"))))
