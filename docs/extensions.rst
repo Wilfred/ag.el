@@ -5,7 +5,8 @@ Using with Projectile
 ---------------------
 
 `Projectile <https://github.com/bbatsov/projectile>`_ supports ag.el. If
-you have Projectile installed, ``C-c p s s`` runs ``ag-regexp`` on your project.
+you have Projectile installed, ``C-c p s s`` runs ``ag`` on your project or
+``ag-regexp`` if a prefix argument is provided.
 
 Customising the project root
 ----------------------------
