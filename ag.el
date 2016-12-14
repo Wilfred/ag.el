@@ -311,14 +311,15 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
                     (propertize ag--search-term 'face 'ag-match-face)
                     (if ag--literal-search "(literal string)"
                       "(regular expression, PCRE syntax)")))
-           (ag--heading-line "Command"
-                             (ag--debug-button ag--command))
+           (ag--heading-line "Command" ag--command)
            (ag--heading-line "Directory"
                              (ag--path-button default-directory))
            (ag--heading-line "Matches"
                              (format "%s in %s"
                                      (ag--pluralize ag--line-match-total "hit")
-                                     (ag--pluralize ag--file-match-total "file")))))))))
+                                     (ag--pluralize ag--file-match-total "file")))
+           (ag--debug-button "[Debug Output]")
+           "\n"))))))
 
 (defconst ag--heading-label-width 13)
 
