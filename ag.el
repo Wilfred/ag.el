@@ -145,10 +145,6 @@ If set to nil, fall back to `projectile-project-root'."
   "Face for metadata in ag results buffers."
   :group 'ag)
 
-(defvar-local ag--start-time nil)
-
-(defvar-local ag--finish-time nil)
-
 (defvar-local ag--redraw-timer nil)
 
 (defvar-local ag--command nil)
@@ -243,7 +239,6 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
   "Update the ag buffer associated with PROCESS as complete."
   (let ((buffer (process-buffer process)))
     ;; We assume that all signals from the ag process mean we're done.
-    (setq ag--finish-time (float-time))
     (cancel-timer ag--redraw-timer)
     (spinner-stop ag--spinner)
 
@@ -298,27 +293,21 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
               (forward-line 1))
             (delete-region (point-min) (point)))
 
-          (let ((elapsed-time
-                 (round (- (float-time) ag--start-time))))
-            (insert
-             (ag--heading-line
-              "Search term"
-              (format "%s %s"
-                      (propertize ag--search-term 'face 'ag-match-face)
-                      (if ag--literal-search "(literal string)"
-                        "(regular expression, PCRE syntax)")))
-             (ag--heading-line "Command"
-                               (ag--debug-button ag--command))
-             (ag--heading-line "Directory"
-                               (ag--path-button default-directory))
-             (ag--heading-line "Time"
-                               (format "%s (%s)"
-                                       (ag--pluralize elapsed-time "second")
-                                       (if ag--finish-time "completed" "running")))
-             (ag--heading-line "Matches"
-                               (format "%s in %s"
-                                       (ag--pluralize ag--line-match-total "hit")
-                                       (ag--pluralize ag--file-match-total "file"))))))))))
+          (insert
+           (ag--heading-line
+            "Search term"
+            (format "%s %s"
+                    (propertize ag--search-term 'face 'ag-match-face)
+                    (if ag--literal-search "(literal string)"
+                      "(regular expression, PCRE syntax)")))
+           (ag--heading-line "Command"
+                             (ag--debug-button ag--command))
+           (ag--heading-line "Directory"
+                             (ag--path-button default-directory))
+           (ag--heading-line "Matches"
+                             (format "%s in %s"
+                                     (ag--pluralize ag--line-match-total "hit")
+                                     (ag--pluralize ag--file-match-total "file")))))))))
 
 (defconst ag--heading-label-width 13)
 
@@ -350,9 +339,7 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
       (setq ag--search-term search-term)
       (setq ag--remaining-output "")
       (setq ag--line-match-total 0)
-      (setq ag--file-match-total 0)
-      ;; Set the start time last, to give more accurate times.
-      (setq ag--start-time (float-time)))
+      (setq ag--file-match-total 0))
     buffer))
 
 (defun ag--goto-result ()
