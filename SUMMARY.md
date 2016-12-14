@@ -8,5 +8,5 @@
 * [Including Files](docs/files_included.md)
 * [Advanced Searching](docs/advanced_searching.md)
 * [Searching Without ag.el](docs/searching_without_ag_el.md)
-* Bugs
+* [Migrating From v0.x](docs/migrating.md)
 * [How To Contribute](docs/contributing.md)
