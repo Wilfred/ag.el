@@ -186,7 +186,7 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
       (let ((inhibit-read-only t))
         (erase-buffer)
         (setq default-directory directory)
-        (insert "$ " command "\n"))
+        (insert "--- command ---\n" command "\n"))
       (setq buffer-read-only t))
     (with-current-buffer results-buffer
       (setq ag--literal-search literal)
