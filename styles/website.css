@@ -1,0 +1,4 @@
+/* default code font sizes are a little small, fix that */
+.markdown-section code, .markdown-section pre > code {
+    font-size: 1em;
+}
