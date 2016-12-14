@@ -382,8 +382,6 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
 
 (define-key ag-mode-map (kbd "p") #'ag-prev-result)
 (define-key ag-mode-map (kbd "n") #'ag-next-result)
-(define-key ag-mode-map (kbd "k") '(lambda () (interactive) 
-                                     (let (kill-buffer-query-functions) (kill-buffer))))
 (define-key ag-mode-map (kbd "g") #'ag-rerun)
 
 (defun ag--buffer-name (search-term directory)
