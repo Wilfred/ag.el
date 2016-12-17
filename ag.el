@@ -162,10 +162,16 @@ We save the last line here, in case we need to append more text to it.")
 
 (defvar-local ag--spinner nil)
 
-(cl-defun ag--start-search (search-term directory &key (literal t))
+;; TODO: file-type needs to be stored in the results buffer, so we can re-run.
+;; TODO: This is assuming that FILE-TYPE is of the form (:file-regex "*.txt") but
+;; the apply call is not obvious.
+(cl-defun ag--start-search (search-term directory &key (literal t) (file-type nil))
   "Initiate an ag search for SEARCH-TERM in ROOT-DIRECTORY.
 If LITERAL is nil, treat SEARCH-TERM as a regular expression."
-  (let* ((command (ag--format-command search-term directory :regexp (not literal)))
+  (let* ((command
+          (apply #'ag--format-command
+                 search-term directory
+                 :regexp (not literal) file-type))
          (results-buffer (ag--create-results-buffer search-term command directory))
          process)
     (with-current-buffer ag--debug-buf
@@ -272,6 +278,8 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
           unit
           (if (= number 1) "" "s")))
 
+;; TODO: report the file type searched too, which an option to rerun
+;; with a different file type.
 (defun ag--insert-results-heading (buffer)
   "Insert or update an ag results heading in BUFFER."
   (when (buffer-live-p buffer)
@@ -437,17 +445,6 @@ If REGEXP is non-nil, treat STRING as a regular expression."
                 (read-from-minibuffer "ag command: "
                                       (cons command-string adjusted-point)))))
       command-string)))
-
-;; TODO: remove.
-(cl-defun ag--search (string directory
-                             &key (regexp nil) (file-regex nil) (file-type nil))
-  "Run ag searching for the STRING given in DIRECTORY.
-If REGEXP is non-nil, treat STRING as a regular expression."
-  (compilation-start
-   (ag--format-command string directory
-                       :regexp regexp :file-regex file-regex :file-type file-type)
-   #'ag-mode
-   `(lambda (mode-name) ,(ag--buffer-name string directory))))
 
 (defun ag--input-at-point ()
   "If there's an active selection, return that.
@@ -615,7 +612,7 @@ If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (ag--read-from-minibuffer "Search string")
                      (ag--read-file-type)
                      (read-directory-name "Directory: ")))
-  (apply #'ag--search string directory file-type))
+  (ag--start-search string directory :file-type file-type))
 
 ;;;###autoload
 (defun ag-regexp (string directory)
@@ -645,7 +642,9 @@ symbol under point.
 If called with a prefix, prompts for flags to pass to ag."
   (interactive (list (ag--read-from-minibuffer "Search string")
                      (ag--read-file-type)))
-  (apply 'ag--search string (ag--project-root default-directory) file-type))
+  (ag--start-search string
+                    (ag--project-root default-directory)
+                    :file-type file-type))
 
 (defun ag--read-from-minibuffer (prompt)
   "Read a value from the minibuffer with PROMPT.
