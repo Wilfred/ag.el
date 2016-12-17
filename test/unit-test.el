@@ -62,3 +62,13 @@
     (ag--strip-shell-highlighting
      "[1;32mag.el[0m[K:[1;33m715[0m[K:2:([30;43mdefvar[0m[K leftover nil)")
     "ag.el:715:2:(defvar leftover nil)")))
+
+(ert-deftest ag--format-command ()
+  (should
+   (equal
+    (ag--format-command "needle" "/")
+    "ag --literal --line-number --smart-case --nogroup --column -- needle ."))
+  (should
+   (equal
+    (ag--format-command "needle" "/" :file-type "python")
+    "ag --python --literal --line-number --smart-case --nogroup --column -- needle .")))
