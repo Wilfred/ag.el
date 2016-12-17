@@ -156,8 +156,6 @@ If set to nil, fall back to `projectile-project-root'."
   "Face for metadata in ag results buffers."
   :group 'ag)
 
-(defvar-local ag--redraw-timer nil)
-
 (defvar-local ag--command nil)
 
 (defvar-local ag--search-term nil)
@@ -190,12 +188,7 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
       (setq buffer-read-only t))
     (with-current-buffer results-buffer
       (setq ag--literal-search literal)
-      (ag--start-spinner)
-      ;; TODO: handle error when buffer has been killed.
-      (setq ag--redraw-timer
-            (run-with-timer
-             0 1
-             #'ag--insert-results-heading results-buffer)))
+      (ag--start-spinner))
 
     (let ((default-directory directory))
       (setq process (start-process-shell-command
@@ -220,6 +213,7 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
     (let ((inhibit-read-only t))
       (insert "\n--- ag--process-filter called ---\n"
               output)))
+  (ag--insert-results-heading (process-buffer process))
   (with-current-buffer (process-buffer process)
     ;; ag--remaining-output may contain a partial line from the last
     ;; time we were called, so append.
@@ -250,7 +244,6 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
   "Update the ag buffer associated with PROCESS as complete."
   (let ((buffer (process-buffer process)))
     ;; We assume that all signals from the ag process mean we're done.
-    (cancel-timer ag--redraw-timer)
     (spinner-stop ag--spinner)
 
     (with-current-buffer ag--debug-buf
