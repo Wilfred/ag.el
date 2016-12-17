@@ -440,16 +440,6 @@ Returns an empty string otherwise."
    after string
    nil nil 1))
 
-(autoload 'vc-git-root "vc-git")
-
-(require 'vc-svn)
-;; Emacs 23.4 doesn't provide vc-svn-root.
-(unless (functionp 'vc-svn-root)
-  (defun vc-svn-root (file)
-    (vc-find-root file vc-svn-admin-directory)))
-
-(autoload 'vc-hg-root "vc-hg")
-
 (defun ag--project-root (file-path)
   "Guess the project root of the given FILE-PATH.
 
