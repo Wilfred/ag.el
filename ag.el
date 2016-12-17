@@ -96,6 +96,12 @@ If set to nil, fall back to `projectile-project-root'."
   "Face for ag matches."
   :group 'ag)
 
+(defface ag-command
+  '((((class color) (background light)) :foreground "SkyBlue4")
+    (((class color) (background  dark)) :foreground "LightSkyBlue1"))
+  "Face for ag commands."
+  :group 'ag)
+
 (defvar ag--debug-buf
   (get-buffer-create "*ag debug*"))
 
@@ -116,22 +122,6 @@ If set to nil, fall back to `projectile-project-root'."
      (f-abbrev path)
      :type 'ag-path-button
      'path path)
-    (buffer-string)))
-
-(defun ag--open-debug (_button)
-  "Open the file referenced by BUTTON."
-  (switch-to-buffer ag--debug-buf)
-  (goto-char (point-min)))
-
-(define-button-type 'ag-debug-button
-  'action #'ag--open-debug
-  'follow-link t
-  'help-echo "Open debug buffer")
-
-(defun ag--debug-button (command)
-  "Return a button that opens the debug buffer."
-  (with-temp-buffer
-    (insert-text-button command :type 'ag-debug-button)
     (buffer-string)))
 
 (defvar ag-search-finished-hook nil
@@ -291,15 +281,14 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
                     (propertize ag--search-term 'face 'ag-match-face)
                     (if ag--literal-search "(literal string)"
                       "(regular expression, PCRE syntax)")))
-           (ag--heading-line "Command" ag--command)
+           (ag--heading-line "Command"
+                             (propertize ag--command 'face 'ag-command))
            (ag--heading-line "Directory"
                              (ag--path-button default-directory))
            (ag--heading-line "Matches"
                              (format "%s in %s"
                                      (ag--pluralize ag--line-match-total "hit")
-                                     (ag--pluralize ag--file-match-total "file")))
-           (ag--debug-button "[Debug Output]")
-           "\n"))))))
+                                     (ag--pluralize ag--file-match-total "file")))))))))
 
 (defconst ag--heading-label-width 13)
 
@@ -334,7 +323,16 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
       (setq ag--file-match-total 0))
     buffer))
 
-(defun ag--goto-result ()
+(defun ag--visit-thing ()
+  "Visit the raw command output, folder or search result at point."
+  (interactive)
+  (cond
+   ((eq (get-text-property (point) 'face) 'ag-command)
+    (switch-to-buffer ag--debug-buf)
+    (goto-char (point-min)))
+   (t (ag--visit-result))))
+
+(defun ag--visit-result ()
   "Goto the search result at point."
   (interactive)
   (let ((file-name (get-text-property (point) 'ag-file-name))
@@ -358,8 +356,8 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
   '("Ag" (:eval (spinner-print ag--spinner)))
   "Mode for ag results buffers.")
 
-(define-key ag-mode-map (kbd "RET") #'ag--goto-result)
-(define-key ag-mode-map (kbd "<mouse-2>") #'ag--goto-result)
+(define-key ag-mode-map (kbd "RET") #'ag--visit-thing)
+(define-key ag-mode-map (kbd "<mouse-2>") #'ag--visit-thing)
 
 (define-key ag-mode-map (kbd "p") #'ag-prev-result)
 (define-key ag-mode-map (kbd "n") #'ag-next-result)
