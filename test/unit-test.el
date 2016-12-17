@@ -34,6 +34,15 @@
      (s-starts-with? "Search term: bananas (regular expression, PCRE syntax)\nCommand:     ag -- foo"
                      (buffer-string)))))
 
+(ert-deftest ag--insert-results-heading-overwrite ()
+  "Test `ag--insert-results-heading' when there's already a heading."
+  (with-current-buffer (ag--create-results-buffer "bananas" "ag -- foo" "/")
+    (ag--insert-results-heading (current-buffer))
+    (ag--insert-results-heading (current-buffer))
+    (should
+     (s-starts-with? "Search term: bananas (regular expression, PCRE syntax)\nCommand:     ag -- foo"
+                     (buffer-string)))))
+
 (ert-deftest ag--parse-output-line ()
   "Ensure we can parse lines with or without shell escape characters."
   (should
