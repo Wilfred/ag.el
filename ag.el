@@ -270,7 +270,7 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
           ;; If there's already a heading, replace it.
           (when (> (point-max) 1)
             (goto-char (point-min))
-            (while (not (looking-at "\n"))
+            (while (and (not (looking-at "\n")) (not (eobp)))
               (forward-line 1))
             (delete-region (point-min) (point)))
 
