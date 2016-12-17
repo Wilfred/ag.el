@@ -72,3 +72,10 @@
    (equal
     (ag--format-command "needle" "/" :file-type "python")
     "ag --python --literal --line-number --smart-case --nogroup --column -- needle .")))
+
+(ert-deftest ag--propertize-match ()
+  "Ensure we pad numbers correctly when displaying matches."
+  (should
+   (equal
+    (ag--propertize-match 123 "foo" "/bar/baz.txt")
+    "123  foo")))
