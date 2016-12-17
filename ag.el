@@ -200,7 +200,7 @@ If LITERAL is nil, treat SEARCH-TERM as a regular expression."
     (switch-to-buffer results-buffer)))
 
 (defun ag--propertize-match (line-number content-line file-name)
-  (let* ((dim-number (s-pad-right 3 " " (propertize (format "%s" line-number) 'face 'ag-dim-face))))
+  (let* ((dim-number (s-pad-right 4 " " (propertize (format "%s" line-number) 'face 'ag-dim-face))))
     (propertize (format "%s %s" dim-number content-line)
                 'mouse-face 'highlight
                 'ag-file-name file-name
