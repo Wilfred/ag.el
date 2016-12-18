@@ -1,4 +1,4 @@
-# Advanced Searching
+# Search Types
 
 ## Text Search
 

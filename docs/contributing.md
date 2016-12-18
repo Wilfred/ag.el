@@ -31,10 +31,11 @@ for private variables and functions.
 This documentation is written using
 [gitbook](https://www.gitbook.com/), which has
 [its own installation instructions](https://toolchain.gitbook.com/setup.html). You
-can install gitbook and build the docs as follows:
+can install gitbook and build the docs lcoally as follows:
 
 ``` bash
 $ npm config set prefix=$HOME/.npm-packages
-$ npm install -g gitbook
+$ npm install -g gitbook-cli
+$ ~/.npm-packages/bin/gitbook install
 $ ~/.npm-packages/bin/gitbook serve
 ```
