@@ -1,4 +1,4 @@
-# Which Files Are Searched
+# Searching Specific Files
 
 ## Ignoring Files
 

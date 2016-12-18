@@ -1,3 +1,6 @@
 {
+    "structure": {
+        "readme": "introduction.md"
+    },
     "plugins": ["-sharing", "-fontsettings", "anchors"]
 }
