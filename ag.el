@@ -415,15 +415,6 @@ If REGEXP is non-nil, treat STRING as a regular expression."
                                       (cons command-string adjusted-point)))))
       command-string)))
 
-(defun ag--input-at-point ()
-  "If there's an active selection, return that.
-Otherwise, get the symbol at point, as a string."
-  (cond ((use-region-p)
-         (buffer-substring-no-properties (region-beginning) (region-end)))
-        ((symbol-at-point)
-         (substring-no-properties
-          (symbol-name (symbol-at-point))))))
-
 (defun ag--buffer-extension-regex ()
   "If the current buffer has an extension, return
 a PCRE pattern that matches files with that extension.
@@ -605,22 +596,25 @@ If called with a prefix, prompts for flags to pass to ag."
 
 (defun ag--read-from-minibuffer (prompt)
   "Read a value from the minibuffer with PROMPT.
-If there's a string at point, offer that as a default."
-  (let* ((suggested (ag--input-at-point))
-         (final-prompt
-          (if suggested
-              (format "%s (default %s): " prompt suggested)
-            (format "%s: " prompt)))
-         ;; Ask the user for input, but add `suggested' to the history
-         ;; so they can use M-n if they want to modify it.
-         (user-input (read-from-minibuffer
-                      final-prompt
-                      nil nil nil nil suggested)))
-    ;; Return the input provided by the user, or use `suggested' if
-    ;; the input was empty.
-    (if (> (length user-input) 0)
-        user-input
-      suggested)))
+Respect the region if it's active, or default to current string at point."
+  (cond
+   ((region-active-p)
+    ;; If the user had an active region, put the current selection
+    ;; as the initial input in the minibuffer.
+    (read-from-minibuffer (format "%s: " prompt)
+                          (buffer-substring-no-properties (region-beginning) (region-end))))
+   ;; If there's a symbol under point, offer that as a default:
+   ((symbol-at-point)
+    (let* ((current-symbol (symbol-name (symbol-at-point)))
+           (user-input
+            ;; Start with an empty prompt, but add `current-symbol'
+            ;; to the history so the user can use M-n to edit it.
+            (read-from-minibuffer (format "%s (default %s): " prompt current-symbol)
+                                  nil nil nil nil current-symbol)))
+      ;; If the user gave no input, use the default.
+      (if (> (length user-input) 0) user-input current-symbol)))
+   (t
+    (read-from-minibuffer (format "%s: " prompt)))))
 
 ;;;###autoload
 (defun ag-project-regexp (regexp)
