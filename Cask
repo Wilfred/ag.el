@@ -3,5 +3,7 @@
 
 (package-file "ag.el")
 
-(depends-on "dash")
-(depends-on "s")
+(development
+ (depends-on "ert-runner")
+ (depends-on "undercover")
+ (depends-on "f"))
