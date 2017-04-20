@@ -541,7 +541,8 @@ See also `find-dired'."
                         (format "*ag dired pattern:%s dir:%s*" regexp dir)))
          (cmd (concat ag-executable " --nocolor -g '" regexp "' "
                       (shell-quote-argument dir)
-                      " | grep -v '^$' | sed s/\\'/\\\\\\\\\\'/ | xargs -I '{}' ls "
+                      " | grep -v '^$' | sed s/\\'/\\\\\\\\\\'/ | xargs -I '{}' "
+                      insert-directory-program " "
                       dired-listing-switches " '{}' &")))
     (with-current-buffer (get-buffer-create buffer-name)
       (switch-to-buffer (current-buffer))
