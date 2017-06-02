@@ -590,6 +590,20 @@ If called with a prefix, prompts for flags to pass to ag."
                      (read-directory-name "Directory: ")))
   (ag--start-search string directory :literal t))
 
+;; Inspired by the nifty rg-dwim command.
+;;;###autoload
+(defun ag-dwim ()
+  "Search for the symbol at point in all files of the same type."
+  (interactive)
+  (let ((type (list :file-regex
+                    (format "\\.%s$"
+                            (ag--escape-pcre (f-ext (buffer-file-name)))))))
+    (ag--start-search
+     (format "\\b%s\\b" (ag--input-at-point))
+     (ag/project-root default-directory)
+     :file-type type
+     :literal nil)))
+
 ;;;###autoload
 (defun ag-files (string file-type directory)
   "Search using ag in a given DIRECTORY for a given literal search STRING,
