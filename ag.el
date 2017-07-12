@@ -539,7 +539,7 @@ See also `find-dired'."
          (buffer-name (if ag-reuse-buffers
                           "*ag dired*"
                         (format "*ag dired pattern:%s dir:%s*" regexp dir)))
-         (cmd (concat ag-executable " --nocolor -g '" regexp "' "
+         (cmd (concat ag-executable " --nocolor -S -g '" regexp "' "
                       (shell-quote-argument dir)
                       " | grep -v '^$' | sed s/\\'/\\\\\\\\\\'/ | xargs -I '{}' "
                       insert-directory-program " "
