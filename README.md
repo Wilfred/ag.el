@@ -20,4 +20,5 @@ Bugs: https://github.com/Wilfred/ag.el/issues
 
 ## Alternatives
 
-* There's an ag plugin for helm: https://github.com/syohex/emacs-helm-ag
+* Ag plugin for helm: https://github.com/syohex/emacs-helm-ag
+* Ag plugin for counsel/ivy: https://github.com/abo-abo/swiper
