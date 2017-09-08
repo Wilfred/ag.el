@@ -62,6 +62,12 @@ print line numbers when the input is a stream."
   :type '(repeat (string))
   :group 'ag)
 
+(defcustom ag-dired-arguments
+  (list "--nocolor" "-S")
+  "Additional arguments passed to ag-dired."
+  :type '(repeat (string))
+  :group 'ag)
+
 (defcustom ag-context-lines nil
   "Number of context lines to include before and after a matching line."
   :type 'integer
@@ -539,7 +545,7 @@ See also `find-dired'."
          (buffer-name (if ag-reuse-buffers
                           "*ag dired*"
                         (format "*ag dired pattern:%s dir:%s*" regexp dir)))
-         (cmd (concat ag-executable " --nocolor -S -g '" regexp "' "
+         (cmd (concat ag-executable " " (string-join ag-dired-arguments " ") " -g '" regexp "' "
                       (shell-quote-argument dir)
                       " | grep -v '^$' | sed s/\\'/\\\\\\\\\\'/ | xargs -I '{}' "
                       insert-directory-program " "
