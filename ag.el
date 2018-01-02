@@ -116,6 +116,8 @@ If set to nil, fall back to finding VCS root directories."
   "A list of patterns for files/directories to ignore when searching."
   :type '(repeat (string))
   :group 'ag)
+(make-variable-buffer-local 'ag-ignore-list)
+(put 'ag-ignore-list 'safe-local-variable #'listp)
 
 (require 'compile)
 
