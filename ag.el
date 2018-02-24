@@ -555,7 +555,7 @@ See also `find-dired'."
                           dired-listing-switches " '{}' &")
                 (concat ag-executable " " (combine-and-quote-strings ag-dired-arguments " ") " -g '" regexp "' "
                         (shell-quote-argument dir)
-                        " | grep -v '^$' | sed s/\\'/\\\\\\\\\\'/ | xargs -I '{}' "
+                        " | grep -v '^$' | sed s/\\'/\\\\\\\\\\'/g | xargs -I '{}' "
                         insert-directory-program " "
                         dired-listing-switches " '{}' &"))))
     (with-current-buffer (get-buffer-create buffer-name)
