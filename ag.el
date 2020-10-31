@@ -3,6 +3,7 @@
 ;; Copyright (C) 2013-2014 Wilfred Hughes <me@wilfred.me.uk>
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
+;; URL: https://github.com/Wilfred/ag.el
 ;; Created: 11 January 2013
 ;; Version: 0.48
 ;; Package-Requires: ((dash "2.8.0") (s "1.9.0") (cl-lib "0.5"))
